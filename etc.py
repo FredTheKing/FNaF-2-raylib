@@ -1,5 +1,4 @@
 from pyray import *
-from raylib.colors import *
 import config
 
 def debug_draw_everywhere_text():

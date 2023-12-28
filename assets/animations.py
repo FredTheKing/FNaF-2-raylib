@@ -1,5 +1,4 @@
 from pyray import *
-from raylib.colors import *
 from classes.Animation import Animation
 
 all_is_ready: bool = False

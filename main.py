@@ -1,4 +1,3 @@
-from pyray import *
 from raylib.colors import *
 from config import *
 from etc import *

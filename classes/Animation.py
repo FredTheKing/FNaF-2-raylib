@@ -1,7 +1,6 @@
 from pyray import *
 from raylib.colors import *
 from classes.Time import Time
-import config
 
 class Animation(Time):
   def __init__(self, frames_list=None, x=0, y=0, animation_speed=30, is_looped=False, first_frame=0, last_frame=-1):

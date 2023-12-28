@@ -1,5 +1,3 @@
-from pyray import *
-from raylib.colors import *
 from classes.Scene_Manager import Scene_Manager
 from etc import *
 
