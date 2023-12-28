@@ -11,6 +11,13 @@ class Scene_Manager(Time):
     self.scene_index = 0
     self.scene_changed = True
 
+  def update_new_key(self, key: KeyboardKey):
+    i = 0
+    if config.key_pressed == key:
+      self.scene_index = i
+      self.scene_changed = True
+      self.start_time()
+
   def check_input(self):
     keys_arr = [
       KeyboardKey.KEY_ZERO,

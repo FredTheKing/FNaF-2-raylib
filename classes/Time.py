@@ -9,6 +9,7 @@ class Time:
 
   def start_time(self):
     self.time_start = time.time()
+    self.go = True
 
   def update_time(self):
     if self.go:

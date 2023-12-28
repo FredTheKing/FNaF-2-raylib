@@ -23,6 +23,8 @@ class Animation(Time):
     self.is_animation_looped: bool = is_looped
 
     if animation_speed != 0: self.start_time()
+    self.shift_time = Time
+    self.shift_add: float = animation_speed
     self.temp_loops = 0
 
   def update(self):

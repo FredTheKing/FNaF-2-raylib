@@ -129,7 +129,7 @@ def main():
     # step
     config.key_pressed = get_key_pressed()
     config.scenes.update_time()
-    update_new_key(KeyboardKey.KEY_F2)
+    config.scenes.update_new_key(KeyboardKey.KEY_F2)
     set_fullscreen(KeyboardKey.KEY_F11)
     if debug: scenes.check_input()
 
