@@ -1,25 +1,16 @@
-import datetime
-import time
-
 from pyray import *
 from raylib.colors import *
+from classes.Time import Time
 import config
 
-class Scene_Manager:
+class Scene_Manager(Time):
   def __init__(self, scenes_names: list):
+    super().__init__(1)
     self.scene_dict = {}
     for i in range(len(scenes_names)):
       self.scene_dict[i] = scenes_names[i]
     self.scene_index = 0
     self.scene_changed = True
-    self.time_start = time.time()
-    self.time_current = int(time.time() - self.time_start)
-
-  def start_time(self):
-    self.time_start = time.time()
-
-  def update_time(self):
-    self.time_current = int(time.time() - self.time_start)
 
   def check_input(self):
     keys_arr = [

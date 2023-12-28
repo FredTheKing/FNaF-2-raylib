@@ -12,12 +12,13 @@ def main():
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
+        textures_activation()
 
       # step
-      pass
+      textures_update()
 
       # draw
-      menu_twitching.draw()
+      textures_draw()
 
 # ----------------------------------------------- #
 
@@ -130,6 +131,7 @@ def main():
     config.key_pressed = get_key_pressed()
     config.scenes.update_time()
     update_new_key(KeyboardKey.KEY_F2)
+    set_fullscreen(KeyboardKey.KEY_F11)
     if debug: scenes.check_input()
 
     # draw
