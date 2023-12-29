@@ -10,7 +10,8 @@ class Animation(Time):
     self.x = x
     self.y = y
     self.frames: list = frames_list
-    self.frames.append(self.frames[len(frames_list)-1])
+    if is_looped:
+      self.frames.append(self.frames[len(frames_list)-1])
     self.frame_index: int = 0
     self.first_frame: int = first_frame
     if last_frame != -1:
@@ -22,8 +23,9 @@ class Animation(Time):
     self.is_animation_ended: bool = False
     self.is_animation_looped: bool = is_looped
 
-    if animation_speed != 0: self.start_time()
-    self.temp_loops = 0
+    if animation_speed != 0:
+      self.start_time()
+    self.temp_loops: int = 0
 
   def update(self):
     self.check_looped()
@@ -62,4 +64,4 @@ class Animation(Time):
       self.is_animation_errored = True
       self.frame_index = self.last_frame
       draw_texture(self.frames[self.frame_index], self.x, self.y, WHITE)
-    # draw_text(f"started: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", 0, 100, 14, WHITE)
+    draw_text(f"started: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", 0, 100, 14, WHITE)
