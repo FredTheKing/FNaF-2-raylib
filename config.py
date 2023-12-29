@@ -10,5 +10,5 @@ actual_night = 0
 upcoming_night = 0
 
 debug = True
-fullscreen = True
+fullscreen = False
 scenes = Scene_Manager(["menu", "settings", "custom night", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame"])

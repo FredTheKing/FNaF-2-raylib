@@ -11,7 +11,6 @@ def main():
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
-        textures_activation()
 
       # step
       textures_update()
