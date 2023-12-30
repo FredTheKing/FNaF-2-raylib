@@ -1,0 +1,2 @@
+1. Low FPS (i dunno why)
+2. 'Scene_changed' not always true on scene changing AND vise versa (maybe sth with debug mode switching)

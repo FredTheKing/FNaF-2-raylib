@@ -8,15 +8,19 @@ class Scene_Manager(Time):
     self.scene_dict = {}
     for i in range(len(scenes_names)):
       self.scene_dict[i] = scenes_names[i]
-    self.scene_index = 0
+    self.scene_index = 9
     self.scene_changed = True
 
   def update_new_key(self, key: KeyboardKey):
-    i = 0
     if config.key_pressed == key:
-      self.scene_index = i
+      self.scene_index = 9
       self.scene_changed = True
       self.start_time()
+
+  def set_scene(self, id):
+    self.scene_index = id
+    self.scene_changed = True
+    print('ding!')
 
   def check_input(self):
     keys_arr = [
@@ -34,8 +38,7 @@ class Scene_Manager(Time):
     for i in range(len(keys_arr)):
       if keys_arr[i] is not None:
         if config.key_pressed == keys_arr[i]:
-          self.scene_index = i
-          self.scene_changed = True
+          self.set_scene(i)
           break
     else:
       self.scene_changed = False

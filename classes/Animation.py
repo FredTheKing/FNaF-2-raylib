@@ -2,22 +2,19 @@ from pyray import *
 from raylib.colors import *
 from classes.Time import Time
 
-class Animation(Time):
-  def __init__(self, frames_list=None, x=0, y=0, animation_speed=30, is_looped=False, first_frame=0, last_frame=-1):
+class Animation_(Time):
+  def __init__(self, frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, first_frame=0):
     if frames_list is None:
       frames_list = []
     super().__init__(animation_speed)
-    self.x = x
-    self.y = y
+    self.pos = pos
     self.frames: list = frames_list
     if is_looped:
       self.frames.append(self.frames[len(frames_list)-1])
     self.frame_index: int = 0
     self.first_frame: int = first_frame
-    if last_frame != -1:
-      self.last_frame: int = last_frame
-    else:
-      self.last_frame: int = len(frames_list)-1
+    self.last_frame: int = len(frames_list)-1
+    self.color = [255, 255, 255, alpha]
 
     self.is_animation_finished: bool = False
     self.is_animation_ended: bool = False
@@ -28,9 +25,11 @@ class Animation(Time):
     self.temp_loops: int = 0
 
   def update(self):
-    self.check_looped()
-    self.update_time()
-    self.step()
+    if self.is_animation_looped:
+      self.check_looped()
+    if self.go:
+      self.update_time()
+      self.step()
     self.check_ended()
     self.finished_ended()
     self.draw()
@@ -59,9 +58,11 @@ class Animation(Time):
 
   def draw(self):
     if self.frame_index <= self.last_frame:
-      draw_texture(self.frames[self.frame_index], self.x, self.y, WHITE)
+      draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
     else:
-      self.is_animation_errored = True
       self.frame_index = self.last_frame
-      draw_texture(self.frames[self.frame_index], self.x, self.y, WHITE)
-    draw_text(f"started: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", 0, 100, 14, WHITE)
+      draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
+
+  def draw_debug(self, name, x, y):
+    draw_text(
+      f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 14, WHITE)
