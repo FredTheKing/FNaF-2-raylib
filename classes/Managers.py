@@ -30,9 +30,6 @@ class Scene_Manager(Time):
       None,
       None,
       KeyboardKey.KEY_ONE,
-      None,
-      None,
-      None
     ]
 
     for i in range(len(keys_arr)):
@@ -42,3 +39,10 @@ class Scene_Manager(Time):
           break
     else:
       self.scene_changed = False
+
+class Sound_Manager:
+  def __init__(self, scenes: Scene_Manager):
+    self.channel = {}
+    for item in range(scenes.scene_dict.__len__()):
+      self.channel[item] = []
+

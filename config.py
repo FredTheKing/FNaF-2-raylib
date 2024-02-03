@@ -1,4 +1,4 @@
-from classes.Scene_Manager import Scene_Manager
+from classes.Managers import Scene_Manager, Sound_Manager
 from etc import *
 
 resolution = Vector2(1024, 768)
@@ -7,7 +7,8 @@ init_audio_device()
 set_window_icon(load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/338.png"))
 key_pressed: int
 set_target_fps(-1)
-mouse = get_mouse_position()
+unload_font(get_font_default())
+def_font_filename = "assets/fonts/regular.ttf"
 
 actual_night = 0
 upcoming_night = 0
@@ -16,3 +17,4 @@ wait_textures = False
 debug = True
 fullscreen = False
 scenes = Scene_Manager(["menu", "settings", "custom night", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot"])
+sounds = Sound_Manager(scenes)

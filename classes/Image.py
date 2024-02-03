@@ -1,7 +1,7 @@
 from pyray import *
 import config
 
-class Image_:
+class Smart_Image:
   def __init__(self, filename: str, pos=Vector2(0, 0), alpha=255):
     self.texture = load_texture_from_image(load_image(filename))
     self.width = self.texture.width
@@ -15,8 +15,8 @@ class Image_:
   def draw(self):
     draw_texture_v(self.texture, self.pos, self.color)
 
-  def check_collision_mouse(self):
-    point = config.mouse
+  def check_collision_mouse(self) -> bool:
+    point = get_mouse_position()
     rec = Rectangle(self.pos.x, self.pos.y, self.width, self.height)
     verdict: bool
 
@@ -25,5 +25,4 @@ class Image_:
     else:
       verdict = False
 
-    draw_text(str(verdict), 500, 0, 14, WHITE)
     return verdict

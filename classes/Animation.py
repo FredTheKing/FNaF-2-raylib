@@ -2,7 +2,7 @@ from pyray import *
 from raylib.colors import *
 from classes.Time import Time
 
-class Animation_(Time):
+class Smart_Animation(Time):
   def __init__(self, frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, first_frame=0):
     if frames_list is None:
       frames_list = []
@@ -55,6 +55,12 @@ class Animation_(Time):
   def step(self):
     if self.go:
       self.frame_index = self.time_current - self.temp_loops * self.last_frame
+
+  def restart(self):
+    self.frame_index = 0
+    self.go = True
+    self.is_animation_finished = False
+    self.is_animation_ended = False
 
   def draw(self):
     if self.frame_index <= self.last_frame:

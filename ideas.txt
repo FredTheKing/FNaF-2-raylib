@@ -1,0 +1,1 @@
+1. add block-text class (a text but with hitbox of a rectangle to optimize to use text instead of pictures)

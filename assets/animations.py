@@ -1,6 +1,7 @@
 from pyray import *
-from classes.Animation import Animation_
-from classes.Image import Image_
+from classes.BoxText import BoxText
+from classes.Animation import Smart_Animation
+from classes.Image import Smart_Image
 import config
 
 all_textures_ready = False
@@ -8,80 +9,83 @@ all_textures_ready = False
 def load(filename):
   return load_texture_from_image(load_image(filename))
 
+# dirname to dir, not the file!
+def load_animation(dirname: str, times: int):
+  arr = []
+  for item in range(times):
+    arr.append(load(dirname + f"/{item}.png"))
+  return arr
 
-menu_twitch = Animation_(
-  [
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/321.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/215.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/362.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/470.png")
-  ], Vector2(0, 0), 3, True
+menu_twitch = Smart_Animation(
+  load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Misc", 4),
+  Vector2(0, 0), 3, True
 )
-multi_static = Animation_(
-  [
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/357.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/358.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/359.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/360.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/361.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/363.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/650.png"),
-    load("assets/graphics/TheOffice_Nights_Menu/Menu/Static/651.png")
-  ], Vector2(0, 0), 26, True, 101
+multi_static = Smart_Animation(
+  load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8),
+  Vector2(0, 0), 26, True, 101
 )
-menu_title = Image_("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/469.png", Vector2(80, 30))
-menu_new_game = Image_("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/301.png", Vector2(80, 370))
-menu_continue = Image_("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/303.png", Vector2(80, 430))
-menu_set = Image_("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/229.png", Vector2(20, 370))
-
+menu_title = Smart_Image("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/469.png", Vector2(80, 30))
+menu_new_game = BoxText("New Game", 48, Vector2(75, 361))
+menu_continue = BoxText("Continue", 48, Vector2(75, 430))
+menu_set = Smart_Image("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/229.png", Vector2(20, 371))
 
 menu_list = {
   'Animation': [menu_twitch, multi_static],
-  'Image': [menu_title, menu_new_game, menu_continue, menu_set]
+  'Image': [menu_title, menu_set],
+  'Text': [menu_new_game, menu_continue]
 }
 settings_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 custom_night_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 newspaper_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 night_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 game_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 paycheck_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 pixel_minigame_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 creepy_minigame_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 error_boot_list = {
   'Animation': [],
-  'Image': []
+  'Image': [],
+  'Text': []
 }
 
 scenes_list = [menu_list, settings_list, custom_night_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list]
 
 def check_all_textures():
   global all_textures_ready
-  all = 0
-  ready = 0
+  all: int = 0
+  ready: int = 0
 
   for scene_id in range(9):
     for arr_id in 'Animation', 'Image':
@@ -114,14 +118,20 @@ def animations_draw_debug():
   space = Vector2(10, 640)
   arr = scenes_list[config.scenes.scene_index]['Animation']
   for item in arr:
-    name = get_variable_name(item)
-    _index = name.find("_")
-    new_name = name[_index + 1::]
-    item.draw_debug(new_name, int(space.x), int(space.y))
-    space.x += 120
+    if space.x < config.resolution.x:
+      name = get_variable_name(item)
+      _index = name.find("_")
+      new_name = name[_index + 1::]
+      item.draw_debug(new_name, int(space.x), int(space.y))
+      space.x += 120
+
+def restart_animations():
+  arr = scenes_list[config.scenes.scene_index]['Animation']
+  for item in arr:
+    item.restart()
 
 def textures_update():
-  for arr_id in 'Animation', 'Image':
+  for arr_id in 'Animation', 'Image', 'Text':
     arr = scenes_list[config.scenes.scene_index][arr_id]
     for item in arr:
       item.update()

@@ -15,12 +15,14 @@ def main():
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
+        restart_animations()
 
       # step
       textures_update()
-      #for item in scenes_list[scenes.scene_index][3:5]:
-      #  if item.check_collision_mouse():
-      #    menu_set.pos.y = item.pos.y
+      if menu_list['Text'][0].check_collision_mouse():
+        menu_list['Image'][1].pos.y = menu_list['Text'][0].pos.y + 10
+      elif menu_list['Text'][1].check_collision_mouse():
+        menu_list['Image'][1].pos.y = menu_list['Text'][1].pos.y + 10
 
       # draw
       if config.debug:
@@ -205,8 +207,8 @@ def main():
       scenes.check_input()
 
     # draw
-    # if config.debug:
-    debug_draw_everywhere_text()
+    if config.debug:
+      debug_draw_everywhere_text()
 
 
 # ----------------------------------------------- #
