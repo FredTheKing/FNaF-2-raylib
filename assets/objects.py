@@ -1,5 +1,5 @@
 from pyray import *
-from classes.BoxText import BoxText
+from classes.Text import JustText, BoxText
 from classes.Animation import Smart_Animation
 from classes.Image import Smart_Image
 import config
@@ -24,25 +24,32 @@ multi_static = Smart_Animation(
   load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8),
   Vector2(0, 0), 26, True, 101
 )
-menu_title = Smart_Image("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/469.png", Vector2(80, 30))
-menu_new_game = BoxText("New Game", 48, Vector2(75, 361))
+menu_title = JustText("Five\n\n\n\nNights\n\n\n\nat\n\n\n\nFreddy's\n\n\n\n2", 63, Vector2(75, 21), spacing=3)
+menu_new_game = BoxText("New game", 48, Vector2(75, 361))
 menu_continue = BoxText("Continue", 48, Vector2(75, 430))
-menu_set = Smart_Image("assets/graphics/TheOffice_Nights_Menu/Menu/Logos/229.png", Vector2(20, 371))
+menu_settings = BoxText("Settings", 48, Vector2(75, 499))
+menu_extras = BoxText("Extras", 48, Vector2(75, 568))
+menu_set = JustText(">>", 48, Vector2(15, 362), font_filename="assets/fonts/consolas.ttf")
+multi_back_button = BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fonts/consolas.ttf")
+
+settings_top_text = JustText("Settings", 48, Vector2(0, 10))
+extras_top_text = JustText("Extras", 48, Vector2(0, 10))
 
 menu_list = {
   'Animation': [menu_twitch, multi_static],
-  'Image': [menu_title, menu_set],
-  'Text': [menu_new_game, menu_continue]
+  'Image': [],
+  'Text': [menu_new_game, menu_continue, menu_title, menu_settings, menu_extras, menu_set]
 }
+
 settings_list = {
   'Animation': [],
   'Image': [],
-  'Text': []
+  'Text': [multi_back_button, settings_top_text]
 }
-custom_night_list = {
+extras_list = {
   'Animation': [],
   'Image': [],
-  'Text': []
+  'Text': [multi_back_button, extras_top_text]
 }
 newspaper_list = {
   'Animation': [],
@@ -80,7 +87,7 @@ error_boot_list = {
   'Text': []
 }
 
-scenes_list = [menu_list, settings_list, custom_night_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list]
+scenes_list = [menu_list, settings_list, extras_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list]
 
 def check_all_textures():
   global all_textures_ready
@@ -115,7 +122,7 @@ def animations_draw_debug():
         return name
     return None
 
-  space = Vector2(10, 640)
+  space = Vector2(10, 615)
   arr = scenes_list[config.scenes.scene_index]['Animation']
   for item in arr:
     if space.x < config.resolution.x:
@@ -124,11 +131,6 @@ def animations_draw_debug():
       new_name = name[_index + 1::]
       item.draw_debug(new_name, int(space.x), int(space.y))
       space.x += 120
-
-def restart_animations():
-  arr = scenes_list[config.scenes.scene_index]['Animation']
-  for item in arr:
-    item.restart()
 
 def textures_update():
   for arr_id in 'Animation', 'Image', 'Text':

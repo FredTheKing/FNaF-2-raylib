@@ -1,28 +1,49 @@
-import assets.animations
+import assets.objects
 from classes.Time import Time
 from raylib.colors import *
 from config import *
 from etc import *
-from assets.animations import *
+from assets.objects import *
 
 def main():
+  global actual_night, upcoming_night
+
   check_textures_time = Time(1)
   check_textures_time.start_time()
   while not window_should_close():
+    textures_update()
 # ----------------------------------------------- #
 
     if scenes.scene_dict[scenes.scene_index] == "menu":
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
-        restart_animations()
 
       # step
-      textures_update()
-      if menu_list['Text'][0].check_collision_mouse():
-        menu_list['Image'][1].pos.y = menu_list['Text'][0].pos.y + 10
-      elif menu_list['Text'][1].check_collision_mouse():
-        menu_list['Image'][1].pos.y = menu_list['Text'][1].pos.y + 10
+      config.scenes.time_multiply = 0.25
+      if config.scenes.time_current % 2 == 0:
+        bottom_text_draw("Original game by: Scott Cawthon\t\t\t\t\tGame built by: FredTheKing\t\t\t\t\tMade in Python 3.12 with raylib (pyray)")
+      else:
+        bottom_text_draw("thingo, funny thingo")
+
+      menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
+      for item in menu_temp_selection_arr:
+        if item.hover_verdict:
+          menu_set.pos.y = item.pos.y + 1
+      if menu_new_game.clicked_verdict:
+        menu_new_game.reset()
+        upcoming_night = actual_night = 0
+        scenes.set_scene(3)
+      elif menu_continue.clicked_verdict:
+        menu_continue.reset()
+        upcoming_night = actual_night
+        scenes.set_scene(4)
+      elif menu_settings.clicked_verdict:
+        menu_settings.reset()
+        scenes.set_scene(1)
+      elif menu_extras.clicked_verdict:
+        menu_extras.reset()
+        scenes.set_scene(2)
 
       # draw
       if config.debug:
@@ -36,20 +57,24 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene(0)
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "custom night":
+    elif scenes.scene_dict[scenes.scene_index] == "extras":
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene(0)
 
       # draw
       pass
@@ -62,7 +87,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -75,7 +100,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -88,7 +113,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -101,7 +126,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -114,7 +139,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -127,7 +152,7 @@ def main():
         config.scenes.start_time()
 
       # step
-      pass
+      config.scenes.time_multiply = 1
 
       # draw
       pass
@@ -140,9 +165,10 @@ def main():
         config.scenes.start_time()
 
       # step
+      config.scenes.time_multiply = 1
       check_all_textures()
       check_textures_time.update_time()
-      if assets.animations.all_textures_ready:
+      if assets.objects.all_textures_ready:
         print('No issues found! Enjoy the game.')
         check_textures_time.kill_time()
         scenes.set_scene(0)
@@ -160,9 +186,10 @@ def main():
       # activation
       if scenes.scene_changed:
         config.scenes.start_time()
-        print("TEXTURE LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load any images whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
+        print("ASSETS LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load anything whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
 
       # step
+      config.scenes.time_multiply = 1
       space_between = 300
 
       rec_dont = Rectangle(0, 0, 250, 50)
@@ -184,8 +211,8 @@ def main():
         config.scenes.set_scene(9)
 
       # draw
-      error_title_text = "TEXTURE LOADING ERROR!"
-      error_description_text = "Oh no! Looks your python console doesn't want to load any images whatsoever.\nTry choosing different python version to boot this game. If you think your\ncomputer needs more time to load all textures, please push 'WAIT' button"
+      error_title_text = "ASSETS LOADING ERROR!"
+      error_description_text = "Oh no! Looks your python console doesn't want to load anything whatsoever.\nTry choosing different python version to boot this game. If you think your\ncomputer needs more time to load all textures, please push 'WAIT' button"
       error_title_measure = measure_text(error_title_text, 40)
       draw_text(error_title_text, int(resolution.x)//2 - error_title_measure//2, int(resolution.y)//2-60, 40, ORANGE)
       space = 0
@@ -198,6 +225,8 @@ def main():
 
     # always do:
     # step
+    settings_top_text.center_text()
+    extras_top_text.center_text()
     config.key_pressed = get_key_pressed()
     config.scenes.update_time()
     config.scenes.update_new_key(KeyboardKey.KEY_F2)
