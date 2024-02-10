@@ -1,13 +1,12 @@
-import assets.objects
+import objects
 from classes.Time import Time
 from raylib.colors import *
 from config import *
 from etc import *
-from assets.objects import *
+from objects import *
 
 def main():
   global actual_night, upcoming_night
-
   check_textures_time = Time(1)
   check_textures_time.start_time()
   while not window_should_close():
@@ -17,14 +16,14 @@ def main():
     if scenes.scene_dict[scenes.scene_index] == "menu":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 0.25
       if config.scenes.time_current % 2 == 0:
         bottom_text_draw("Original game by: Scott Cawthon\t\t\t\t\tGame built by: FredTheKing\t\t\t\t\tMade in Python 3.12 with raylib (pyray)")
       else:
-        bottom_text_draw("thingo, funny thingo")
+        bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
 
       menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
       for item in menu_temp_selection_arr:
@@ -44,17 +43,17 @@ def main():
       elif menu_extras.clicked_verdict:
         menu_extras.reset()
         scenes.set_scene(2)
+      del menu_temp_selection_arr
 
       # draw
-      if config.debug:
-        animations_draw_debug()
+      pass
 
 # ----------------------------------------------- #
 
     elif scenes.scene_dict[scenes.scene_index] == "settings":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -69,7 +68,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "extras":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -84,7 +83,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "newspaper":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -97,7 +96,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "night":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -110,10 +109,12 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "game":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
+      if gui_button(Rectangle(300, 400, 100, 80), "go"):
+        scenes.set_scene(0)
 
       # draw
       pass
@@ -123,7 +124,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "paycheck":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -136,7 +137,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "pixel minigame":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -149,7 +150,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "creepy minigame":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
@@ -162,13 +163,13 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "loading":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
+        pass
 
       # step
       config.scenes.time_multiply = 1
       check_all_textures()
       check_textures_time.update_time()
-      if assets.objects.all_textures_ready:
+      if objects.all_textures_ready:
         print('No issues found! Enjoy the game.')
         check_textures_time.kill_time()
         scenes.set_scene(0)
@@ -179,13 +180,13 @@ def main():
       loading_text = "Loading..."
       measure = measure_text(loading_text, 28)
       draw_text(loading_text, int(resolution.x)//2-measure//2, int(resolution.y)//2-16, 28, WHITE)
+      del loading_text, measure
 
 # ----------------------------------------------- #
 
     elif scenes.scene_dict[scenes.scene_index] == "error boot":
       # activation
       if scenes.scene_changed:
-        config.scenes.start_time()
         print("ASSETS LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load anything whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
 
       # step
@@ -209,6 +210,7 @@ def main():
         # set wait_textures to true in save files here
         config.wait_textures = True
         config.scenes.set_scene(9)
+      del rec_do, rec_dont, space_between
 
       # draw
       error_title_text = "ASSETS LOADING ERROR!"
@@ -220,6 +222,7 @@ def main():
         error_description_measure = measure_text(item, 20)
         draw_text(item, int(resolution.x) // 2 - error_description_measure // 2, int(resolution.y) // 2 - 10 + space, 20, WHITE)
         space += 20
+      del error_title_text, error_description_text, error_title_measure, space
 
 # ----------------------------------------------- #
 
@@ -232,12 +235,14 @@ def main():
     config.scenes.update_new_key(KeyboardKey.KEY_F2)
     set_fullscreen(KeyboardKey.KEY_F11)
     xor_debug()
+    scenes.check_changed()
     if config.debug:
       scenes.check_input()
 
     # draw
     if config.debug:
       debug_draw_everywhere_text()
+      animations_draw_debug()
 
 
 # ----------------------------------------------- #

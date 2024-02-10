@@ -1,10 +1,10 @@
 from pyray import *
 from raylib.colors import *
-import config
 
 class Hitbox:
   def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(0, 0)):
     self.rec = Rectangle(int(pos.x), int(pos.y), int(size.x), int(size.y))
+    self.hitbox_color = RED
 
     self.hover_verdict: bool = False
     self.clicked_verdict: bool = False
@@ -35,7 +35,8 @@ class Hitbox:
   def draw_debug(self):
     rec_pos = Vector2(self.rec.x, self.rec.y)
     rec_size = Vector2(self.rec.width, self.rec.height)
-    draw_rectangle_v(rec_pos, rec_size, (255, 0, 0, 100))
+    color = self.hitbox_color
+    draw_rectangle_v(rec_pos, rec_size, (color[0], color[1], color[2], 100))
 
     x = int(self.pos.x) + int(self.rec.width) + 4
     y = int(self.pos.y) + int(self.rec.height // 2) - 4

@@ -52,6 +52,14 @@ class Smart_Animation(Time):
     else:
       self.is_animation_finished = False
 
+  def restart(self):
+    self.frame_index = 0
+    self.go = True
+    self.is_animation_finished = False
+    self.is_animation_ended = False
+    self.temp_loops = 0
+    self.start_time()
+
   def step(self):
     if self.go:
       self.frame_index = self.time_current - self.temp_loops * self.last_frame
@@ -65,4 +73,4 @@ class Smart_Animation(Time):
 
   def draw_debug(self, name, x, y):
     draw_text(
-      f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 14, WHITE)
+      f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 10, WHITE)

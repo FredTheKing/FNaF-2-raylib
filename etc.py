@@ -31,7 +31,6 @@ def debug_draw_everywhere_text():
   draw_rectangle_rounded_lines(rec, 0, 0, 2, [255, 255, 255, alpha])
   draw_text(text, int(pos.x), int(pos.y), font_size, WHITE)
 
-
 def bottom_text_draw(text: str, size: float = 16):
   measure = measure_text_ex(config.def_font, text, size, 0)
   draw_text_ex(config.def_font, text, Vector2(int(config.resolution.x // 2 - measure.x // 2), int(config.resolution.y) - 17.2), size, 0, (255, 255, 255, 153))

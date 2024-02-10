@@ -1,13 +1,19 @@
 from pyray import *
-from classes.Text import JustText, BoxText
+from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import Smart_Animation
 from classes.Image import Smart_Image
 import config
+import sys, os
 
 all_textures_ready = False
+release_path = ""
+
+
+if os.path.basename(sys.argv[0])[os.path.basename(sys.argv[0]).rfind(".")::] == ".exe":
+  release_path = "_internal/"
 
 def load(filename):
-  return load_texture_from_image(load_image(filename))
+  return load_texture_from_image(load_image(release_path + filename))
 
 # dirname to dir, not the file!
 def load_animation(dirname: str, times: int):
@@ -24,7 +30,11 @@ multi_static = Smart_Animation(
   load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8),
   Vector2(0, 0), 26, True, 101
 )
-menu_title = JustText("Five\n\n\n\nNights\n\n\n\nat\n\n\n\nFreddy's\n\n\n\n2", 63, Vector2(75, 21), spacing=3)
+menu_title_1 = JustText("Five", 63, Vector2(75, 21), spacing=3)
+menu_title_2 = JustText("Nights", 63, Vector2(75, 81), spacing=3)
+menu_title_3 = JustText("at", 63, Vector2(75, 141), spacing=3)
+menu_title_4 = JustText("Freddy's", 63, Vector2(75, 201), spacing=3)
+menu_title_5 = JustText("2", 63, Vector2(75, 261), spacing=3)
 menu_new_game = BoxText("New game", 48, Vector2(75, 361))
 menu_continue = BoxText("Continue", 48, Vector2(75, 430))
 menu_settings = BoxText("Settings", 48, Vector2(75, 499))
@@ -32,24 +42,29 @@ menu_extras = BoxText("Extras", 48, Vector2(75, 568))
 menu_set = JustText(">>", 48, Vector2(15, 362), font_filename="assets/fonts/consolas.ttf")
 multi_back_button = BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fonts/consolas.ttf")
 
+
 settings_top_text = JustText("Settings", 48, Vector2(0, 10))
+
+
+extras_proj_github = LinkText("https://github.com/DudFootStud/FNaF-2-raylib", "Project's Github", 40, Vector2(75, 200))
+extras_auth_github = LinkText("https://github.com/FredTheKing", "Author's Github", 40, Vector2(75, 269))
 extras_top_text = JustText("Extras", 48, Vector2(0, 10))
 
 menu_list = {
   'Animation': [menu_twitch, multi_static],
   'Image': [],
-  'Text': [menu_new_game, menu_continue, menu_title, menu_settings, menu_extras, menu_set]
+  'Text': [menu_new_game, menu_continue, menu_title_1, menu_title_2, menu_title_3, menu_title_4, menu_title_5, menu_settings, menu_extras, menu_set]
 }
 
 settings_list = {
-  'Animation': [],
+  'Animation': [multi_static],
   'Image': [],
   'Text': [multi_back_button, settings_top_text]
 }
 extras_list = {
-  'Animation': [],
+  'Animation': [multi_static],
   'Image': [],
-  'Text': [multi_back_button, extras_top_text]
+  'Text': [multi_back_button, extras_top_text, extras_proj_github, extras_auth_github]
 }
 newspaper_list = {
   'Animation': [],
@@ -122,7 +137,7 @@ def animations_draw_debug():
         return name
     return None
 
-  space = Vector2(10, 615)
+  space = Vector2(10, 630)
   arr = scenes_list[config.scenes.scene_index]['Animation']
   for item in arr:
     if space.x < config.resolution.x:
@@ -130,7 +145,12 @@ def animations_draw_debug():
       _index = name.find("_")
       new_name = name[_index + 1::]
       item.draw_debug(new_name, int(space.x), int(space.y))
-      space.x += 120
+      space.x += 90
+
+def restart_animations():
+  arr = scenes_list[config.scenes.scene_index]['Animation']
+  for item in arr:
+    item.restart()
 
 def textures_update():
   for arr_id in 'Animation', 'Image', 'Text':

@@ -1,4 +1,5 @@
 from pyray import *
+import objects
 from classes.Time import Time
 import config
 
@@ -21,8 +22,14 @@ class Scene_Manager(Time):
   def set_scene(self, id):
     self.scene_index = id
     self.scene_changed = True
-    self.scene_counter+=1
-    print(f'{self.scene_counter} ding!')
+    self.scene_counter += 1
+    self.start_time()
+    objects.restart_animations()
+    print(f'{self.scene_counter} ding!, goto {self.scene_index} and checked [{self.scene_changed}]')
+
+  def check_changed(self):
+    if self.scene_changed:
+      self.scene_changed = False
 
   def check_input(self):
     keys_arr = [
