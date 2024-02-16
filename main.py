@@ -25,6 +25,10 @@ def main():
       else:
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
 
+      if menu_test_image.clicked_verdict:
+        scenes.set_scene(11)
+        menu_test_image.reset()
+
       menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
       for item in menu_temp_selection_arr:
         if item.hover_verdict:
@@ -223,6 +227,21 @@ def main():
         draw_text(item, int(resolution.x) // 2 - error_description_measure // 2, int(resolution.y) // 2 - 10 + space, 20, WHITE)
         space += 20
       del error_title_text, error_description_text, error_title_measure, space
+
+# ----------------------------------------------- #
+
+    elif scenes.scene_dict[scenes.scene_index] == "test scene":
+      # activation
+      if scenes.scene_changed:
+        pass
+
+      # step
+      config.scenes.time_multiply = 1
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene(0)
+
+      # draw
+      pass
 
 # ----------------------------------------------- #
 

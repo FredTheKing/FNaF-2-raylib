@@ -74,3 +74,6 @@ class Smart_Animation(Time):
   def draw_debug(self, name, x, y):
     draw_text(
       f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 10, WHITE)
+
+
+

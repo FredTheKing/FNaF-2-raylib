@@ -3,7 +3,7 @@ from raylib.colors import *
 import objects
 from classes.Hitbox import Hitbox
 import config
-import webbrowser
+from webbrowser import open
 
 class JustText:
   def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, spacing: float = 0, font_filename = None):
@@ -52,4 +52,4 @@ class LinkText(BoxText):
 
   def goto_link(self):
     if self.clicked_verdict:
-      webbrowser.open(f'{self.link}')
+      open(f'{self.link}')

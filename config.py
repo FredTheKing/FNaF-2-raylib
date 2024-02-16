@@ -16,5 +16,5 @@ upcoming_night = 0
 wait_textures = False
 debug = True
 fullscreen = False
-scenes = Scene_Manager(["menu", "settings", "extras", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot"])
+scenes = Scene_Manager(["menu", "settings", "extras", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot", "test scene"])
 sounds = Sound_Manager(scenes)

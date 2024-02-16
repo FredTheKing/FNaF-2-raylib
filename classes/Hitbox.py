@@ -2,9 +2,9 @@ from pyray import *
 from raylib.colors import *
 
 class Hitbox:
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(0, 0)):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(0, 0), hitbox_color: Color = RED):
     self.rec = Rectangle(int(pos.x), int(pos.y), int(size.x), int(size.y))
-    self.hitbox_color = RED
+    self.hitbox_color = hitbox_color
 
     self.hover_verdict: bool = False
     self.clicked_verdict: bool = False
