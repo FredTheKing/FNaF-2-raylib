@@ -14,11 +14,6 @@ class Scene_Manager(Time):
     self.scene_counter = 0
     self.start_time()
 
-  def update_new_key(self, key: KeyboardKey):
-    if config.key_pressed == key:
-      self.set_scene(9)
-      self.start_time()
-
   def set_scene(self, id):
     self.scene_index = id
     self.scene_changed = True

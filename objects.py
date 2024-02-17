@@ -3,6 +3,7 @@ from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import Smart_Animation
 from classes.Image import JustImage, BoxImage
 from classes.Checkbox import Checkbox
+from classes.Slider import SliderButtons
 import config
 import sys, os
 
@@ -47,27 +48,25 @@ multi_back_button = BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fon
 
 settings_top_text = JustText("Settings", 48, Vector2(0, 10))
 settings_fullscreen_text = JustText("Fullscreen: ", 40, Vector2(75, 200))
-settings_fullscreen_checkbox = Checkbox(Vector2(890, 202), 40)
+settings_fullscreen_checkbox = Checkbox(Vector2(890, 202), 40, False)
 settings_wait_textures_text = JustText("Boot up waiting for Assets: ", 40, Vector2(75, 269))
-settings_wait_textures_checkbox = Checkbox(Vector2(890, 271), 40)
+settings_wait_textures_checkbox = Checkbox(Vector2(890, 271), 40, False)
 settings_wait_textures_notice = JustText("Useful only if you boot up game through python console, ignore in ported version", 14, Vector2(76, 306), color=(255, 161, 0, 153))
 settings_debug_text = JustText("Debug mode: ", 40, Vector2(75, 338))
-settings_debug_checkbox = Checkbox(Vector2(890, 340), 40)
+settings_debug_checkbox = Checkbox(Vector2(890, 340), 40, False)
 
 extras_proj_github = LinkText("https://github.com/DudFootStud/FNaF-2-raylib", "Project's Github", 40, Vector2(75, 200))
 extras_auth_github = LinkText("https://github.com/FredTheKing", "Author's Github", 40, Vector2(75, 269))
 extras_top_text = JustText("Extras", 48, Vector2(0, 10))
 
+menu_to_test_tp = BoxText("\t", 60, Vector2(950, 670))
 
-menu_test_image = BoxImage(load("assets/graphics/Unused_RareScreens/185.png"), Vector2(600, 100))
-
-
-
+test_slider = SliderButtons(Vector2(100, 600))
 
 menu_list = {
   'Animation': [menu_twitch,
                 multi_static],
-  'Image': [menu_test_image],
+  'Image': [],
   'Text': [menu_new_game,
            menu_continue,
            menu_title_1,
@@ -77,7 +76,8 @@ menu_list = {
            menu_title_5,
            menu_settings,
            menu_extras,
-           menu_set]
+           menu_set,
+           menu_to_test_tp]
 }
 
 settings_list = {
@@ -144,7 +144,7 @@ error_boot_list = {
 test_scene_list = {
   'Animation': [],
   'Image': [],
-  'Text': [multi_back_button]
+  'Text': [multi_back_button, test_slider]
 }
 
 scenes_list = [menu_list, settings_list, extras_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list, loading_list, test_scene_list]

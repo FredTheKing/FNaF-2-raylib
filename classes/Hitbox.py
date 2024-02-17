@@ -40,4 +40,4 @@ class Hitbox:
 
     x = int(self.pos.x) + int(self.rec.width) + 4
     y = int(self.pos.y) + int(self.rec.height // 2) - 4
-    draw_text(f'{self.hover_verdict}; {self.clicked_verdict}', x, y, 20, WHITE)
+    draw_text(f'{int(self.hover_verdict)}; {int(self.clicked_verdict)}', x, y, 20, WHITE)

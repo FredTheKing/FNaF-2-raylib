@@ -4,16 +4,18 @@ from pyray import *
 from raylib.colors import *
 
 class Checkbox(Hitbox):
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: int = 30):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: int = 30, auto_changing: bool = True):
     self.pos = pos
     self.size = size
     self.state: bool = False
+    self.auto_changing: bool = auto_changing
     super().__init__(pos, Vector2(size, size), YELLOW)
 
   def check_state(self):
     if self.clicked_verdict:
-      self.state ^= 1
-      self.reset()
+      if self.auto_changing:
+        self.state ^= 1
+        self.reset()
 
   def update(self):
     self.check_collision_mouse()

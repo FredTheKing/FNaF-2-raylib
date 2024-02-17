@@ -25,9 +25,8 @@ def main():
       else:
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
 
-      if menu_test_image.clicked_verdict:
+      if menu_to_test_tp.clicked_verdict and config.debug:
         scenes.set_scene(11)
-        menu_test_image.reset()
 
       menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
       for item in menu_temp_selection_arr:
@@ -63,6 +62,26 @@ def main():
       config.scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene(0)
+
+      if config.fullscreen:
+        settings_fullscreen_checkbox.state = True
+      else:
+        settings_fullscreen_checkbox.state = False
+      if config.wait_textures:
+        settings_wait_textures_checkbox.state = True
+      else:
+        settings_wait_textures_checkbox.state = False
+      if config.debug:
+        settings_debug_checkbox.state = True
+      else:
+        settings_debug_checkbox.state = False
+
+      if settings_fullscreen_checkbox.clicked_verdict:
+        config.fullscreen ^= 1
+      if settings_wait_textures_checkbox.clicked_verdict:
+        config.wait_textures ^= 1
+      if settings_debug_checkbox.clicked_verdict:
+        config.debug ^= 1
 
       # draw
       pass
@@ -251,8 +270,7 @@ def main():
     extras_top_text.center_text()
     config.key_pressed = get_key_pressed()
     config.scenes.update_time()
-    config.scenes.update_new_key(KeyboardKey.KEY_F2)
-    set_fullscreen(KeyboardKey.KEY_F11)
+    set_fullscreen()
     xor_debug()
     scenes.check_changed()
     if config.debug:

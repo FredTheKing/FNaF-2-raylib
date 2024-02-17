@@ -41,7 +41,7 @@ class BoxText(JustText, Hitbox):
       self.draw_debug()
 
 class LinkText(BoxText):
-  def __init__(self, link: str = "https://github.com/DudFootStud", text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, spacing: float = 0, font_filename = None):
+  def __init__(self, link: str = "https://link.here", text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, spacing: float = 0, font_filename = None):
     super().__init__(text, size, pos, color, spacing, font_filename)
     self.hitbox_color = BLUE
     self.link = link
