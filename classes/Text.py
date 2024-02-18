@@ -33,6 +33,11 @@ class BoxText(JustText, Hitbox):
     measure = measure_text_ex(self.font, self.text, self.size, 0)
     Hitbox.__init__(self, Vector2(int(self.pos.x), int(self.pos.y) + 5), Vector2(int(measure.x) + self.spacing * self.text.__len__() - self.spacing, int(measure.y) - 10))
 
+  def set_position(self, pos: Vector2):
+    self.pos = pos
+    self.rec.x = pos.x
+    self.rec.y = pos.y
+
   def update(self):
     self.check_collision_mouse()
     self.check_mouse_interaction()

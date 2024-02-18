@@ -1,13 +1,16 @@
 from pyray import *
 import config
+import objects
 
 def debug_draw_everywhere_text():
   t_index = config.scenes.scene_index
   t_dict_index = config.scenes.scene_dict[t_index]
   t_changed = config.scenes.scene_changed
   t_current_time = config.scenes.time_current
+  t_fps = get_fps()
+  t_ms = get_frame_time() * 1000
 
-  text = f"Scene name-index: {t_dict_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {get_fps()}"
+  text = f"Scene name-index: {t_dict_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}"
   # n_times = text.count("\n")
 
   pos = Vector2(0, 0)
@@ -18,8 +21,6 @@ def debug_draw_everywhere_text():
 
   text_scale.x += shift * 2
   text_scale.y += shift * 2
-
-  # text_scale.y -= shift * (n_times * (shift / ((5/1.3)*((shift/5)**2))))
 
   pos.x += shift+2
   pos.y += shift+2

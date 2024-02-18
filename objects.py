@@ -5,7 +5,8 @@ from classes.Image import JustImage, BoxImage
 from classes.Checkbox import Checkbox
 from classes.Slider import SliderButtons
 import config
-import sys, os
+import sys
+import os
 
 all_textures_ready = False
 release_path = ""
@@ -14,6 +15,8 @@ release_path = ""
 if os.path.basename(sys.argv[0])[os.path.basename(sys.argv[0]).rfind(".")::] == ".exe":
   release_path = "_internal/"
 
+
+config.def_font = load_font(release_path + config.def_font_filename)
 
 def load(filename: str) -> Texture:
   return load_texture_from_image(load_image(release_path + filename))
@@ -45,15 +48,16 @@ menu_extras = BoxText("Extras", 48, Vector2(75, 568))
 menu_set = JustText(">>", 48, Vector2(15, 362), font_filename="assets/fonts/consolas.ttf")
 multi_back_button = BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fonts/consolas.ttf")
 
-
 settings_top_text = JustText("Settings", 48, Vector2(0, 10))
 settings_fullscreen_text = JustText("Fullscreen: ", 40, Vector2(75, 200))
 settings_fullscreen_checkbox = Checkbox(Vector2(890, 202), 40, False)
 settings_wait_textures_text = JustText("Boot up waiting for Assets: ", 40, Vector2(75, 269))
 settings_wait_textures_checkbox = Checkbox(Vector2(890, 271), 40, False)
-settings_wait_textures_notice = JustText("Useful only if you boot up game through python console, ignore in ported version", 14, Vector2(76, 306), color=(255, 161, 0, 153))
+settings_wait_textures_notice = JustText("Useful only if you boot up game through python console, ignore in ported version", 14, Vector2(78, 306), color=(255, 161, 0, 153))
 settings_debug_text = JustText("Debug mode: ", 40, Vector2(75, 338))
 settings_debug_checkbox = Checkbox(Vector2(890, 340), 40, False)
+settings_volume_text = JustText("Volume: ", 40, Vector2(75, 407))
+settings_volume_slider = SliderButtons(Vector2(593, 409), Vector2(300, 40), 6, False)
 
 extras_proj_github = LinkText("https://github.com/DudFootStud/FNaF-2-raylib", "Project's Github", 40, Vector2(75, 200))
 extras_auth_github = LinkText("https://github.com/FredTheKing", "Author's Github", 40, Vector2(75, 269))
@@ -91,7 +95,9 @@ settings_list = {
            settings_wait_textures_checkbox,
            settings_wait_textures_notice,
            settings_debug_text,
-           settings_debug_checkbox]
+           settings_debug_checkbox,
+           settings_volume_text,
+           settings_volume_slider]
 }
 extras_list = {
   'Animation': [multi_static],

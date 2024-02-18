@@ -26,7 +26,7 @@ def main():
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
 
       if menu_to_test_tp.clicked_verdict and config.debug:
-        scenes.set_scene(11)
+        scenes.set_scene('test scene')
 
       menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
       for item in menu_temp_selection_arr:
@@ -35,17 +35,17 @@ def main():
       if menu_new_game.clicked_verdict:
         menu_new_game.reset()
         upcoming_night = actual_night = 0
-        scenes.set_scene(3)
+        scenes.set_scene('newspaper')
       elif menu_continue.clicked_verdict:
         menu_continue.reset()
         upcoming_night = actual_night
-        scenes.set_scene(4)
+        scenes.set_scene('night')
       elif menu_settings.clicked_verdict:
         menu_settings.reset()
-        scenes.set_scene(1)
+        scenes.set_scene('settings')
       elif menu_extras.clicked_verdict:
         menu_extras.reset()
-        scenes.set_scene(2)
+        scenes.set_scene('extras')
       del menu_temp_selection_arr
 
       # draw
@@ -61,7 +61,7 @@ def main():
       # step
       config.scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
-        scenes.set_scene(0)
+        scenes.set_scene('menu')
 
       if config.fullscreen:
         settings_fullscreen_checkbox.state = True
@@ -96,7 +96,7 @@ def main():
       # step
       config.scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
-        scenes.set_scene(0)
+        scenes.set_scene('menu')
 
       # draw
       pass
@@ -137,7 +137,7 @@ def main():
       # step
       config.scenes.time_multiply = 1
       if gui_button(Rectangle(300, 400, 100, 80), "go"):
-        scenes.set_scene(0)
+        scenes.set_scene('menu')
 
       # draw
       pass
@@ -195,9 +195,9 @@ def main():
       if objects.all_textures_ready:
         print('No issues found! Enjoy the game.')
         check_textures_time.kill_time()
-        scenes.set_scene(0)
+        scenes.set_scene('menu')
       if not all_textures_ready and check_textures_time.time_current >= 5 and not config.wait_textures:
-        scenes.set_scene(10)
+        scenes.set_scene('error boot')
 
       # draw
       loading_text = "Loading..."
@@ -227,12 +227,12 @@ def main():
       if gui_button(rec_dont, "WAIT (DONT REMEMBER PICK)"):
         check_textures_time.start_time()
         config.wait_textures = True
-        config.scenes.set_scene(9)
+        config.scenes.set_scene('loading')
       if gui_button(rec_do, "WAIT (DO REMEMBER PICK)"):
         check_textures_time.start_time()
         # set wait_textures to true in save files here
         config.wait_textures = True
-        config.scenes.set_scene(9)
+        config.scenes.set_scene('loading')
       del rec_do, rec_dont, space_between
 
       # draw
@@ -257,7 +257,7 @@ def main():
       # step
       config.scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
-        scenes.set_scene(0)
+        scenes.set_scene('menu')
 
       # draw
       pass

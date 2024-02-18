@@ -14,13 +14,26 @@ class Scene_Manager(Time):
     self.scene_counter = 0
     self.start_time()
 
-  def set_scene(self, id):
-    self.scene_index = id
+  def set_scene(self, id: str):
+    try:
+      a = int(id)
+      self.scene_index = a
+    except ValueError:
+      for key, value in self.scene_dict.items():
+        if value == id:
+          a = key
+          self.scene_index = a
+          break
     self.scene_changed = True
     self.scene_counter += 1
     self.start_time()
     objects.restart_animations()
-    print(f'{self.scene_counter} ding!, goto {self.scene_index} and checked [{self.scene_changed}]')
+    if config.debug:
+      is_changed: str = "IS"
+      if not self.scene_changed:
+        is_changed = is_changed.lower()
+        is_changed += " NOT"
+      print(f'ding! (for {self.scene_counter} time), goto "{str(self.scene_dict[self.scene_index]).upper()}" ({self.scene_index}) and {is_changed} changed')
 
   def check_changed(self):
     if self.scene_changed:
