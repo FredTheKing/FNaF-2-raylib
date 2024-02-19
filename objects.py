@@ -1,7 +1,7 @@
 from pyray import *
 from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import Smart_Animation
-from classes.Image import JustImage, BoxImage
+from classes.Image import JustImage, BorderImage, BoxImage
 from classes.Checkbox import Checkbox
 from classes.Slider import SliderButtons
 import config
@@ -59,9 +59,33 @@ settings_debug_checkbox = Checkbox(Vector2(890, 340), 40, False)
 settings_volume_text = JustText("Volume: ", 40, Vector2(75, 407))
 settings_volume_slider = SliderButtons(Vector2(593, 409), Vector2(300, 40), 6, False)
 
+extras_top_text = JustText("Extras", 48, Vector2(0, 10))
 extras_proj_github = LinkText("https://github.com/DudFootStud/FNaF-2-raylib", "Project's Github", 40, Vector2(75, 200))
 extras_auth_github = LinkText("https://github.com/FredTheKing", "Author's Github", 40, Vector2(75, 269))
-extras_top_text = JustText("Extras", 48, Vector2(0, 10))
+extras_custom_night = BoxText("Custom night", 40, Vector2(75, 338))
+
+custom_night_top_text = JustText("Custom Night", 48, Vector2(0, 10))
+#125x125
+custom_night_with_freddy = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithFreddy.png"), Vector2(150, 150))
+custom_night_with_bonnie = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithBonnie.png"), Vector2(300, 150))
+custom_night_with_chica = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithChica.png"), Vector2(450, 150))
+custom_night_with_foxy = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithFoxy.png"), Vector2(600, 150))
+custom_night_golden_freddy = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/GoldenFreddy.png"), Vector2(750, 150))
+custom_night_toy_freddy = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyFreddy.png"), Vector2(150, 350))
+custom_night_toy_bonnie = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyBonnie.png"), Vector2(300, 350))
+custom_night_toy_chica = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyChica.png"), Vector2(450, 350))
+custom_night_mangle = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/Mangle.png"), Vector2(600, 350))
+custom_night_balloon_boy = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/BalloonBoy.png"), Vector2(750, 350))
+custom_night_with_freddy_text = JustText("W. Freddy", 20, Vector2(212, 130))
+custom_night_with_bonnie_text = JustText("W. Bonnie", 20, Vector2(362, 130))
+custom_night_with_chica_text = JustText("W. Chica", 20, Vector2(512, 130))
+custom_night_with_foxy_text = JustText("W. Foxy", 20, Vector2(662, 130))
+custom_night_golden_freddy_text = JustText("G. Freddy", 20, Vector2(812, 130))
+custom_night_with_freddy_slider = SliderButtons(Vector2(185, 280), Vector2(55, 30), 20)
+custom_night_with_bonnie_slider = SliderButtons(Vector2(335, 280), Vector2(55, 30), 20)
+custom_night_with_chica_slider = SliderButtons(Vector2(485, 280), Vector2(55, 30), 20)
+custom_night_with_foxy_slider = SliderButtons(Vector2(635, 280), Vector2(55, 30), 20)
+custom_night_golden_freddy_slider = SliderButtons(Vector2(785, 280), Vector2(55, 30), 20)
 
 menu_to_test_tp = BoxText("\t", 60, Vector2(950, 670))
 
@@ -105,7 +129,33 @@ extras_list = {
   'Text': [multi_back_button,
            extras_top_text,
            extras_proj_github,
-           extras_auth_github]
+           extras_auth_github,
+           extras_custom_night]
+}
+custom_night_list = {
+  'Animation': [multi_static],
+  'Image': [custom_night_with_freddy,
+            custom_night_with_bonnie,
+            custom_night_with_chica,
+            custom_night_with_foxy,
+            custom_night_golden_freddy,
+            custom_night_toy_freddy,
+            custom_night_toy_bonnie,
+            custom_night_toy_chica,
+            custom_night_mangle,
+            custom_night_balloon_boy],
+  'Text': [multi_back_button,
+           custom_night_top_text,
+           custom_night_with_freddy_text,
+           custom_night_with_bonnie_text,
+           custom_night_with_chica_text,
+           custom_night_with_foxy_text,
+           custom_night_golden_freddy_text,
+           custom_night_with_freddy_slider,
+           custom_night_with_bonnie_slider,
+           custom_night_with_chica_slider,
+           custom_night_with_foxy_slider,
+           custom_night_golden_freddy_slider]
 }
 newspaper_list = {
   'Animation': [],
@@ -153,7 +203,7 @@ test_scene_list = {
   'Text': [multi_back_button, test_slider]
 }
 
-scenes_list = [menu_list, settings_list, extras_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list, loading_list, test_scene_list]
+scenes_list = [menu_list, settings_list, extras_list, custom_night_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list, loading_list, test_scene_list]
 
 def check_all_textures():
   global all_textures_ready

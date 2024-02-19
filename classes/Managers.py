@@ -9,8 +9,8 @@ class Scene_Manager(Time):
     self.scene_dict = {}
     for i in range(len(scenes_names)):
       self.scene_dict[i] = scenes_names[i]
-    self.scene_index = 9
-    self.scene_changed = True
+    self.scene_index = 10
+    self.scene_changed: int = 1
     self.scene_counter = 0
     self.start_time()
 
@@ -24,7 +24,7 @@ class Scene_Manager(Time):
           a = key
           self.scene_index = a
           break
-    self.scene_changed = True
+    self.scene_changed = 2
     self.scene_counter += 1
     self.start_time()
     objects.restart_animations()
@@ -33,11 +33,11 @@ class Scene_Manager(Time):
       if not self.scene_changed:
         is_changed = is_changed.lower()
         is_changed += " NOT"
-      print(f'ding! (for {self.scene_counter} time), goto "{str(self.scene_dict[self.scene_index]).upper()}" ({self.scene_index}) and {is_changed} changed')
+      print(f'scene DING! (for {self.scene_counter} time), goto "{str(self.scene_dict[self.scene_index]).upper()}" ({self.scene_index}) and {is_changed} changed')
 
   def check_changed(self):
     if self.scene_changed:
-      self.scene_changed = False
+      self.scene_changed -= 1
 
   def check_input(self):
     keys_arr = [

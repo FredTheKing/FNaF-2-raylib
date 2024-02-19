@@ -56,7 +56,7 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "settings":
       # activation
       if scenes.scene_changed:
-        pass
+        settings_top_text.center_text()
 
       # step
       config.scenes.time_multiply = 1
@@ -91,12 +91,35 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "extras":
       # activation
       if scenes.scene_changed:
-        pass
+        extras_top_text.center_text()
 
       # step
       config.scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
+      if extras_custom_night.clicked_verdict:
+        scenes.set_scene('custom night')
+
+      # draw
+      pass
+
+# ----------------------------------------------- #
+
+    elif scenes.scene_dict[scenes.scene_index] == "custom night":
+      # activation
+      if scenes.scene_changed:
+        custom_night_top_text.center_text()
+        custom_night_with_freddy_text.center_text(int(custom_night_with_freddy_text.pos.x))
+        custom_night_with_bonnie_text.center_text(int(custom_night_with_bonnie_text.pos.x))
+        custom_night_with_chica_text.center_text(int(custom_night_with_chica_text.pos.x))
+        custom_night_with_foxy_text.center_text(int(custom_night_with_foxy_text.pos.x))
+        custom_night_golden_freddy_text.center_text(int(custom_night_golden_freddy_text.pos.x))
+
+
+      # step
+      config.scenes.time_multiply = 1
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene('extras')
 
       # draw
       pass
@@ -117,6 +140,7 @@ def main():
 # ----------------------------------------------- #
 
     elif scenes.scene_dict[scenes.scene_index] == "night":
+
       # activation
       if scenes.scene_changed:
         pass
@@ -266,8 +290,6 @@ def main():
 
     # always do:
     # step
-    settings_top_text.center_text()
-    extras_top_text.center_text()
     config.key_pressed = get_key_pressed()
     config.scenes.update_time()
     set_fullscreen()

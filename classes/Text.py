@@ -20,9 +20,9 @@ class JustText:
   def update(self):
     self.draw()
 
-  def center_text(self):
+  def center_text(self, anchor_point: int = config.resolution.x//2):
     measure = measure_text(self.text, self.size)
-    self.pos.x = config.resolution.x//2 - measure//2
+    self.pos.x = anchor_point - measure//2
 
   def draw(self):
     draw_text_ex(self.font, self.text, self.pos, self.size, self.spacing, self.color)

@@ -1,6 +1,5 @@
 from pyray import *
 import config
-import objects
 
 def debug_draw_everywhere_text():
   t_index = config.scenes.scene_index
@@ -11,7 +10,6 @@ def debug_draw_everywhere_text():
   t_ms = get_frame_time() * 1000
 
   text = f"Scene name-index: {t_dict_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}"
-  # n_times = text.count("\n")
 
   pos = Vector2(0, 0)
   font_size = 14
