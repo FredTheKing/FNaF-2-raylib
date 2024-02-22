@@ -28,6 +28,7 @@ def load_animation(dirname: str, times: int) -> list:
     arr.append(load(dirname + f"/{item}.png"))
   return arr
 
+
 # ----------------------------------------------- #
 scenes = Scene_Manager(["menu", "settings", "extras", "custom night", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot", "test scene"])
 sounds = Sound_Manager(scenes)
