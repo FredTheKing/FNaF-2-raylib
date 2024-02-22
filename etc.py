@@ -1,11 +1,14 @@
+from random import randint
 from pyray import *
 import config
+import objects
+
 
 def debug_draw_everywhere_text():
-  t_index = config.scenes.scene_index
-  t_dict_index = config.scenes.scene_dict[t_index]
-  t_changed = config.scenes.scene_changed
-  t_current_time = config.scenes.time_current
+  t_index = objects.scenes.scene_index
+  t_dict_index = objects.scenes.scene_dict[t_index]
+  t_changed = objects.scenes.scene_changed
+  t_current_time = objects.scenes.time_current
   t_fps = get_fps()
   t_ms = get_frame_time() * 1000
 
@@ -32,7 +35,15 @@ def debug_draw_everywhere_text():
 
 def bottom_text_draw(text: str, size: float = 16):
   measure = measure_text_ex(config.def_font, text, size, 0)
-  draw_text_ex(config.def_font, text, Vector2(int(config.resolution.x // 2 - measure.x // 2), int(config.resolution.y) - 17.2), size, 0, (255, 255, 255, 153))
+  draw_text_ex(config.def_font, text, Vector2(config.resolution[0] // 2 - measure.x // 2, config.resolution[1] - 17.2), size, 0, (255, 255, 255, 153))
+
+def funny_mode(mod: int = 1):
+  x_mod = mod
+  y_mod = round(mod*(9/16))
+
+  x = config.screen_resolution[0]//2 - config.resolution[0]//2 + randint(x_mod*-1, x_mod+1)
+  y = config.screen_resolution[1]//2 - config.resolution[1]//2 + randint(y_mod*-1, y_mod+1)
+  set_window_position(x, y)
 
 def set_fullscreen(key: KeyboardKey = None):
   if config.key_pressed == key:

@@ -1,3 +1,4 @@
+import config
 import objects
 from classes.Time import Time
 from raylib.colors import *
@@ -16,11 +17,11 @@ def main():
     if scenes.scene_dict[scenes.scene_index] == "menu":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 0.25
-      if config.scenes.time_current % 2 == 0:
+      scenes.time_multiply = 0.25
+      if scenes.time_current % 2 == 0:
         bottom_text_draw("Original game by: Scott Cawthon\t\t\t\t\tGame built by: FredTheKing\t\t\t\t\tMade in Python 3.12 with raylib (pyray)")
       else:
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
@@ -56,10 +57,11 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "settings":
       # activation
       if scenes.scene_changed:
+        scenes.scene_changed -= 1
         settings_top_text.center_text()
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
 
@@ -71,6 +73,10 @@ def main():
         settings_wait_textures_checkbox.state = True
       else:
         settings_wait_textures_checkbox.state = False
+      if config.funny:
+        settings_funny_checkbox.state = True
+      else:
+        settings_funny_checkbox.state = False
       if config.debug:
         settings_debug_checkbox.state = True
       else:
@@ -78,10 +84,23 @@ def main():
 
       if settings_fullscreen_checkbox.clicked_verdict:
         config.fullscreen ^= 1
+        config.funny = False
       if settings_wait_textures_checkbox.clicked_verdict:
         config.wait_textures ^= 1
+      if settings_funny_checkbox.clicked_verdict:
+        config.funny ^= 1
+        config.fullscreen = False
       if settings_debug_checkbox.clicked_verdict:
         config.debug ^= 1
+
+      if settings_wait_textures_checkbox.hover_verdict:
+        settings_wait_textures_notice.color[3] = 153
+      else:
+        settings_wait_textures_notice.color[3] = 0
+      if settings_funny_checkbox.hover_verdict:
+        settings_funny_notice.color[3] = 153
+      else:
+        settings_funny_notice.color[3] = 0
 
       # draw
       pass
@@ -91,10 +110,11 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "extras":
       # activation
       if scenes.scene_changed:
+        scenes.scene_changed -= 1
         extras_top_text.center_text()
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
       if extras_custom_night.clicked_verdict:
@@ -108,16 +128,22 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "custom night":
       # activation
       if scenes.scene_changed:
+        scenes.scene_changed -= 1
         custom_night_top_text.center_text()
-        custom_night_with_freddy_text.center_text(int(custom_night_with_freddy_text.pos.x))
-        custom_night_with_bonnie_text.center_text(int(custom_night_with_bonnie_text.pos.x))
-        custom_night_with_chica_text.center_text(int(custom_night_with_chica_text.pos.x))
-        custom_night_with_foxy_text.center_text(int(custom_night_with_foxy_text.pos.x))
-        custom_night_golden_freddy_text.center_text(int(custom_night_golden_freddy_text.pos.x))
+        custom_night_with_freddy_text.center_text(212)
+        custom_night_with_bonnie_text.center_text(362)
+        custom_night_with_chica_text.center_text(512)
+        custom_night_with_foxy_text.center_text(662)
+        custom_night_golden_freddy_text.center_text(812)
+        custom_night_toy_freddy_text.center_text(212)
+        custom_night_toy_bonnie_text.center_text(362)
+        custom_night_toy_chica_text.center_text(512)
+        custom_night_mangle_text.center_text(662)
+        custom_night_balloon_boy_text.center_text(812)
 
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('extras')
 
@@ -129,10 +155,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "newspaper":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
 
       # draw
       pass
@@ -143,10 +169,10 @@ def main():
 
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
 
       # draw
       pass
@@ -156,10 +182,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "game":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       if gui_button(Rectangle(300, 400, 100, 80), "go"):
         scenes.set_scene('menu')
 
@@ -171,10 +197,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "paycheck":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
 
       # draw
       pass
@@ -184,10 +210,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "pixel minigame":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
 
       # draw
       pass
@@ -197,10 +223,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "creepy minigame":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
 
       # draw
       pass
@@ -210,10 +236,10 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "loading":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       check_all_textures()
       check_textures_time.update_time()
       if objects.all_textures_ready:
@@ -226,7 +252,7 @@ def main():
       # draw
       loading_text = "Loading..."
       measure = measure_text(loading_text, 28)
-      draw_text(loading_text, int(resolution.x)//2-measure//2, int(resolution.y)//2-16, 28, WHITE)
+      draw_text(loading_text, resolution[0]//2-measure//2, resolution[1]//2-16, 28, WHITE)
       del loading_text, measure
 
 # ----------------------------------------------- #
@@ -234,40 +260,41 @@ def main():
     elif scenes.scene_dict[scenes.scene_index] == "error boot":
       # activation
       if scenes.scene_changed:
+        scenes.scene_changed -= 1
         print("ASSETS LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load anything whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       space_between = 300
 
       rec_dont = Rectangle(0, 0, 250, 50)
-      rec_dont.x = int(resolution.x) // 2 - rec_dont.width // 2 - space_between // 2
-      rec_dont.y = int(resolution.y) // 2 + 80
+      rec_dont.x = resolution[0] // 2 - rec_dont.width // 2 - space_between // 2
+      rec_dont.y = resolution[1] // 2 + 80
 
       rec_do = Rectangle(0, 0, 250, 50)
-      rec_do.x = int(resolution.x) // 2 - rec_do.width // 2 + space_between // 2
-      rec_do.y = int(resolution.y) // 2 + 80
+      rec_do.x = resolution[0] // 2 - rec_do.width // 2 + space_between // 2
+      rec_do.y = resolution[1] // 2 + 80
 
       if gui_button(rec_dont, "WAIT (DONT REMEMBER PICK)"):
         check_textures_time.start_time()
         config.wait_textures = True
-        config.scenes.set_scene('loading')
+        scenes.set_scene('loading')
       if gui_button(rec_do, "WAIT (DO REMEMBER PICK)"):
         check_textures_time.start_time()
         # set wait_textures to true in save files here
         config.wait_textures = True
-        config.scenes.set_scene('loading')
+        scenes.set_scene('loading')
       del rec_do, rec_dont, space_between
 
       # draw
       error_title_text = "ASSETS LOADING ERROR!"
       error_description_text = "Oh no! Looks your python console doesn't want to load anything whatsoever.\nTry choosing different python version to boot this game. If you think your\ncomputer needs more time to load all textures, please push 'WAIT' button"
       error_title_measure = measure_text(error_title_text, 40)
-      draw_text(error_title_text, int(resolution.x)//2 - error_title_measure//2, int(resolution.y)//2-60, 40, ORANGE)
+      draw_text(error_title_text, resolution[0]//2 - error_title_measure//2, resolution[1]//2-60, 40, ORANGE)
       space = 0
       for item in error_description_text.split('\n'):
         error_description_measure = measure_text(item, 20)
-        draw_text(item, int(resolution.x) // 2 - error_description_measure // 2, int(resolution.y) // 2 - 10 + space, 20, WHITE)
+        draw_text(item, resolution[0] // 2 - error_description_measure // 2, resolution[1]//2-10+space, 20, WHITE)
         space += 20
       del error_title_text, error_description_text, error_title_measure, space
 
@@ -279,7 +306,7 @@ def main():
         pass
 
       # step
-      config.scenes.time_multiply = 1
+      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
 
@@ -291,12 +318,14 @@ def main():
     # always do:
     # step
     config.key_pressed = get_key_pressed()
-    config.scenes.update_time()
+    scenes.update_time()
     set_fullscreen()
     xor_debug()
     scenes.check_changed()
     if config.debug:
       scenes.check_input()
+    if config.funny:
+      funny_mode(1)
 
     # draw
     if config.debug:
