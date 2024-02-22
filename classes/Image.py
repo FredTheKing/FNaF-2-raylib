@@ -10,6 +10,11 @@ class JustImage:
     self.pos = pos
     self.color = [255, 255, 255, alpha]
 
+  def resize(self, new_size: Vector2):
+    image = load_image_from_texture(self.texture)
+    image_resize(image, int(new_size.x), int(new_size.y))
+    self.texture = load_texture_from_image(image)
+
   def update(self):
     self.draw()
 

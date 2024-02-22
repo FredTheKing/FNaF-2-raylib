@@ -6,13 +6,13 @@ import objects
 
 def debug_draw_everywhere_text():
   t_index = objects.scenes.scene_index
-  t_dict_index = objects.scenes.scene_dict[t_index]
+  t_list_index = objects.scenes.scene_list[t_index]
   t_changed = objects.scenes.scene_changed
   t_current_time = objects.scenes.time_current
   t_fps = get_fps()
   t_ms = get_frame_time() * 1000
 
-  text = f"Scene name-index: {t_dict_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}"
+  text = f"Scene name-index: {t_list_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}"
 
   pos = Vector2(0, 0)
   font_size = 14

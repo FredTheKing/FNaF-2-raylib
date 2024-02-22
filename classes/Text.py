@@ -6,8 +6,11 @@ import config
 from webbrowser import open
 
 class JustText:
-  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: list = WHITE, spacing: float = 0, font_filename = None):
-    if font_filename is None:
+  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: list = WHITE, spacing: float = 0, font_filename: str or Font or None = None):
+    font_type: str = f"{type(font_filename)}"
+    if font_type == "<class '_cffi_backend.__CDataOwn'>":
+      self.font = font_filename
+    elif font_type == "<class 'NoneType'>":
       self.font = load_font_ex(objects.release_path + config.def_font_filename, size, None, 0)
     else:
       self.font = load_font_ex(objects.release_path + font_filename, size, None, 0)
@@ -32,6 +35,7 @@ class BoxText(JustText, Hitbox):
     JustText.__init__(self, text, size, pos, color, spacing, font_filename)
     measure = measure_text_ex(self.font, self.text, self.fontsize, 0)
     Hitbox.__init__(self, Vector2(int(self.pos.x), int(self.pos.y) + 5), Vector2(int(measure.x) + self.spacing * self.text.__len__() - self.spacing, int(measure.y) - 10))
+
 
   def set_position(self, pos: Vector2):
     self.pos = pos

@@ -1,5 +1,3 @@
-import config
-import objects
 from classes.Time import Time
 from raylib.colors import *
 from config import *
@@ -14,13 +12,13 @@ def main():
     textures_update()
 # ----------------------------------------------- #
 
-    if scenes.scene_dict[scenes.scene_index] == "menu":
+    if scenes.scene_list[scenes.scene_index] == "menu":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 0.25
 
       # step
-      scenes.time_multiply = 0.25
       if scenes.time_current % 2 == 0:
         bottom_text_draw("Original game by: Scott Cawthon\t\t\t\t\tGame built by: FredTheKing\t\t\t\t\tMade in Python 3.12 with raylib (pyray)")
       else:
@@ -54,14 +52,13 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "settings":
+    elif scenes.scene_list[scenes.scene_index] == "settings":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
-        settings_top_text.center_text()
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
 
@@ -107,85 +104,91 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "extras":
+    elif scenes.scene_list[scenes.scene_index] == "extras":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
-        extras_top_text.center_text()
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
       if extras_custom_night.clicked_verdict:
         scenes.set_scene('custom night')
+      if extras_credits_text.clicked_verdict:
+        unload_all_textures(100)
+
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "custom night":
+    elif scenes.scene_list[scenes.scene_index] == "custom night":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
-        custom_night_top_text.center_text()
-        custom_night_with_freddy_text.center_text(212)
-        custom_night_with_bonnie_text.center_text(362)
-        custom_night_with_chica_text.center_text(512)
-        custom_night_with_foxy_text.center_text(662)
-        custom_night_golden_freddy_text.center_text(812)
-        custom_night_toy_freddy_text.center_text(212)
-        custom_night_toy_bonnie_text.center_text(362)
-        custom_night_toy_chica_text.center_text(512)
-        custom_night_mangle_text.center_text(662)
-        custom_night_balloon_boy_text.center_text(812)
+        scenes.time_multiply = 1
 
 
       # step
-      scenes.time_multiply = 1
       if multi_back_button.clicked_verdict:
         scenes.set_scene('extras')
+      if custom_night_start.clicked_verdict:
+        global difficulty_withered_freddy, difficulty_withered_bonnie, difficulty_withered_chica, difficulty_withered_foxy, difficulty_golden_freddy, difficulty_toy_freddy, difficulty_toy_bonnie, difficulty_toy_chica, difficulty_mangle, difficulty_balloon_boy
+        difficulty_withered_freddy = objects.custom_night_with_freddy_slider.current_state
+        difficulty_withered_bonnie = objects.custom_night_with_bonnie_slider.current_state
+        difficulty_withered_chica = objects.custom_night_with_chica_slider.current_state
+        difficulty_withered_foxy = objects.custom_night_with_foxy_slider.current_state
+        difficulty_golden_freddy = objects.custom_night_golden_freddy_slider.current_state
+        difficulty_toy_freddy = objects.custom_night_toy_freddy_slider.current_state
+        difficulty_toy_bonnie = objects.custom_night_toy_bonnie_slider.current_state
+        difficulty_toy_chica = objects.custom_night_toy_chica_slider.current_state
+        difficulty_mangle = objects.custom_night_mangle_slider.current_state
+        difficulty_balloon_boy = objects.custom_night_balloon_boy_slider.current_state
+        scenes.set_scene('night')
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "newspaper":
+    elif scenes.scene_list[scenes.scene_index] == "newspaper":
       # activation
       if scenes.scene_changed:
+        scenes.time_multiply = 1
         scenes.scene_changed -= 1
 
       # step
-      scenes.time_multiply = 1
+      pass
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "night":
+    elif scenes.scene_list[scenes.scene_index] == "night":
 
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
+      pass
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "game":
+    elif scenes.scene_list[scenes.scene_index] == "game":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
       if gui_button(Rectangle(300, 400, 100, 80), "go"):
         scenes.set_scene('menu')
 
@@ -194,58 +197,64 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "paycheck":
+    elif scenes.scene_list[scenes.scene_index] == "paycheck":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
+      pass
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "pixel minigame":
+    elif scenes.scene_list[scenes.scene_index] == "pixel minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
+      pass
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "creepy minigame":
+    elif scenes.scene_list[scenes.scene_index] == "creepy minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
+      pass
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "loading":
+    elif scenes.scene_list[scenes.scene_index] == "loading":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
       check_all_textures()
       check_textures_time.update_time()
       if objects.all_textures_ready:
         print('No issues found! Enjoy the game.')
         check_textures_time.kill_time()
-        scenes.set_scene('menu')
+        if show_preview:
+          scenes.set_scene('preview')
+        else:
+          scenes.set_scene('menu')
       if not all_textures_ready and check_textures_time.time_current >= 5 and not config.wait_textures:
         scenes.set_scene('error boot')
 
@@ -257,14 +266,14 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "error boot":
+    elif scenes.scene_list[scenes.scene_index] == "error boot":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
+        scenes.time_multiply = 1
         print("ASSETS LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load anything whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
 
       # step
-      scenes.time_multiply = 1
       space_between = 300
 
       rec_dont = Rectangle(0, 0, 250, 50)
@@ -300,13 +309,28 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_dict[scenes.scene_index] == "test scene":
+    elif scenes.scene_list[scenes.scene_index] == "preview":
       # activation
       if scenes.scene_changed:
-        pass
+        scenes.scene_changed -= 1
+        scenes.time_multiply = 1
 
       # step
-      scenes.time_multiply = 1
+      if scenes.time_current >= 3:
+        scenes.set_scene('menu')
+
+      # draw
+      pass
+
+# ----------------------------------------------- #
+
+    elif scenes.scene_list[scenes.scene_index] == "test scene":
+      # activation
+      if scenes.scene_changed:
+        scenes.scene_changed -= 1
+        scenes.time_multiply = 1
+
+      # step
       if multi_back_button.clicked_verdict:
         scenes.set_scene('menu')
 
@@ -336,6 +360,7 @@ def main():
 # ----------------------------------------------- #
     end_drawing()
     clear_background(BLACK)
+  unload_all_textures()
   close_window()
 
 

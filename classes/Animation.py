@@ -24,6 +24,14 @@ class Smart_Animation(Time):
       self.start_time()
     self.temp_loops: int = 0
 
+  def resize(self, new_size: Vector2):
+    arr = []
+    for item in self.frames:
+      image = load_image_from_texture(item)
+      image_resize(image, int(new_size.x), int(new_size.y))
+      arr.append(load_texture_from_image(image))
+    self.frames = arr
+
   def update(self):
     if self.is_animation_looped:
       self.check_looped()
