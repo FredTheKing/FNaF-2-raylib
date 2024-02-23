@@ -15,7 +15,7 @@ class SideButtons:
     self.right_button.set_position(Vector2(x_right, y_new))
 
 class BarButtons(SideButtons):
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int = 10, goes_zero: bool = True, default_state: int = None):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int = 10, layer: int = 3, goes_zero: bool = True, default_state: int = None):
     self.pos = pos
     self.size = size
     self.states = states
@@ -23,6 +23,7 @@ class BarButtons(SideButtons):
       self.current_state = states
     else:
       self.current_state = default_state
+    self.layer_order = layer
     self.goes_zero = goes_zero
 
     super().__init__()

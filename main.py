@@ -115,6 +115,10 @@ def main():
         scenes.set_scene('menu')
       if extras_custom_night.clicked_verdict:
         scenes.set_scene('custom night')
+      if extras_jumpscares.clicked_verdict:
+        scenes.set_scene('jumpscares')
+      if extras_development_moments.clicked_verdict:
+        scenes.set_scene('development moments')
       if extras_credits_text.clicked_verdict:
         unload_all_textures(100)
 
@@ -150,6 +154,37 @@ def main():
 
       # draw
       pass
+
+# ----------------------------------------------- #
+
+    elif scenes.scene_list[scenes.scene_index] == "jumpscares":
+      # activation
+      if scenes.scene_changed:
+        scenes.scene_changed -= 1
+        scenes.time_multiply = 1
+
+      # step
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene('extras')
+
+      # draw
+      pass
+
+# ----------------------------------------------- #
+
+    elif scenes.scene_list[scenes.scene_index] == "development moments":
+      # activation
+      if scenes.scene_changed:
+        scenes.scene_changed -= 1
+        scenes.time_multiply = 1
+
+      # step
+      if multi_back_button.clicked_verdict:
+        scenes.set_scene('extras')
+
+      # draw
+      pass
+
 
 # ----------------------------------------------- #
 
@@ -255,6 +290,7 @@ def main():
           scenes.set_scene('preview')
         else:
           scenes.set_scene('menu')
+        do_valid_filetype()
       if not all_textures_ready and check_textures_time.time_current >= 5 and not config.wait_textures:
         scenes.set_scene('error boot')
 

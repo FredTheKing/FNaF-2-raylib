@@ -9,7 +9,7 @@ class Scene_Manager(Time):
     self.scene_list = []
     for item in scenes_names:
       self.scene_list.append(item)
-    self.scene_index = 10
+    self.scene_index = 12
     self.scene_changed: int = 1
     self.scene_counter = 0
     self.start_time()
@@ -42,6 +42,8 @@ class Scene_Manager(Time):
       KeyboardKey.KEY_ONE,
       KeyboardKey.KEY_TWO,
       KeyboardKey.KEY_THREE,
+      None,
+      None,
       None,
       None,
       None,

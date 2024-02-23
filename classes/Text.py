@@ -6,7 +6,7 @@ import config
 from webbrowser import open
 
 class JustText:
-  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: list = WHITE, spacing: float = 0, font_filename: str or Font or None = None):
+  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: list = WHITE, layer: int = 2, spacing: float = 0, font_filename: str or Font or None = None):
     font_type: str = f"{type(font_filename)}"
     if font_type == "<class '_cffi_backend.__CDataOwn'>":
       self.font = font_filename
@@ -19,6 +19,7 @@ class JustText:
     self.pos = pos
     self.color = color
     self.spacing = spacing
+    self.layer_order = layer
 
   def update(self):
     self.draw()
@@ -31,8 +32,8 @@ class JustText:
     draw_text_ex(self.font, self.text, self.pos, self.fontsize, self.spacing, self.color)
 
 class BoxText(JustText, Hitbox):
-  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, spacing: float = 0, font_filename = None):
-    JustText.__init__(self, text, size, pos, color, spacing, font_filename)
+  def __init__(self, text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, layer: int = 2, spacing: float = 0, font_filename = None):
+    JustText.__init__(self, text, size, pos, color, layer, spacing, font_filename)
     measure = measure_text_ex(self.font, self.text, self.fontsize, 0)
     Hitbox.__init__(self, Vector2(int(self.pos.x), int(self.pos.y) + 5), Vector2(int(measure.x) + self.spacing * self.text.__len__() - self.spacing, int(measure.y) - 10))
 
@@ -50,8 +51,8 @@ class BoxText(JustText, Hitbox):
       self.draw_debug()
 
 class LinkText(BoxText):
-  def __init__(self, link: str = "https://link.here", text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, spacing: float = 0, font_filename = None):
-    super().__init__(text, size, pos, color, spacing, font_filename)
+  def __init__(self, link: str = "https://link.here", text: str = "PLACEHOLDER", size: float = 30, pos: Vector2 = Vector2(0, 0), color: tuple = WHITE, layer: int = 2, spacing: float = 0, font_filename = None):
+    super().__init__(text, size, pos, color, layer, spacing, font_filename)
     self.hitbox_color = BLUE
     self.link = link
 

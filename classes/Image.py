@@ -3,12 +3,13 @@ import config
 from classes.Hitbox import Hitbox
 
 class JustImage:
-  def __init__(self, texture: Texture, pos=Vector2(0, 0), alpha=255):
+  def __init__(self, texture: Texture, pos=Vector2(0, 0), layer: int = 1, alpha=255):
     self.texture = texture
     self.width = self.texture.width
     self.height = self.texture.height
     self.pos = pos
     self.color = [255, 255, 255, alpha]
+    self.layer_order = layer
 
   def resize(self, new_size: Vector2):
     image = load_image_from_texture(self.texture)
@@ -22,8 +23,8 @@ class JustImage:
     draw_texture_v(self.texture, self.pos, self.color)
 
 class BorderImage(JustImage):
-  def __init__(self, texture: Texture, pos: Vector2 = Vector2(0, 0), border_thick:int = 2, alpha: int = 255):
-    super().__init__(texture, pos, alpha)
+  def __init__(self, texture: Texture, pos: Vector2 = Vector2(0, 0), border_thick:int = 2, layer: int = 1, alpha: int = 255):
+    super().__init__(texture, pos, layer, alpha)
     self.border_thick = border_thick
 
   def update(self):
@@ -31,8 +32,8 @@ class BorderImage(JustImage):
     draw_rectangle_lines_ex(Rectangle(int(self.pos.x), int(self.pos.y), int(self.texture.width), int(self.texture.height)), self.border_thick, WHITE)
 
 class BoxImage(JustImage, Hitbox):
-  def __init__(self, texture: Texture, pos=Vector2(0, 0), alpha=255):
-    JustImage.__init__(self, texture, pos, alpha)
+  def __init__(self, texture: Texture, pos=Vector2(0, 0), layer: int = 1, alpha=255):
+    JustImage.__init__(self, texture, pos, layer, alpha)
     Hitbox.__init__(self, pos, Vector2(self.width, self.height), BROWN)
 
   def update(self):

@@ -2,8 +2,8 @@ from pyray import *
 from raylib.colors import *
 from classes.Time import Time
 
-class Smart_Animation(Time):
-  def __init__(self, frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, first_frame=0):
+class JustAnimation(Time):
+  def __init__(self, frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, layer: int = 0, first_frame=0):
     if frames_list is None:
       frames_list = []
     super().__init__(animation_speed)
@@ -15,6 +15,7 @@ class Smart_Animation(Time):
     self.first_frame: int = first_frame
     self.last_frame: int = len(frames_list)-1
     self.color = [255, 255, 255, alpha]
+    self.layer_order = layer
 
     self.is_animation_finished: bool = False
     self.is_animation_ended: bool = False
@@ -82,6 +83,3 @@ class Smart_Animation(Time):
   def draw_debug(self, name, x, y):
     draw_text(
       f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 10, WHITE)
-
-
-

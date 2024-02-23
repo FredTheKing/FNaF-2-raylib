@@ -3,7 +3,7 @@ from random import randint
 from pyray import *
 from classes.Managers import Scene_Manager, Sound_Manager
 from classes.Text import JustText, BoxText, LinkText
-from classes.Animation import Smart_Animation
+from classes.Animation import JustAnimation
 from classes.Image import JustImage, BorderImage, BoxImage
 from classes.Checkbox import Checkbox
 from classes.Bar import BarButtons, DigitButtons
@@ -14,14 +14,17 @@ import os
 all_textures_ready = False
 release_path = ""
 
+
 if os.path.basename(sys.argv[0])[os.path.basename(sys.argv[0]).rfind(".")::] == ".exe":
   release_path = "_internal/"
-  config.fullscreen = True
-  config.debug = False
-  config.show_preview = True
 
 config.def_font = load_font(release_path + config.def_font_filename)
 
+def do_valid_filetype():
+  if release_path is not "":
+    config.fullscreen = True
+    config.debug = False
+    scenes.set_scene('preview')
 
 def change_needs() -> None:
   settings_top_text.center_text()
@@ -43,6 +46,14 @@ def change_needs() -> None:
   custom_night_mangle_text.center_text(662)
   custom_night_balloon_boy_text.center_text(812)
 
+  jumpscares_top_text.center_text()
+  jumpscares_office_preview.resize(Vector2(512, 384))
+  jumpscares_withered_freddy.resize(Vector2(512, 384))
+  jumpscares_withered_bonnie.resize(Vector2(512, 384))
+  jumpscares_withered_chica.resize(Vector2(512, 384))
+  jumpscares_withered_foxy.resize(Vector2(512, 384))
+
+  development_moments_top_text.center_text()
 
 def load(filename: str) -> Texture:
   return load_texture_from_image(load_image(release_path + filename))
@@ -57,14 +68,14 @@ def load_animation(dirname: str, times: int) -> list:
 
 
 # ----------------------------------------------- #
-scenes = Scene_Manager(["menu", "settings", "extras", "custom night", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot", "preview", "test scene"])
+scenes = Scene_Manager(["menu", "settings", "extras", "custom night", "jumpscares", "development moments", "newspaper", "night", "game", "paycheck", "pixel minigame", "creepy minigame", "loading", "error boot", "preview", "test scene"])
 sounds = Sound_Manager(scenes)
 # ----------------------------------------------- #
-multi_static = Smart_Animation(load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8), Vector2(0, 0),
+multi_static = JustAnimation(load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8), Vector2(0, 0),
                                26, True, 101)
 multi_back_button = BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fonts/consolas.ttf")
 # ----------------------------------------------- #
-menu_twitch = Smart_Animation(load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Misc", 4), Vector2(0, 0), 3,
+menu_twitch = JustAnimation(load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Misc", 4), Vector2(0, 0), 3,
                               True)
 menu_title_1 = JustText("Five", 63, Vector2(75, 21), spacing=3)
 menu_title_2 = JustText("Nights", 63, Vector2(75, 81), spacing=3)
@@ -95,13 +106,15 @@ extras_top_text = JustText("Extras", 48, Vector2(0, 10))
 extras_proj_github = LinkText("https://github.com/DudFootStud/FNaF-2-raylib", "Project's Github", 40, Vector2(75, 200))
 extras_auth_github = LinkText("https://github.com/FredTheKing", "Author's Github", 40, Vector2(75, 269))
 extras_custom_night = BoxText("Custom night", 40, Vector2(75, 338))
+extras_jumpscares = BoxText("Jumpscares", 40, Vector2(75, 407))
+extras_development_moments = BoxText("Developments", 40, Vector2(75, 476))
 
 extras_credits_text = BoxText("Credits:", 40, Vector2(600, 135))
-extras_credits_raylib_text = JustText("powered with", 16, Vector2(600, 222), WHITE, 2, get_font_default())
+extras_credits_raylib_text = JustText("powered with", 16, Vector2(600, 222), WHITE, 2, font_filename=get_font_default(), spacing=2)
 extras_credits_raylib_logo = JustImage(load("assets/graphics/PreviewLogos/raylib.png"), Vector2(600, 240))
-extras_credits_dudfoot_text = JustText("designed and built by", 16, Vector2(600, 422), WHITE, 2, get_font_default())
+extras_credits_dudfoot_text = JustText("designed and built by", 16, Vector2(600, 422), WHITE, 2, font_filename=get_font_default(), spacing=2)
 extras_credits_dudfoot_logo = JustImage(load("assets/graphics/PreviewLogos/dudfoot.png"), Vector2(600, 450))
-extras_credits_scott_text = JustText("OG game idea", 16, Vector2(800, 222), WHITE, 2, get_font_default())
+extras_credits_scott_text = JustText("OG game idea", 16, Vector2(800, 222), WHITE, 2, font_filename=get_font_default(), spacing=2)
 extras_credits_scott_logo = JustImage(load("assets/graphics/PreviewLogos/scott.png"), Vector2(800, 240))
 # ----------------------------------------------- #
 custom_night_top_text = JustText("Custom Night", 48, Vector2(0, 10))
@@ -141,7 +154,17 @@ custom_night_balloon_boy_slider = DigitButtons(Vector2(750, 480), Vector2(53, 30
 
 custom_night_start = BoxText("START", 80, Vector2(645, 600))
 # ----------------------------------------------- #
-preview_raylib_logo_text = JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, get_font_default())
+jumpscares_top_text = JustText("Jumpscares", 48, Vector2(0, 10))
+
+jumpscares_office_preview = BorderImage(load("assets/graphics/TheOffice_Nights_Menu/TheOffice/office_preview.png"), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50))
+jumpscares_withered_freddy = JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredFreddy", 13), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True)
+jumpscares_withered_bonnie = JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredBonnie", 16), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True)
+jumpscares_withered_chica = JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredChica", 12), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True)
+jumpscares_withered_foxy = JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredFoxy", 14), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True)
+# ----------------------------------------------- #
+development_moments_top_text = JustText("Developments", 48, Vector2(0, 10))
+# ----------------------------------------------- #
+preview_raylib_logo_text = JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, font_filename=get_font_default(), spacing=2)
 preview_raylib_logo = JustImage(load("assets/graphics/PreviewLogos/raylib.png"), Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 128))
 # ----------------------------------------------- #
 test_digit_bar = DigitButtons(Vector2(100, 500))
@@ -197,6 +220,8 @@ extras_list = {
            extras_proj_github,
            extras_auth_github,
            extras_custom_night,
+           extras_jumpscares,
+           extras_development_moments,
            extras_credits_text,
            extras_credits_raylib_text,
            extras_credits_dudfoot_text,
@@ -238,6 +263,24 @@ custom_night_list = {
             custom_night_toy_chica_slider,
             custom_night_mangle_slider,
             custom_night_balloon_boy_slider]
+}
+jumpscares_list = {
+  'Animation': [multi_static,
+                jumpscares_withered_freddy,
+                jumpscares_withered_bonnie,
+                jumpscares_withered_chica,
+                jumpscares_withered_foxy],
+  'Image': [jumpscares_office_preview],
+  'Text': [multi_back_button,
+           jumpscares_top_text],
+  'Stuff': []
+}
+development_moments_list = {
+  'Animation': [multi_static],
+  'Image': [],
+  'Text': [multi_back_button,
+           development_moments_top_text],
+  'Stuff': []
 }
 newspaper_list = {
   'Animation': [],
@@ -301,14 +344,15 @@ test_scene_list = {
             test_digit_bar]
 }
 
-scenes_list = [menu_list, settings_list, extras_list, custom_night_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list, loading_list, preview_list, test_scene_list]
+scenes_list = [menu_list, settings_list, extras_list, custom_night_list, jumpscares_list, development_moments_list, newspaper_list, night_list, game_list, paycheck_list, pixel_minigame_list, creepy_minigame_list, error_boot_list, loading_list, preview_list, test_scene_list]
 
+# ----------------------------------------------- #
 change_needs()
 def unload_all_textures(mod: int = -1):
   a = 0
   b = 2
   if mod <= 0:
-    a = 1
+    b = 0
   else:
     b = mod+1
   for scene_id in range(scenes_list.__len__()):
@@ -362,7 +406,6 @@ def check_all_textures():
   if all == ready:
     all_textures_ready = True
 
-
 def animations_draw_debug():
   def get_variable_name(variable):
     for name_ in globals():
@@ -388,7 +431,11 @@ def restart_animations():
 
 
 def textures_update():
+  broken_order = {}
   for arr_id in 'Animation', 'Image', 'Text', 'Stuff':
     arr = scenes_list[scenes.scene_index][arr_id]
     for item in arr:
-      item.update()
+      broken_order[item] = item.layer_order
+  fixed_order = sorted(broken_order.items(), key=lambda x: x[1])
+  for item in fixed_order:
+    item[0].update()

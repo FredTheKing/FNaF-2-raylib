@@ -4,10 +4,11 @@ from pyray import *
 from raylib.colors import *
 
 class Checkbox(Hitbox):
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: int = 30, auto_changing: bool = True):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: int = 30, layer: int = 3, auto_changing: bool = True):
     self.pos = pos
     self.size = size
     self.state: bool = False
+    self.layer_order = layer
     self.auto_changing: bool = auto_changing
     super().__init__(pos, Vector2(size, size), YELLOW)
 
