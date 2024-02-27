@@ -1,8 +1,8 @@
 import time
 
 class Time:
-  def __init__(self, time_multiply: int):
-    self.time_multiply = time_multiply
+  def __init__(self, time_mod: int):
+    self.time_multiply = time_mod
     self.time_start: float
     self.time_current: int = 0
     self.go = False

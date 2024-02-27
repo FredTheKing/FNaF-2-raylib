@@ -24,26 +24,22 @@ def main():
       else:
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
 
-      if menu_to_test_tp.clicked_verdict and config.debug:
-        scenes.set_scene('test scene')
+      if scenes.scene_objects['menu']['to_test_tp'].clicked_verdict and config.debug:
+        scenes.set_scene('test_scene')
 
-      menu_temp_selection_arr = [menu_new_game, menu_continue, menu_settings, menu_extras]
+      menu_temp_selection_arr = [scenes.scene_objects['menu']['new_game'], scenes.scene_objects['menu']['continue'], scenes.scene_objects['menu']['settings'], scenes.scene_objects['menu']['extras']]
       for item in menu_temp_selection_arr:
         if item.hover_verdict:
-          menu_set.pos.y = item.pos.y + 1
-      if menu_new_game.clicked_verdict:
-        menu_new_game.reset()
+          scenes.scene_objects['menu']['set'].pos.y = item.pos.y + 1
+      if scenes.scene_objects['menu']['new_game'].clicked_verdict:
         upcoming_night = actual_night = 0
         scenes.set_scene('newspaper')
-      elif menu_continue.clicked_verdict:
-        menu_continue.reset()
+      elif scenes.scene_objects['menu']['continue'].clicked_verdict:
         upcoming_night = actual_night
         scenes.set_scene('night')
-      elif menu_settings.clicked_verdict:
-        menu_settings.reset()
+      elif scenes.scene_objects['menu']['settings'].clicked_verdict:
         scenes.set_scene('settings')
-      elif menu_extras.clicked_verdict:
-        menu_extras.reset()
+      elif scenes.scene_objects['menu']['extras'].clicked_verdict:
         scenes.set_scene('extras')
       del menu_temp_selection_arr
 
@@ -59,45 +55,45 @@ def main():
         scenes.time_multiply = 1
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['settings']['back_button'].clicked_verdict:
         scenes.set_scene('menu')
 
       if config.fullscreen:
-        settings_fullscreen_checkbox.state = True
+        scenes.scene_objects['settings']['fullscreen_checkbox'].state = True
       else:
-        settings_fullscreen_checkbox.state = False
+        scenes.scene_objects['settings']['fullscreen_checkbox'].state = False
       if config.wait_textures:
-        settings_wait_textures_checkbox.state = True
+        scenes.scene_objects['settings']['wait_textures_checkbox'].state = True
       else:
-        settings_wait_textures_checkbox.state = False
+        scenes.scene_objects['settings']['wait_textures_checkbox'].state = False
       if config.funny:
-        settings_funny_checkbox.state = True
+        scenes.scene_objects['settings']['funny_checkbox'].state = True
       else:
-        settings_funny_checkbox.state = False
+        scenes.scene_objects['settings']['funny_checkbox'].state = False
       if config.debug:
-        settings_debug_checkbox.state = True
+        scenes.scene_objects['settings']['debug_checkbox'].state = True
       else:
-        settings_debug_checkbox.state = False
+        scenes.scene_objects['settings']['debug_checkbox'].state = False
 
-      if settings_fullscreen_checkbox.clicked_verdict:
+      if scenes.scene_objects['settings']['fullscreen_checkbox'].clicked_verdict:
         config.fullscreen ^= 1
         config.funny = False
-      if settings_wait_textures_checkbox.clicked_verdict:
+      if scenes.scene_objects['settings']['wait_textures_checkbox'].clicked_verdict:
         config.wait_textures ^= 1
-      if settings_funny_checkbox.clicked_verdict:
+      if scenes.scene_objects['settings']['funny_checkbox'].clicked_verdict:
         config.funny ^= 1
         config.fullscreen = False
-      if settings_debug_checkbox.clicked_verdict:
+      if scenes.scene_objects['settings']['debug_checkbox'].clicked_verdict:
         config.debug ^= 1
 
-      if settings_wait_textures_checkbox.hover_verdict:
-        settings_wait_textures_notice.color[3] = 153
+      if scenes.scene_objects['settings']['wait_textures_checkbox'].hover_verdict:
+        scenes.scene_objects['settings']['wait_textures_notice'].color[3] = 153
       else:
-        settings_wait_textures_notice.color[3] = 0
-      if settings_funny_checkbox.hover_verdict:
-        settings_funny_notice.color[3] = 153
+        scenes.scene_objects['settings']['wait_textures_notice'].color[3] = 0
+      if scenes.scene_objects['settings']['funny_checkbox'].hover_verdict:
+        scenes.scene_objects['settings']['funny_notice'].color[3] = 153
       else:
-        settings_funny_notice.color[3] = 0
+        scenes.scene_objects['settings']['funny_notice'].color[3] = 0
 
       # draw
       pass
@@ -111,15 +107,15 @@ def main():
         scenes.time_multiply = 1
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['extras']['back_button'].clicked_verdict:
         scenes.set_scene('menu')
-      if extras_custom_night.clicked_verdict:
-        scenes.set_scene('custom night')
-      if extras_jumpscares.clicked_verdict:
+      if scenes.scene_objects['extras']['custom_night'].clicked_verdict:
+        scenes.set_scene('custom_night')
+      if scenes.scene_objects['extras']['jumpscares'].clicked_verdict:
         scenes.set_scene('jumpscares')
-      if extras_development_moments.clicked_verdict:
-        scenes.set_scene('development moments')
-      if extras_credits_text.clicked_verdict:
+      if scenes.scene_objects['extras']['development_moments'].clicked_verdict:
+        scenes.set_scene('development_moments')
+      if scenes.scene_objects['extras']['credits_text'].clicked_verdict:
         unload_all_textures(100)
 
 
@@ -128,7 +124,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "custom night":
+    elif scenes.scene_list[scenes.scene_index] == "custom_night":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -136,9 +132,9 @@ def main():
 
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['custom_night']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
-      if custom_night_start.clicked_verdict:
+      if scenes.scene_objects['custom_night']['start'].clicked_verdict:
         global difficulty_withered_freddy, difficulty_withered_bonnie, difficulty_withered_chica, difficulty_withered_foxy, difficulty_golden_freddy, difficulty_toy_freddy, difficulty_toy_bonnie, difficulty_toy_chica, difficulty_mangle, difficulty_balloon_boy
         difficulty_withered_freddy = objects.custom_night_with_freddy_slider.current_state
         difficulty_withered_bonnie = objects.custom_night_with_bonnie_slider.current_state
@@ -164,7 +160,7 @@ def main():
         scenes.time_multiply = 1
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['jumpscares']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
 
       # draw
@@ -172,14 +168,14 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "development moments":
+    elif scenes.scene_list[scenes.scene_index] == "development_moments":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['development_moments']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
 
       # draw
@@ -246,7 +242,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "pixel minigame":
+    elif scenes.scene_list[scenes.scene_index] == "pixel_minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -260,7 +256,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "creepy minigame":
+    elif scenes.scene_list[scenes.scene_index] == "creepy_minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -302,7 +298,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "error boot":
+    elif scenes.scene_list[scenes.scene_index] == "error":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -360,14 +356,14 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "test scene":
+    elif scenes.scene_list[scenes.scene_index] == "test_scene":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
 
       # step
-      if multi_back_button.clicked_verdict:
+      if scenes.scene_objects['test_scene']['back_button'].clicked_verdict:
         scenes.set_scene('menu')
 
       # draw

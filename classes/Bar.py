@@ -64,8 +64,8 @@ class BarButtons(SideButtons):
 
 
 class DigitButtons(BarButtons):
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int = 10, goes_zero: bool = True, default_state: int = None):
-    super().__init__(pos, size, states, goes_zero, default_state)
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int = 10, layer: int = 3, goes_zero: bool = True, default_state: int = None):
+    super().__init__(pos, size, states, layer, goes_zero, default_state)
     self.text = JustText(str(self.current_state), int(size.y), Vector2((int(self.pos.x) + self.left_button.rec.width + self.space + int(size.x)) - int(self.size.x)//2, int(pos.y)))
     self.text_pos_x = self.text.pos.x
 

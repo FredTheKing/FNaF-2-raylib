@@ -23,6 +23,7 @@ class JustAnimation(Time):
 
     if animation_speed != 0:
       self.start_time()
+    self.debug_message: str = None
     self.temp_loops: int = 0
 
   def resize(self, new_size: Vector2):
@@ -81,5 +82,5 @@ class JustAnimation(Time):
       draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
 
   def draw_debug(self, name, x, y):
-    draw_text(
-      f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}", x, y, 10, WHITE)
+    self.debug_message = f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}"
+    draw_text(self.debug_message, x, y, 10, WHITE)

@@ -2,13 +2,37 @@ from pyray import *
 import objects
 from classes.Time import Time
 import config
+from classes.Text import JustText, BoxText, LinkText
+from classes.Animation import JustAnimation
+from classes.Image import JustImage, BorderImage, BoxImage
+from classes.Checkbox import Checkbox
+from classes.Bar import BarButtons, DigitButtons
 
 class Scene_Manager(Time):
-  def __init__(self, scenes_names: list):
+  def __init__(self, scenes_names: list, objects_dict: dict):
+    def init_scene_objects(all_scenes: list, all_objects: dict) -> dict:
+      new_dict = {}
+      for item in scenes_names:
+        new_dict[item] = {}
+
+      for dict_name in all_objects.keys():
+        split_scene: list = dict_name.split('>')
+        if split_scene[0] == 'multi' and split_scene.__len__() == 3:
+          multi_split_scenes: list = split_scene[1].split('|')
+          for item_multi_scene in multi_split_scenes:
+            for item_all_scenes in all_scenes:
+              if item_multi_scene == item_all_scenes:
+                new_dict[item_multi_scene][split_scene[-1]] = all_objects[dict_name]
+                pass
+        else:
+          new_dict[split_scene[0]][split_scene[-1]] = all_objects[dict_name]
+      return new_dict
     super().__init__(1)
     self.scene_list = []
+    self.scene_objects = {}
     for item in scenes_names:
       self.scene_list.append(item)
+    self.scene_objects = init_scene_objects(scenes_names, objects_dict)
     self.scene_index = 12
     self.scene_changed: int = 1
     self.scene_counter = 0
