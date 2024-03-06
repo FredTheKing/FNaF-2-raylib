@@ -10,7 +10,7 @@ class JustAnimation(Time):
     self.pos = pos
     self.frames: list = frames_list
     if is_looped:
-      self.frames.append(self.frames[len(frames_list)-1])
+      self.frames.append(self.frames[-1])
     self.frame_index: int = 0
     self.first_frame: int = first_frame
     self.last_frame: int = len(frames_list)-1
@@ -84,3 +84,40 @@ class JustAnimation(Time):
   def draw_debug(self, name, x, y):
     self.debug_message = f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}"
     draw_text(self.debug_message, x, y, 10, WHITE)
+
+
+class SelectableAnimation(JustAnimation):
+  def __init__(self, animations_list_init_frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, layer: int = 0, first_frame=0):
+    if animations_list_init_frames_list is None:
+      self.animations_list = []
+    else:
+      self.animations_list = animations_list_init_frames_list
+
+    super().__init__(self.animations_list[0], pos, animation_speed, is_looped, alpha, layer, first_frame)
+    self.animation_index = 0
+
+  def resize(self, new_size: Vector2):
+    for index in range(self.animations_list.__len__()):
+      arr = []
+      for item in self.animations_list[index]:
+        image = load_image_from_texture(item)
+        image_resize(image, int(new_size.x), int(new_size.y))
+        arr.append(load_texture_from_image(image))
+      self.animations_list[index] = arr
+
+  def change_current_animation(self):
+    if self.frames is not self.animations_list[self.animation_index]:
+      self.restart()
+    self.frames = self.animations_list[self.animation_index]
+    self.last_frame = len(self.frames)-1
+
+  def update(self):
+    self.change_current_animation()
+    if self.is_animation_looped:
+      self.check_looped()
+    if self.go:
+      self.update_time()
+      self.step()
+    self.check_ended()
+    self.finished_ended()
+    self.draw()

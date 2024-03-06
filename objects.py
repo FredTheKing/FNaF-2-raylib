@@ -3,10 +3,10 @@ from random import randint
 from pyray import *
 from classes.Managers import Scene_Manager, Sound_Manager
 from classes.Text import JustText, BoxText, LinkText
-from classes.Animation import JustAnimation
+from classes.Animation import JustAnimation, SelectableAnimation
 from classes.Image import JustImage, BorderImage, BoxImage
 from classes.Checkbox import Checkbox
-from classes.Bar import BarButtons, DigitButtons
+from classes.Bar import BarButtons, DigitButtons, TextButtons
 import config
 import sys
 import os
@@ -27,33 +27,30 @@ def do_valid_filetype():
     scenes.set_scene('preview')
 
 def change_needs() -> None:
-  all_objects['settings>top_text'].center_text()
+  for scene in scenes.scene_list:
+    try:
+      scenes.scene_objects[scene]['top_text'].center_text()
+    except KeyError:
+      continue
 
-  all_objects['extras>top_text'].center_text()
-  all_objects['extras>credits_raylib_logo'].resize(Vector2(128, 128))
-  all_objects['extras>credits_scott_logo'].resize(Vector2(128, 128))
-  all_objects['extras>credits_dudfoot_logo'].resize(Vector2(306, 123))
+  scenes.scene_objects['extras']['credits_raylib_logo'].resize(Vector2(128, 128))
+  scenes.scene_objects['extras']['credits_scott_logo'].resize(Vector2(128, 128))
+  scenes.scene_objects['extras']['credits_dudfoot_logo'].resize(Vector2(306, 123))
 
-  all_objects['custom_night>top_text'].center_text()
-  all_objects['custom_night>with_freddy_text'].center_text(212)
-  all_objects['custom_night>with_bonnie_text'].center_text(362)
-  all_objects['custom_night>with_chica_text'].center_text(512)
-  all_objects['custom_night>with_foxy_text'].center_text(662)
-  all_objects['custom_night>golden_freddy_text'].center_text(812)
-  all_objects['custom_night>toy_freddy_text'].center_text(212)
-  all_objects['custom_night>toy_bonnie_text'].center_text(362)
-  all_objects['custom_night>toy_chica_text'].center_text(512)
-  all_objects['custom_night>mangle_text'].center_text(662)
-  all_objects['custom_night>balloon_boy_text'].center_text(812)
+  scenes.scene_objects['custom_night']['with_freddy_text'].center_text(212)
+  scenes.scene_objects['custom_night']['with_bonnie_text'].center_text(362)
+  scenes.scene_objects['custom_night']['with_chica_text'].center_text(512)
+  scenes.scene_objects['custom_night']['with_foxy_text'].center_text(662)
+  scenes.scene_objects['custom_night']['golden_freddy_text'].center_text(812)
+  scenes.scene_objects['custom_night']['toy_freddy_text'].center_text(212)
+  scenes.scene_objects['custom_night']['toy_bonnie_text'].center_text(362)
+  scenes.scene_objects['custom_night']['toy_chica_text'].center_text(512)
+  scenes.scene_objects['custom_night']['mangle_text'].center_text(662)
+  scenes.scene_objects['custom_night']['balloon_boy_text'].center_text(812)
 
-  all_objects['jumpscares>top_text'].center_text()
-  all_objects['jumpscares>office_preview'].resize(Vector2(512, 384))
-  all_objects['jumpscares>withered_freddy'].resize(Vector2(512, 384))
-  all_objects['jumpscares>withered_bonnie'].resize(Vector2(512, 384))
-  all_objects['jumpscares>withered_chica'].resize(Vector2(512, 384))
-  all_objects['jumpscares>withered_foxy'].resize(Vector2(512, 384))
+  scenes.scene_objects['jumpscares']['office_preview'].resize(Vector2(516, 388))
+  scenes.scene_objects['jumpscares']['stack'].resize(Vector2(512, 384))
 
-  all_objects['development_moments>top_text'].center_text()
 
 def load(filename: str) -> Texture:
   return load_texture_from_image(load_image(release_path + filename))
@@ -154,12 +151,21 @@ all_objects = {
   'custom_night>start': BoxText("START", 80, Vector2(645, 600)),
   # ----------------------------------------------- #
   'jumpscares>top_text': JustText("Jumpscares", 48, Vector2(0, 10)),
-  
-  'jumpscares>office_preview': BorderImage(load("assets/graphics/TheOffice_Nights_Menu/TheOffice/office_preview.png"), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50)),
-  'jumpscares>withered_freddy': JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredFreddy", 13), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True),
-  'jumpscares>withered_bonnie': JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredBonnie", 16), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True),
-  'jumpscares>withered_chica': JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredChica", 12), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True),
-  'jumpscares>withered_foxy': JustAnimation(load_animation("assets/graphics/Jumpscares/WitheredFoxy", 14), Vector2(config.resolution[0]//2 - 512//2, config.resolution[1]//2 - 384//2 - 50), layer=2, animation_speed=20, is_looped=True),
+  'jumpscares>office_preview': BorderImage(load("assets/graphics/TheOffice_Nights_Menu/TheOffice/office_preview.png"), Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 - 51)),
+  'jumpscares>stack': SelectableAnimation([
+    load_animation("assets/graphics/Jumpscares/WitheredFreddy", 13),
+    load_animation("assets/graphics/Jumpscares/WitheredBonnie", 16),
+    load_animation("assets/graphics/Jumpscares/WitheredChica", 12),
+    load_animation("assets/graphics/Jumpscares/WitheredFoxy", 14),
+    load_animation("assets/graphics/Jumpscares/WitheredGoldenFreddy", 13),
+    load_animation("assets/graphics/Jumpscares/ToyFreddy", 12),
+    load_animation("assets/graphics/Jumpscares/ToyBonnie", 13),
+    load_animation("assets/graphics/Jumpscares/ToyChica", 13),
+    load_animation("assets/graphics/Jumpscares/Mangle", 16),
+    load_animation("assets/graphics/Jumpscares/TheMarionette", 15)
+  ], Vector2(config.resolution[0]//2 - 512//2 + 1, config.resolution[1]//2 - 384//2 - 49), layer=2, animation_speed=20, is_looped=True),
+
+  'jumpscares>selector': TextButtons(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['Withered Freddy', 'Withered Bonnie', 'Withered Chica', 'Withered Foxy', 'Golden Freddy', 'Toy Freddy', 'Toy Bonnie', 'Toy Chica', 'Mangle', 'Marionette/Puppet']),
   # ----------------------------------------------- #
   'development_moments>top_text': JustText("Developments", 48, Vector2(0, 10)),
   # ----------------------------------------------- #
@@ -173,10 +179,12 @@ all_objects = {
 scenes = Scene_Manager(["menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects)
 sounds = Sound_Manager(scenes)
 
+del all_objects
+change_needs()
+
 
 # ----------------------------------------------- #
 
-change_needs()
 def unload_all_textures(mod: int = -1):
   a = 0
   b = 2

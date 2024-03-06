@@ -115,7 +115,7 @@ def main():
         scenes.set_scene('jumpscares')
       if scenes.scene_objects['extras']['development_moments'].clicked_verdict:
         scenes.set_scene('development_moments')
-      if scenes.scene_objects['extras']['credits_text'].clicked_verdict:
+      if scenes.scene_objects['extras']['credits_text'].clicked_verdict and config.debug:
         unload_all_textures(100)
 
 
@@ -162,6 +162,7 @@ def main():
       # step
       if scenes.scene_objects['jumpscares']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
+      scenes.scene_objects['jumpscares']['stack'].animation_index = scenes.scene_objects['jumpscares']['selector'].current_index
 
       # draw
       pass
@@ -288,7 +289,7 @@ def main():
           scenes.set_scene('menu')
         do_valid_filetype()
       if not all_textures_ready and check_textures_time.time_current >= 5 and not config.wait_textures:
-        scenes.set_scene('error boot')
+        scenes.set_scene('error')
 
       # draw
       loading_text = "Loading..."
@@ -392,7 +393,6 @@ def main():
 # ----------------------------------------------- #
     end_drawing()
     clear_background(BLACK)
-  unload_all_textures()
   close_window()
 
 
