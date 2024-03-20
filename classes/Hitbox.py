@@ -2,10 +2,12 @@ from pyray import *
 from raylib.colors import *
 
 class Hitbox:
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(0, 0), hitbox_color: Color = RED):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(0, 0), hitbox_color: Color = RED, click_sound: Sound = None):
     self.rec = Rectangle(int(pos.x), int(pos.y), int(size.x), int(size.y))
     self.hitbox_color = hitbox_color
+    self.click_sound = click_sound
 
+    self.temp_hover: int = -1
     self.hover_verdict: bool = False
     self.clicked_verdict: bool = False
 
@@ -22,6 +24,19 @@ class Hitbox:
     else:
       self.hover_verdict = False
 
+  def check_hover_click_sound(self):
+    if self.hover_verdict:
+      if 0 <= self.temp_hover < 2:
+        self.temp_hover += 1
+      if self.temp_hover == 1:
+        try:
+          play_sound(self.click_sound)
+        except TypeError:
+          pass
+    else:
+      if self.temp_hover != -1:
+        self.temp_hover = 0
+
   def check_mouse_interaction(self, mouse_button: MouseButton = MouseButton.MOUSE_BUTTON_LEFT):
     point = get_mouse_position()
     rec = self.rec
@@ -29,6 +44,10 @@ class Hitbox:
 
     if check_collision_point_rec(point, rec) and is_mouse_button_pressed(button):
       self.clicked_verdict = True
+      try:
+        play_sound(self.click_sound)
+      except TypeError:
+        pass
     else:
       self.clicked_verdict = False
 

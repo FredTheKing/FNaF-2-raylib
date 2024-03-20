@@ -16,6 +16,7 @@ key_pressed: int
 set_target_fps(-1)
 def_font_filename = "assets/fonts/regular.ttf"
 def_font: Font
+def_set_sound: Sound
 
 actual_night = 0
 upcoming_night = 0
@@ -24,7 +25,7 @@ fullscreen = False
 wait_textures = False
 funny = False
 debug = True
-volume = 3
+volume = 1
 show_preview = False
 
 difficulty_withered_freddy = 0

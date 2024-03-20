@@ -11,8 +11,9 @@ def debug_draw_everywhere_text():
   t_current_time = objects.scenes.time_current
   t_fps = get_fps()
   t_ms = get_frame_time() * 1000
+  t_volume = config.volume
 
-  text = f"Scene name-index: {t_list_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}"
+  text = f"Scene name-index: {t_list_index}-{t_index}\nScene changed: {t_changed}\nFrame time: {t_current_time}s\n\nFPS: {t_fps}\nMS: {t_ms}\n\nVolume: {round(t_volume, 4)}"
 
   pos = Vector2(0, 0)
   font_size = 14
@@ -51,6 +52,10 @@ def set_fullscreen(key: KeyboardKey = None):
 
   if (config.fullscreen and not is_window_fullscreen()) or (not config.fullscreen and is_window_fullscreen()):
     toggle_fullscreen()
+
+def volume_makes_sense(value: objects.BarSlider):
+  config.volume = 1 / value.states * value.current_state
+  set_master_volume(config.volume)
 
 def xor_debug():
   if config.key_pressed == KeyboardKey.KEY_D:

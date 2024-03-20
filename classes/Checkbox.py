@@ -10,7 +10,7 @@ class Checkbox(Hitbox):
     self.state: bool = False
     self.layer_order = layer
     self.auto_changing: bool = auto_changing
-    super().__init__(pos, Vector2(size, size), YELLOW)
+    super().__init__(pos, Vector2(size, size), YELLOW, config.def_set_sound)
 
   def check_state(self):
     if self.clicked_verdict:
@@ -20,6 +20,7 @@ class Checkbox(Hitbox):
 
   def update(self):
     self.check_collision_mouse()
+    self.check_hover_click_sound()
     self.check_mouse_interaction()
     self.check_state()
     self.draw()

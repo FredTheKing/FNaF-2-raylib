@@ -14,7 +14,7 @@ class SideButtons:
     self.left_button.set_position(Vector2(x_left, y_new))
     self.right_button.set_position(Vector2(x_right, y_new))
 
-class BarButtons(SideButtons):
+class BarSlider(SideButtons):
   def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int | list = 10, layer: int = 3, goes_zero: bool = True, default_state: int = None):
     self.pos = pos
     self.size = size
@@ -63,7 +63,7 @@ class BarButtons(SideButtons):
     draw_rectangle_rec(state_rec, WHITE)
 
 
-class DigitButtons(BarButtons):
+class DigitSlider(BarSlider):
   def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: int = 10, layer: int = 3, goes_zero: bool = True, default_state: int = None):
     super().__init__(pos, size, states, layer, goes_zero, default_state)
     self.text = JustText(str(self.current_state), int(size.y), Vector2((int(self.pos.x) + self.left_button.rec.width + self.space + int(size.x)) - int(self.size.x)//2, int(pos.y)))
@@ -82,7 +82,7 @@ class DigitButtons(BarButtons):
     draw_text_ex(self.text.font, self.text.text, self.text.pos, self.text.fontsize, self.text.spacing, self.text.color)
 
 
-class TextButtons(BarButtons):
+class TextSlider(BarSlider):
   def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: list = ['PLACE-', '-HOLDER'], layer: int = 3, default_state: int = None):
     super().__init__(pos, size, layer=layer)
     del self.goes_zero
