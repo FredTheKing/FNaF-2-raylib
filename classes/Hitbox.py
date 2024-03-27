@@ -10,10 +10,17 @@ class Hitbox:
     self.temp_hover: int = -1
     self.hover_verdict: bool = False
     self.clicked_verdict: bool = False
+    self.hold_verdict: bool = False
 
   def reset(self):
     self.hover_verdict = False
     self.clicked_verdict = False
+
+  def update(self):
+    self.check_collision_mouse()
+    self.check_hold_interaction()
+    self.check_mouse_interaction()
+    self.check_hover_click_sound()
 
   def check_collision_mouse(self):
     point = get_mouse_position()
@@ -51,6 +58,17 @@ class Hitbox:
     else:
       self.clicked_verdict = False
 
+  def check_hold_interaction(self, mouse_button: MouseButton = MouseButton.MOUSE_BUTTON_LEFT):
+    point = get_mouse_position()
+    rec = self.rec
+    button = mouse_button
+
+    half_verdict = check_collision_point_rec(point, rec) and is_mouse_button_down(button)
+    if self.clicked_verdict and not self.hold_verdict and half_verdict:
+      self.hold_verdict = True
+    elif self.hold_verdict and not half_verdict:
+      self.hold_verdict = False
+
   def draw_debug(self):
     rec_pos = Vector2(self.rec.x, self.rec.y)
     rec_size = Vector2(self.rec.width, self.rec.height)
@@ -60,4 +78,4 @@ class Hitbox:
 
     x = int(self.pos.x) + int(self.rec.width) + 4
     y = int(self.pos.y) + int(self.rec.height // 2) - 4
-    draw_text(f'{int(self.hover_verdict)}; {int(self.clicked_verdict)}', x, y, 20, WHITE)
+    draw_text(f'{int(self.hover_verdict)}; {int(self.clicked_verdict)}; {int(self.hold_verdict)}', x, y, 20, WHITE)

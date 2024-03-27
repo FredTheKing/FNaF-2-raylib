@@ -113,11 +113,4 @@ class SelectableAnimation(JustAnimation):
 
   def update(self):
     self.change_current_animation()
-    if self.is_animation_looped:
-      self.check_looped()
-    if self.go:
-      self.update_time()
-      self.step()
-    self.check_ended()
-    self.finished_ended()
-    self.draw()
+    JustAnimation.update(self)

@@ -82,7 +82,7 @@ class Scene_Manager(Time):
       if not self.scene_changed:
         is_changed = is_changed.lower()
         is_changed += " NOT"
-      print(f'scene DING! (for {self.scene_counter} time), goto "{str(self.scene_list[self.scene_index]).upper()}" ({self.scene_index}) and {is_changed} changed')
+      print(f'scene DING! (for {self.scene_counter} time), goto "{str(self.scene_list[self.scene_index]).upper()}" ({self.scene_index}) scene')
 
   def check_changed(self):
     if self.scene_changed:

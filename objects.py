@@ -4,10 +4,11 @@ from pyray import *
 from classes.Managers import Scene_Manager
 from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import JustAnimation, SelectableAnimation
-from classes.Image import JustImage, BorderImage, BoxImage
+from classes.Image import JustImage, BorderImage, BoxImage, SelectableImage
 from classes.Checkbox import Checkbox
-from classes.Bar import BarSlider, DigitSlider, TextSlider
+from classes.Bar import BarSlider, DigitSlider, TextSlider, BarCircle
 from classes.Sound import JustSound
+
 import config
 import sys
 import os
@@ -15,12 +16,13 @@ import os
 all_textures_ready = False
 release_path = ""
 
-
-if os.path.basename(sys.argv[0])[os.path.basename(sys.argv[0]).rfind(".")::] == ".exe":
+temp_extension = os.path.basename(sys.argv[0])
+if temp_extension[temp_extension.rfind(".")::] == ".exe":
   release_path = "_internal/"
+del temp_extension
 
 config.def_font = load_font(release_path + config.def_font_filename)
-config.def_set_sound = load_sound(release_path + 'assets/audios/blip3.wav')
+config.def_set_sound = load_sound(release_path + config.def_set_sound_filename)
 
 def do_valid_filetype():
   if release_path is not "":
@@ -39,6 +41,7 @@ def change_needs() -> None:
   scenes.scene_objects['menu']['continue'].temp_hover = 0
   scenes.scene_objects['menu']['settings'].temp_hover = 0
   scenes.scene_objects['menu']['extras'].temp_hover = 0
+  scenes.scene_objects['menu']['to_test_tp'].click_sound = None
 
   scenes.scene_objects['extras']['credits_raylib_logo'].resize(Vector2(128, 128))
   scenes.scene_objects['extras']['credits_scott_logo'].resize(Vector2(128, 128))
@@ -48,6 +51,8 @@ def change_needs() -> None:
   scenes.scene_objects['extras']['custom_night'].temp_hover = 0
   scenes.scene_objects['extras']['jumpscares'].temp_hover = 0
   scenes.scene_objects['extras']['development_moments'].temp_hover = 0
+  scenes.scene_objects['extras']['credits_text'].click_sound = None
+
 
   scenes.scene_objects['custom_night']['slider'].left_button.set_position(Vector2(scenes.scene_objects['custom_night']['slider'].left_button.pos.x, scenes.scene_objects['custom_night']['slider'].left_button.pos.y + 15))
   scenes.scene_objects['custom_night']['slider'].right_button.set_position(Vector2(scenes.scene_objects['custom_night']['slider'].right_button.pos.x, scenes.scene_objects['custom_night']['slider'].right_button.pos.y + 15))
@@ -67,6 +72,10 @@ def change_needs() -> None:
   scenes.scene_objects['jumpscares']['office_preview'].resize(Vector2(516, 388))
   scenes.scene_objects['jumpscares']['stack'].resize(Vector2(512, 384))
 
+  scenes.scene_objects['development_moments']['stack'].resize(Vector2(512, 384))
+  scenes.scene_objects['development_moments']['dont_aks_me_why'].center_text()
+
+  scenes.scene_objects['test_scene']['circle_button'].click_sound = None
 
 def spec_load_image(filename: str) -> Texture:
   return load_texture_from_image(load_image(release_path + filename))
@@ -138,36 +147,37 @@ all_objects = {
   'custom_night>with_bonnie': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithBonnie.png"), Vector2(300, 150)),
   'custom_night>with_chica': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithChica.png"), Vector2(450, 150)),
   'custom_night>with_foxy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithFoxy.png"), Vector2(600, 150)),
-  'custom_night>golden_freddy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/GoldenFreddy.png"), Vector2(750, 150)),
+  'custom_night>balloon_boy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/BalloonBoy.png"), Vector2(750, 150)),
   'custom_night>toy_freddy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyFreddy.png"), Vector2(150, 350)),
   'custom_night>toy_bonnie': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyBonnie.png"), Vector2(300, 350)),
   'custom_night>toy_chica': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/ToyChica.png"), Vector2(450, 350)),
   'custom_night>mangle': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/Mangle.png"), Vector2(600, 350)),
-  'custom_night>balloon_boy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/BalloonBoy.png"), Vector2(750, 350)),
+  'custom_night>golden_freddy': BorderImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/GoldenFreddy.png"), Vector2(750, 350)),
 
   'custom_night>with_freddy_text': JustText("W. Freddy", 22, Vector2(212, 128)),
   'custom_night>with_bonnie_text': JustText("W. Bonnie", 22, Vector2(362, 128)),
   'custom_night>with_chica_text': JustText("W. Chica", 22, Vector2(512, 128)),
   'custom_night>with_foxy_text': JustText("W. Foxy", 22, Vector2(662, 128)),
-  'custom_night>golden_freddy_text': JustText("G. Freddy", 22, Vector2(812, 128)),
+  'custom_night>balloon_boy_text': JustText("BB", 22, Vector2(812, 128)),
   'custom_night>toy_freddy_text': JustText("T. Freddy", 22, Vector2(212, 328)),
   'custom_night>toy_bonnie_text': JustText("T. Bonnie", 22, Vector2(362, 328)),
   'custom_night>toy_chica_text': JustText("T. Chica", 22, Vector2(512, 328)),
   'custom_night>mangle_text': JustText("Mangle", 22, Vector2(662, 328)),
-  'custom_night>balloon_boy_text': JustText("BB", 22, Vector2(812, 328)),
+  'custom_night>golden_freddy_text': JustText("G. Freddy", 22, Vector2(812, 328)),
 
   'custom_night>with_freddy_slider': DigitSlider(Vector2(150, 280), Vector2(53, 30), 20, default_state=0),
   'custom_night>with_bonnie_slider': DigitSlider(Vector2(300, 280), Vector2(53, 30), 20, default_state=0),
   'custom_night>with_chica_slider': DigitSlider(Vector2(450, 280), Vector2(53, 30), 20, default_state=0),
   'custom_night>with_foxy_slider': DigitSlider(Vector2(600, 280), Vector2(53, 30), 20, default_state=0),
-  'custom_night>golden_freddy_slider': DigitSlider(Vector2(750, 280), Vector2(53, 30), 20, default_state=0),
+  'custom_night>balloon_boy_slider': DigitSlider(Vector2(750, 280), Vector2(53, 30), 20, default_state=0),
   'custom_night>toy_freddy_slider': DigitSlider(Vector2(150, 480), Vector2(53, 30), 20, default_state=0),
   'custom_night>toy_bonnie_slider': DigitSlider(Vector2(300, 480), Vector2(53, 30), 20, default_state=0),
   'custom_night>toy_chica_slider': DigitSlider(Vector2(450, 480), Vector2(53, 30), 20, default_state=0),
   'custom_night>mangle_slider': DigitSlider(Vector2(600, 480), Vector2(53, 30), 20, default_state=0),
-  'custom_night>balloon_boy_slider': DigitSlider(Vector2(750, 480), Vector2(53, 30), 20, default_state=0),
+  'custom_night>golden_freddy_slider': DigitSlider(Vector2(750, 480), Vector2(53, 30), 20, default_state=0),
 
-  'custom_night>slider': TextSlider(Vector2(150, 606), states=['20/20/20/20', 'New & Shiny  ', 'Double Trouble', 'Night of Misfits   ', 'Foxy Foxy', 'Ladies Night', "Freddy's Circus", 'Cupcake Challenge', 'Fazbear Fever', 'Golden Freddy'], default_state=0),
+
+  'custom_night>slider': TextSlider(Vector2(150, 606), states=['20/20/20/20', 'New & Shiny  ', 'Double Trouble', 'Night of Misfits   ', 'Foxy Foxy', 'Ladies Night   ', "Freddy's Circus", 'Cupcake Challenge', 'Fazbear Fever', 'Golden Freddy'], default_state=0),
   'custom_night>confirm_button': BoxText('APPLY SELECTED', 34, Vector2(202, 636), gray_hover=True),
   
   'custom_night>start': BoxText("START", 48, Vector2(735, 615), gray_hover=True),
@@ -190,16 +200,31 @@ all_objects = {
   'jumpscares>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['Withered Freddy', 'Withered Bonnie', 'Withered Chica', 'Withered Foxy', 'Golden Freddy', 'Toy Freddy', 'Toy Bonnie', 'Toy Chica', 'Mangle', 'Marionette/Puppet']),
   # ----------------------------------------------- #
   'development_moments>top_text': JustText("Developments", 48, Vector2(0, 10)),
+  'development_moments>stack': SelectableImage([
+    spec_load_image("assets/graphics/Development_Moments/boris.png"),
+    spec_load_image("assets/graphics/Development_Moments/am_i_right.png"),
+    spec_load_image("assets/graphics/Development_Moments/hate_this_thing.png"),
+    spec_load_image("assets/graphics/Development_Moments/X).png"),
+    spec_load_image("assets/graphics/Development_Moments/poor_restart.png"),
+  ], Vector2(config.resolution[0]//2 - 512//2 + 1, config.resolution[1]//2 - 384//2 - 49), layer=2),
+
+  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', '.gitignore one love  ', ';)', 'restart functions are cool  ']),
+  'development_moments>dont_aks_me_why': JustText("do not ask me why these pictures are so scaled", 20, Vector2(0, 736), color=DARKGRAY),
+  # ----------------------------------------------- #
+  'newspaper>news': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/Paychecks_Fire/news.png")),
   # ----------------------------------------------- #
   'preview>logo_text': JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, font_filename=get_font_default(), spacing=2),
   'preview>logo': JustImage(spec_load_image("assets/graphics/PreviewLogos/raylib.png"), Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 128)),
   # ----------------------------------------------- #
   'test_scene>digit_bar': DigitSlider(Vector2(100, 500)),
   'test_scene>slider': BarSlider(Vector2(100, 600)),
+  'test_scene>circle_bar': BarCircle(Vector2(100, 400), default_state=360, speed=10),
+  'test_scene>circle_button': BoxText('<------->\nPUSH-HERE\n<------->', 20, Vector2(230, 360)),
 }
 
 all_sounds = {
   'menu>reset_sounds': False,
+  'menu>activation>menu_music': JustSound(spec_load_sound('assets/audios/The_Sand_Temple_Loop_G.wav'), True),
   # ----------------------------------------------- #
   'settings>reset_sounds': False,
   # ----------------------------------------------- #
@@ -213,11 +238,12 @@ all_sounds = {
   # ----------------------------------------------- #
   'newspaper>reset_sounds': False,
   # ----------------------------------------------- #
-  'preview>activation>menu_music': JustSound(spec_load_sound('assets/audios/The_Sand_Temple_Loop_G.wav'), True),
+  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True)
 }
 
 all_variables = {
   'menu>selected_hover_item': None,
+  'menu>selection_arr': None
 }
 
 scenes = Scene_Manager(["menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables)

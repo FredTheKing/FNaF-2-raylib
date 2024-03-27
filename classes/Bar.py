@@ -1,6 +1,10 @@
+import config
 from classes.Text import BoxText, JustText
 from pyray import *
 from raylib.colors import *
+
+from classes.Time import Time
+
 
 class SideButtons:
   def __init__(self):
@@ -120,3 +124,57 @@ class TextSlider(BarSlider):
 
   def draw(self):
     draw_text_ex(self.text.font, self.text.text, self.text.pos, self.text.fontsize, self.text.spacing, self.text.color)
+
+
+class BarCircle:
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: float = 30, states: int = 10, layer: int = 3, default_state: int = None, speed: int = 5):
+    self.pos = pos
+    self.size = size
+    self.states = states
+    if default_state is None:
+      self.current_state: int = states
+    else:
+      self.current_state: int = default_state
+    self.layer_order = layer
+
+    self.time: Time = Time(speed)
+    self.time.start_time()
+    self.start_circle: bool = False
+    self.start_circle_temp: bool = False
+
+  def check_state(self):
+    if self.current_state > 360:
+      self.current_state = 360
+
+    if self.current_state < 0:
+      self.current_state = 0
+
+  def draw(self):
+    draw_circle_sector(self.pos, self.size, 180, 180-self.current_state, 64, WHITE)
+
+  def check_ticks(self):
+    self.time.update_time()
+
+    if self.start_circle:
+      self.start_circle_temp = True
+    else:
+      self.start_circle_temp = False
+
+    if self.start_circle and self.start_circle_temp:
+      if self.time.time_current >= 1:
+        self.current_state += 2.2
+        self.time.start_time()
+    elif not self.start_circle and not self.start_circle_temp:
+      if self.time.time_current >= 1:
+        self.current_state -= 1
+        self.time.start_time()
+
+  def draw_debug(self):
+    draw_text(f'{int(self.start_circle)}; {int(self.start_circle_temp)} = {self.time.time_current}', int(self.pos.x) + self.size + 4, int(self.pos.y) - 8, 20, WHITE)
+
+  def update(self):
+    self.check_ticks()
+    self.check_state()
+    self.draw()
+    if config.debug:
+      self.draw_debug()

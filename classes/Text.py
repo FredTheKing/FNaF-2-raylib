@@ -51,9 +51,7 @@ class BoxText(JustText, Hitbox):
       self.color = [123, 123, 123, 255]
 
   def update(self):
-    self.check_collision_mouse()
-    self.check_hover_click_sound()
-    self.check_mouse_interaction()
+    Hitbox.update(self)
     if self.color_check_flag:
       self.check_color_on_hover()
     JustText.update(self)

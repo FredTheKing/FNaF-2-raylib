@@ -1,3 +1,4 @@
+import config
 from classes.Time import Time
 from raylib.colors import *
 from config import *
@@ -16,6 +17,10 @@ def main():
       # activation
       if scenes.scene_changed:
         audio_activation_update()
+        scenes.scene_variables['menu']['selection_arr'] = [scenes.scene_objects['menu']['new_game'],
+                                                           scenes.scene_objects['menu']['continue'],
+                                                           scenes.scene_objects['menu']['settings'],
+                                                           scenes.scene_objects['menu']['extras']]
         scenes.scene_changed -= 1
         scenes.time_multiply = 0.25
 
@@ -28,17 +33,17 @@ def main():
       if scenes.scene_objects['menu']['to_test_tp'].clicked_verdict and config.debug:
         scenes.set_scene('test_scene')
 
-      menu_temp_selection_arr = [scenes.scene_objects['menu']['new_game'], scenes.scene_objects['menu']['continue'], scenes.scene_objects['menu']['settings'], scenes.scene_objects['menu']['extras']]
-      for item in menu_temp_selection_arr:
+      for item in scenes.scene_variables['menu']['selection_arr']:
         if item.hover_verdict:
           scenes.scene_objects['menu']['set'].pos.y = item.pos.y + 1
           scenes.scene_variables['menu']['selected_hover_item'] = item
+
       if scenes.scene_objects['menu']['new_game'].clicked_verdict:
         upcoming_night = actual_night = 0
         scenes.set_scene('newspaper')
       elif scenes.scene_objects['menu']['continue'].clicked_verdict:
-        upcoming_night = actual_night
-        if upcoming_night == 0:
+        upcoming_night = actual_night + 1
+        if upcoming_night == 1:
           scenes.set_scene('newspaper')
         else:
           scenes.set_scene('night')
@@ -46,7 +51,6 @@ def main():
         scenes.set_scene('settings')
       elif scenes.scene_objects['menu']['extras'].clicked_verdict:
         scenes.set_scene('extras')
-      del menu_temp_selection_arr
 
       # draw
       if scenes.scene_variables['menu']['selected_hover_item'] is not None and scenes.scene_variables['menu']['selected_hover_item'].text == 'Continue':
@@ -144,24 +148,49 @@ def main():
 
 
       # step
+      scene_animatronics_arr = [scenes.scene_objects['custom_night']['with_freddy_slider'], scenes.scene_objects['custom_night']['with_bonnie_slider'], scenes.scene_objects['custom_night']['with_chica_slider'], scenes.scene_objects['custom_night']['with_foxy_slider'], scenes.scene_objects['custom_night']['balloon_boy_slider'], scenes.scene_objects['custom_night']['toy_freddy_slider'], scenes.scene_objects['custom_night']['toy_bonnie_slider'], scenes.scene_objects['custom_night']['toy_chica_slider'], scenes.scene_objects['custom_night']['mangle_slider'], scenes.scene_objects['custom_night']['golden_freddy_slider']]
+
       if scenes.scene_objects['custom_night']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
 
       if scenes.scene_objects['custom_night']['start'].clicked_verdict:
-        global difficulty_withered_freddy, difficulty_withered_bonnie, difficulty_withered_chica, difficulty_withered_foxy, difficulty_golden_freddy, difficulty_toy_freddy, difficulty_toy_bonnie, difficulty_toy_chica, difficulty_mangle, difficulty_balloon_boy
+        temp_animatronics_arr = []
+        for i in range(10):
+          temp_animatronics_arr.append(scene_animatronics_arr[i].current_state)
+        config.animatronics_arr = temp_animatronics_arr
+        del temp_animatronics_arr
 
-        scene_animatronics_arr = [scenes.scene_objects['custom_night']['with_freddy_slider'].current_state, scenes.scene_objects['custom_night']['with_bonnie_slider'].current_state, scenes.scene_objects['custom_night']['with_chica_slider'].current_state, scenes.scene_objects['custom_night']['with_foxy_slider'].current_state, scenes.scene_objects['custom_night']['balloon_boy_slider'].current_state, scenes.scene_objects['custom_night']['toy_freddy_slider'].current_state, scenes.scene_objects['custom_night']['toy_bonnie_slider'].current_state, scenes.scene_objects['custom_night']['toy_chica_slider'].current_state, scenes.scene_objects['custom_night']['mangle_slider'].current_state, scenes.scene_objects['custom_night']['golden_freddy_slider'].current_state]
-        config_animatronics_arr = [difficulty_withered_freddy, difficulty_withered_bonnie, difficulty_withered_chica, difficulty_withered_foxy, difficulty_balloon_boy, difficulty_toy_freddy, difficulty_toy_bonnie, difficulty_toy_chica, difficulty_mangle, difficulty_golden_freddy]
-
-        config_animatronics_arr += scene_animatronics_arr
-
+        config.upcoming_night = 7
         scenes.set_scene('night')
 
       if scenes.scene_objects['custom_night']['confirm_button'].clicked_verdict:
-        print(f'apply DING! picked up a "{scenes.scene_objects['custom_night']['slider'].current_state}" difficulty!')
-        if scenes.scene_objects['custom_night']['slider'].current_index == 0:
-          pass
+        what_to_set = []
+        if scenes.scene_objects['custom_night']['slider'].current_index == 0: # 20/20/20/20
+          what_to_set = [20, 20, 20, 20, 0, 0, 0, 0, 0, 0]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 1:  # New & Shiny
+          what_to_set = [0,	0, 0, 0, 10, 10, 10, 10, 10, 0]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 2:  # Double Trouble
+          what_to_set = [0, 20, 0, 5, 0, 0, 20,	0, 0, 0]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 3:  # Night of Misfits
+          what_to_set = [0, 0, 0, 0, 20, 0, 0, 0, 20, 10]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 4:  # Foxy Foxy
+          what_to_set = [0, 0, 0, 20, 0, 0, 0, 0, 20, 0]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 5:  # Ladies' Night
+          what_to_set = [0, 0, 20, 0, 0, 0, 0, 20, 20, 0]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 6:  # Freddy's Circus
+          what_to_set = [20, 0, 0, 5, 10, 20, 0, 0, 0, 10]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 7:  # Cupcake Challenge
+          what_to_set = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 8:  # Fazbear Fever
+          what_to_set = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        elif scenes.scene_objects['custom_night']['slider'].current_index == 9:  # Golden Freddy
+          what_to_set = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
 
+        if config.debug:
+          print(f'apply DING! picked up a "{scenes.scene_objects['custom_night']['slider'].current_state}" difficulty!\t{what_to_set}')
+
+        for i in range(10):
+          scene_animatronics_arr[i].current_state = what_to_set[i]
       # draw
       pass
 
@@ -192,6 +221,7 @@ def main():
       # step
       if scenes.scene_objects['development_moments']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
+      scenes.scene_objects['development_moments']['stack'].texture_index = scenes.scene_objects['development_moments']['selector'].current_index
 
       # draw
       pass
@@ -219,6 +249,8 @@ def main():
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
+        if config.debug:
+          print(f'starting DING! the difficulty is {config.animatronics_arr}, upcoming night is "{config.upcoming_night}"')
 
       # step
       pass
@@ -380,6 +412,12 @@ def main():
       # step
       if scenes.scene_objects['test_scene']['back_button'].clicked_verdict:
         scenes.set_scene('menu')
+
+      scenes.scene_objects['test_scene']['circle_bar'].start_circle = scenes.scene_objects['test_scene']['circle_button'].hold_verdict
+      if scenes.scene_objects['test_scene']['circle_button'].hold_verdict:
+        scenes.scene_sounds['test_scene']['storage']['wind_sound'].play()
+      else:
+        scenes.scene_sounds['test_scene']['storage']['wind_sound'].stop()
 
       # draw
       pass

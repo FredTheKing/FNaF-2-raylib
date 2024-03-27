@@ -19,9 +19,7 @@ class Checkbox(Hitbox):
         self.reset()
 
   def update(self):
-    self.check_collision_mouse()
-    self.check_hover_click_sound()
-    self.check_mouse_interaction()
+    Hitbox.update(self)
     self.check_state()
     self.draw()
     if config.debug:
