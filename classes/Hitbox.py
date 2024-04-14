@@ -16,11 +16,16 @@ class Hitbox:
     self.hover_verdict = False
     self.clicked_verdict = False
 
+  def hitbox_with_model(self):
+    self.rec.x = self.pos.x
+    self.rec.y = self.pos.y
+
   def update(self):
     self.check_collision_mouse()
     self.check_hold_interaction()
     self.check_mouse_interaction()
     self.check_hover_click_sound()
+    self.hitbox_with_model()
 
   def check_collision_mouse(self):
     point = get_mouse_position()
@@ -74,7 +79,7 @@ class Hitbox:
     rec_size = Vector2(self.rec.width, self.rec.height)
     color = self.hitbox_color
     draw_rectangle_v(rec_pos, rec_size, (color[0], color[1], color[2], 100))
-    #draw_rectangle_v(Vector2(self.rec.x-2, self.rec.y-2), Vector2(4, 4), BLUE)
+    draw_rectangle_v(Vector2(self.rec.x-2, self.rec.y-2), Vector2(4, 4), BLUE)
 
     x = int(self.pos.x) + int(self.rec.width) + 4
     y = int(self.pos.y) + int(self.rec.height // 2) - 4

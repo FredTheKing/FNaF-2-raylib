@@ -42,7 +42,7 @@ class BoxImage(JustImage, Hitbox):
     if config.debug:
       self.draw_debug()
 
-class SelectableImage(JustImage):
+class SelectableJustImage(JustImage):
   def __init__(self, textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255):
     if textures_list_init is None:
       self.textures_list = []
@@ -64,3 +64,12 @@ class SelectableImage(JustImage):
   def update(self):
     self.change_current_texture()
     JustImage.update(self)
+
+class SelectableBoxImage(SelectableJustImage, BoxImage):
+  def __init__(self, textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255):
+    SelectableJustImage.__init__(self, textures_list_init)
+    BoxImage.__init__(self, self.textures_list[0], pos, layer, alpha)
+
+  def update(self):
+    self.change_current_texture()
+    BoxImage.update(self)

@@ -1,26 +1,44 @@
 import config
 from classes.Time import Time
 from raylib.colors import *
-from config import *
+from config import set_night
 from etc import *
 from objects import *
 
 def main():
-  global actual_night, upcoming_night
   check_textures_time = Time(1)
   check_textures_time.start_time()
   while not window_should_close():
+    current_scene = scenes.scene_list[scenes.scene_index]
     process_update()
+
 # ----------------------------------------------- #
 
-    if scenes.scene_list[scenes.scene_index] == "menu":
+    if current_scene == "config":
       # activation
       if scenes.scene_changed:
         audio_activation_update()
-        scenes.scene_variables['menu']['selection_arr'] = [scenes.scene_objects['menu']['new_game'],
-                                                           scenes.scene_objects['menu']['continue'],
-                                                           scenes.scene_objects['menu']['settings'],
-                                                           scenes.scene_objects['menu']['extras']]
+        scenes.scene_changed -= 1
+        scenes.time_multiply = 1
+
+      # step
+      set_night(scenes.scene_objects['config']['actual_night_slider'].current_state, False)
+
+      # draw
+      pass
+
+# ----------------------------------------------- #
+
+    elif current_scene == "menu":
+      # activation
+      if scenes.scene_changed:
+        audio_activation_update()
+        scenes.scene_variables['menu']['selection_arr'] = [
+          scenes.scene_objects['menu']['new_game'],
+          scenes.scene_objects['menu']['continue'],
+          scenes.scene_objects['menu']['settings'],
+          scenes.scene_objects['menu']['extras'],
+        ]
         scenes.scene_changed -= 1
         scenes.time_multiply = 0.25
 
@@ -39,11 +57,12 @@ def main():
           scenes.scene_variables['menu']['selected_hover_item'] = item
 
       if scenes.scene_objects['menu']['new_game'].clicked_verdict:
-        upcoming_night = actual_night = 0
+        set_night(1, False)
+        set_night(config.actual_night)
         scenes.set_scene('newspaper')
       elif scenes.scene_objects['menu']['continue'].clicked_verdict:
-        upcoming_night = actual_night + 1
-        if upcoming_night == 1:
+        set_night(config.actual_night)
+        if config.upcoming_night == 1:
           scenes.set_scene('newspaper')
         else:
           scenes.set_scene('night')
@@ -54,11 +73,11 @@ def main():
 
       # draw
       if scenes.scene_variables['menu']['selected_hover_item'] is not None and scenes.scene_variables['menu']['selected_hover_item'].text == 'Continue':
-        draw_text_ex(config.def_font, f'Night {actual_night+1}', Vector2(230, 470), 15, 0, GRAY)
+        draw_text_ex(config.def_font, f'Night {config.actual_night}', Vector2(230, 470), 15, 0, GRAY)
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "settings":
+    elif current_scene == "settings":
       # activation
       if scenes.scene_changed:
         audio_activation_update()
@@ -111,15 +130,21 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "extras":
+    elif current_scene == "extras":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
 
       # step
-      extras_temp_selection_arr = [scenes.scene_objects['extras']['proj_github'], scenes.scene_objects['extras']['auth_github'], scenes.scene_objects['extras']['custom_night'], scenes.scene_objects['extras']['jumpscares'], scenes.scene_objects['extras']['development_moments']]
-      for item in extras_temp_selection_arr:
+      scenes.scene_variables['extras']['selection_arr'] = [
+        scenes.scene_objects['extras']['proj_github'],
+        scenes.scene_objects['extras']['auth_github'],
+        scenes.scene_objects['extras']['custom_night'],
+        scenes.scene_objects['extras']['jumpscares'],
+        scenes.scene_objects['extras']['development_moments'],
+      ]
+      for item in scenes.scene_variables['extras']['selection_arr']:
         if item.hover_verdict:
           scenes.scene_objects['extras']['set'].pos.y = item.pos.y + 1
 
@@ -140,7 +165,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "custom_night":
+    elif current_scene == "custom_night":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -148,7 +173,18 @@ def main():
 
 
       # step
-      scene_animatronics_arr = [scenes.scene_objects['custom_night']['with_freddy_slider'], scenes.scene_objects['custom_night']['with_bonnie_slider'], scenes.scene_objects['custom_night']['with_chica_slider'], scenes.scene_objects['custom_night']['with_foxy_slider'], scenes.scene_objects['custom_night']['balloon_boy_slider'], scenes.scene_objects['custom_night']['toy_freddy_slider'], scenes.scene_objects['custom_night']['toy_bonnie_slider'], scenes.scene_objects['custom_night']['toy_chica_slider'], scenes.scene_objects['custom_night']['mangle_slider'], scenes.scene_objects['custom_night']['golden_freddy_slider']]
+      scene_animatronics_arr = [
+        scenes.scene_objects['custom_night']['with_freddy_slider'],
+        scenes.scene_objects['custom_night']['with_bonnie_slider'],
+        scenes.scene_objects['custom_night']['with_chica_slider'],
+        scenes.scene_objects['custom_night']['with_foxy_slider'],
+        scenes.scene_objects['custom_night']['balloon_boy_slider'],
+        scenes.scene_objects['custom_night']['toy_freddy_slider'],
+        scenes.scene_objects['custom_night']['toy_bonnie_slider'],
+        scenes.scene_objects['custom_night']['toy_chica_slider'],
+        scenes.scene_objects['custom_night']['mangle_slider'],
+        scenes.scene_objects['custom_night']['golden_freddy_slider'],
+      ]
 
       if scenes.scene_objects['custom_night']['back_button'].clicked_verdict:
         scenes.set_scene('extras')
@@ -157,33 +193,35 @@ def main():
         temp_animatronics_arr = []
         for i in range(10):
           temp_animatronics_arr.append(scene_animatronics_arr[i].current_state)
-        config.animatronics_arr = temp_animatronics_arr
+        for i in range(len(config.animatronics_arr)):
+          config.animatronics_arr[i].difficulty = temp_animatronics_arr[i]
         del temp_animatronics_arr
 
-        config.upcoming_night = 7
+        set_night(7)
         scenes.set_scene('night')
 
       if scenes.scene_objects['custom_night']['confirm_button'].clicked_verdict:
         what_to_set = []
-        if scenes.scene_objects['custom_night']['slider'].current_index == 0: # 20/20/20/20
+        current_index = scenes.scene_objects['custom_night']['slider'].current_index
+        if current_index == 0:  # 20/20/20/20
           what_to_set = [20, 20, 20, 20, 0, 0, 0, 0, 0, 0]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 1:  # New & Shiny
+        elif current_index == 1:  # New & Shiny
           what_to_set = [0,	0, 0, 0, 10, 10, 10, 10, 10, 0]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 2:  # Double Trouble
+        elif current_index == 2:  # Double Trouble
           what_to_set = [0, 20, 0, 5, 0, 0, 20,	0, 0, 0]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 3:  # Night of Misfits
+        elif current_index == 3:  # Night of Misfits
           what_to_set = [0, 0, 0, 0, 20, 0, 0, 0, 20, 10]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 4:  # Foxy Foxy
+        elif current_index == 4:  # Foxy Foxy
           what_to_set = [0, 0, 0, 20, 0, 0, 0, 0, 20, 0]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 5:  # Ladies' Night
+        elif current_index == 5:  # Ladies' Night
           what_to_set = [0, 0, 20, 0, 0, 0, 0, 20, 20, 0]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 6:  # Freddy's Circus
+        elif current_index == 6:  # Freddy's Circus
           what_to_set = [20, 0, 0, 5, 10, 20, 0, 0, 0, 10]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 7:  # Cupcake Challenge
+        elif current_index == 7:  # Cupcake Challenge
           what_to_set = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 8:  # Fazbear Fever
+        elif current_index == 8:  # Fazbear Fever
           what_to_set = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-        elif scenes.scene_objects['custom_night']['slider'].current_index == 9:  # Golden Freddy
+        elif current_index == 9:  # Golden Freddy
           what_to_set = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
 
         if config.debug:
@@ -196,7 +234,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "jumpscares":
+    elif current_scene == "jumpscares":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -212,7 +250,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "development_moments":
+    elif current_scene == "development_moments":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -229,53 +267,119 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "newspaper":
+    elif current_scene == "newspaper":
       # activation
       if scenes.scene_changed:
         scenes.time_multiply = 1
         scenes.scene_changed -= 1
 
       # step
-      pass
+      if scenes.scene_objects['newspaper']['news'].clicked_verdict or scenes.time_current > 5:
+        scenes.set_scene('night')
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "night":
-
+    elif current_scene == "night":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
+        scenes.scene_variables['night']['upcoming_end'] = define_ending(config.upcoming_night)
+        scenes.scene_objects['night']['night_count'].text = f'{config.upcoming_night}{scenes.scene_variables['night']['upcoming_end']} Night'
+        scenes.scene_objects['night']['white_blinko'].go = True
         if config.debug:
-          print(f'starting DING! the difficulty is {config.animatronics_arr}, upcoming night is "{config.upcoming_night}"')
+          long = len(config.animatronics_arr)
+          print('starting DING! the difficulty is [', end='')
+          for i in range(long):
+            if i == long-1:
+              print(config.animatronics_arr[i].difficulty, end='')
+            else:
+              print(config.animatronics_arr[i].difficulty, end=', ')
+          print(f'], upcoming night is "{config.upcoming_night}"')
 
       # step
-      pass
+      if config.debug:
+        if scenes.time_current >= 0:
+          scenes.set_scene("game")
+      else:
+        if scenes.time_current > 4:
+          scenes.set_scene("game")
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "game":
+    elif current_scene == "game":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
         scenes.time_multiply = 1
 
       # step
-      if gui_button(Rectangle(300, 400, 100, 80), "go"):
-        scenes.set_scene('menu')
+      if config.debug:
+        debug_draw_game_text()
+      tests_do_testing(scenes)
+      border_anchor_point(scenes.scene_objects['game']['scroll_anchor'])
+      glue_subjects_to_object(scenes)
+
+      point = int(get_mouse_position().x)
+      if point > (scenes.scene_objects['game']['scroll_box'].pos.x + scenes.scene_variables['game']['scroll_space']):
+        scenes.scene_objects['game']['scroll_anchor'].pos.x -= 0.6 * config.delta
+      if point < (scenes.scene_objects['game']['scroll_box'].pos.x - scenes.scene_variables['game']['scroll_space']):
+        scenes.scene_objects['game']['scroll_anchor'].pos.x += 0.6 * config.delta
+
+
+
+      if not config.ctrl_hold:
+        scenes.scene_objects['game']['office_selectable'].texture_index = 0
+      elif config.ctrl_hold:
+        if scenes.scene_variables['game']['light_not_working']:
+          scenes.scene_objects['game']['office_selectable'].texture_index = 4
+        else:
+          scenes.scene_objects['game']['office_selectable'].texture_index = 1
+          scenes.scene_variables['game']['light_left_status'] = False
+          scenes.scene_variables['game']['light_right_status'] = False
+
+
+      scenes.scene_variables['game']['light_left_status'] = scenes.scene_objects['game']['office_left_light'].hold_verdict
+      scenes.scene_variables['game']['light_right_status'] = scenes.scene_objects['game']['office_right_light'].hold_verdict
+
+
+      if scenes.scene_variables['game']['light_left_status']:
+        scenes.scene_objects['game']['office_left_light'].texture_index = 1
+        scenes.scene_objects['game']['office_selectable'].texture_index = 2
+      else:
+        scenes.scene_objects['game']['office_left_light'].texture_index = 0
+
+
+      if scenes.scene_variables['game']['light_right_status']:
+        scenes.scene_objects['game']['office_right_light'].texture_index = 1
+        scenes.scene_objects['game']['office_selectable'].texture_index = 3
+      else:
+        scenes.scene_objects['game']['office_right_light'].texture_index = 0
+
+
+      if (scenes.scene_variables['game']['light_left_status'] or scenes.scene_variables['game']['light_right_status']) or (not scenes.scene_variables['game']['light_not_working'] and config.ctrl_hold):
+        scenes.scene_sounds['game']['storage']['light_sound'].play()
+        scenes.scene_sounds['game']['storage']['broken_light'].stop()
+      elif config.ctrl_hold and scenes.scene_variables['game']['light_not_working'] and not (scenes.scene_variables['game']['light_left_status'] or scenes.scene_variables['game']['light_right_status']):
+        scenes.scene_sounds['game']['storage']['broken_light'].play()
+        scenes.scene_sounds['game']['storage']['light_sound'].stop()
+      else:
+        scenes.scene_sounds['game']['storage']['light_sound'].stop()
+        scenes.scene_sounds['game']['storage']['broken_light'].stop()
+
 
       # draw
       pass
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "paycheck":
+    elif current_scene == "paycheck":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -289,7 +393,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "pixel_minigame":
+    elif current_scene == "pixel_minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -303,7 +407,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "creepy_minigame":
+    elif current_scene == "creepy_minigame":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -317,7 +421,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "loading":
+    elif current_scene == "loading":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -329,7 +433,7 @@ def main():
       if objects.all_textures_ready:
         print('No issues found! Enjoy the game.')
         check_textures_time.kill_time()
-        if show_preview:
+        if config.show_preview:
           scenes.set_scene('preview')
         else:
           scenes.set_scene('menu')
@@ -340,12 +444,12 @@ def main():
       # draw
       loading_text = "Loading..."
       measure = measure_text(loading_text, 28)
-      draw_text(loading_text, resolution[0]//2-measure//2, resolution[1]//2-16, 28, WHITE)
+      draw_text(loading_text, config.resolution[0]//2-measure//2, config.resolution[1]//2-16, 28, WHITE)
       del loading_text, measure
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "error":
+    elif current_scene == "error":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -356,12 +460,12 @@ def main():
       space_between = 300
 
       rec_dont = Rectangle(0, 0, 250, 50)
-      rec_dont.x = resolution[0] // 2 - rec_dont.width // 2 - space_between // 2
-      rec_dont.y = resolution[1] // 2 + 80
+      rec_dont.x = config.resolution[0] // 2 - rec_dont.width // 2 - space_between // 2
+      rec_dont.y = config.resolution[1] // 2 + 80
 
       rec_do = Rectangle(0, 0, 250, 50)
-      rec_do.x = resolution[0] // 2 - rec_do.width // 2 + space_between // 2
-      rec_do.y = resolution[1] // 2 + 80
+      rec_do.x = config.resolution[0] // 2 - rec_do.width // 2 + space_between // 2
+      rec_do.y = config.resolution[1] // 2 + 80
 
       if gui_button(rec_dont, "WAIT (DONT REMEMBER PICK)"):
         check_textures_time.start_time()
@@ -378,17 +482,17 @@ def main():
       error_title_text = "ASSETS LOADING ERROR!"
       error_description_text = "Oh no! Looks your python console doesn't want to load anything whatsoever.\nTry choosing different python version to boot this game. If you think your\ncomputer needs more time to load all textures, please push 'WAIT' button"
       error_title_measure = measure_text(error_title_text, 40)
-      draw_text(error_title_text, resolution[0]//2 - error_title_measure//2, resolution[1]//2-60, 40, ORANGE)
+      draw_text(error_title_text, config.resolution[0]//2 - error_title_measure//2, config.resolution[1]//2-60, 40, ORANGE)
       space = 0
       for item in error_description_text.split('\n'):
         error_description_measure = measure_text(item, 20)
-        draw_text(item, resolution[0] // 2 - error_description_measure // 2, resolution[1]//2-10+space, 20, WHITE)
+        draw_text(item, config.resolution[0] // 2 - error_description_measure // 2, config.resolution[1]//2-10+space, 20, WHITE)
         space += 20
       del error_title_text, error_description_text, error_title_measure, space
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "preview":
+    elif current_scene == "preview":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -403,7 +507,7 @@ def main():
 
 # ----------------------------------------------- #
 
-    elif scenes.scene_list[scenes.scene_index] == "test_scene":
+    elif current_scene == "test_scene":
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
@@ -426,7 +530,8 @@ def main():
 
     # always do:
     # step
-    config.key_pressed = get_key_pressed()
+    config.delta = get_frame_time() * 1000
+    global_keys_update()
     scenes.update_time()
     set_fullscreen()
     xor_debug()
@@ -445,7 +550,8 @@ def main():
 
 # ----------------------------------------------- #
     end_drawing()
-    clear_background(BLACK)
+    if config.debug: clear_background(DARKPURPLE)
+    else: clear_background(BLACK)
   close_window()
 
 

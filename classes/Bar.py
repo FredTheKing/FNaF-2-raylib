@@ -87,8 +87,10 @@ class DigitSlider(BarSlider):
 
 
 class TextSlider(BarSlider):
-  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states: list = ['PLACE-', '-HOLDER'], layer: int = 3, default_state: int = None):
+  def __init__(self, pos: Vector2 = Vector2(0, 0), size: Vector2 = Vector2(300, 30), states=None, layer: int = 3, default_state: int = None):
     super().__init__(pos, size, layer=layer)
+    if states is None:
+      states = ['PLACE-', '-HOLDER']
     del self.goes_zero
     self.states = states
     if default_state is None:

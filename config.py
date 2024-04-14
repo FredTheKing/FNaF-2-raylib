@@ -1,10 +1,21 @@
 from pyray import *
 import screeninfo
 
+from classes.Special import Special
+
+
 def get_res():
   screen_info = screeninfo.get_monitors()
   for screen in screen_info:
     return screen.width, screen.height
+
+def set_night(night: int, actual_or_upcoming: bool = True):
+  if actual_or_upcoming:
+    global upcoming_night
+    upcoming_night = night
+  else:
+    global actual_night
+    actual_night = night
 
 
 resolution = (1024, 768)
@@ -13,13 +24,15 @@ init_window(resolution[0], resolution[1], "Five Nights at Freddy's 2")
 init_audio_device()
 set_window_icon(load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/CustomNightIcons/WithChica.png"))
 key_pressed: int
+ctrl_hold: bool = False
+delta: float
 set_target_fps(-1)
 def_font_filename = "assets/fonts/regular.ttf"
 def_set_sound_filename = "assets/audios/blip3.wav"
 def_font: Font
 def_set_sound: Sound
 
-actual_night = 0
+actual_night = 1
 upcoming_night = 0
 
 fullscreen = False
@@ -29,14 +42,15 @@ debug = True
 volume = 1
 show_preview = False
 
-difficulty_withered_freddy = 0
-difficulty_withered_bonnie = 0
-difficulty_withered_chica = 0
-difficulty_withered_foxy = 0
-difficulty_balloon_boy = 0
-difficulty_toy_freddy = 0
-difficulty_toy_bonnie = 0
-difficulty_toy_chica = 0
-difficulty_mangle = 0
-difficulty_golden_freddy = 0
-animatronics_arr = [difficulty_withered_freddy, difficulty_withered_bonnie, difficulty_withered_chica, difficulty_withered_foxy, difficulty_balloon_boy, difficulty_toy_freddy, difficulty_toy_bonnie, difficulty_toy_chica, difficulty_mangle, difficulty_golden_freddy]
+animatronics_arr = [
+  Special.Animatronic('Withered_Freddy', ['8', '7', '3']),
+  Special.Animatronic('Withered_Bonnie', ['8', '7', '1', '5', '']),
+  Special.Animatronic('Withered_Chica', ['8', '4', '2', '6']),
+  Special.Animatronic('Withered_Foxy', ['8', '']),
+  Special.Animatronic('Balloon_Boy', ['10', '5']),
+  Special.Animatronic('Toy_Freddy', ['9', '10', '']),
+  Special.Animatronic('Toy_Bonnie', ['9', '3', '4', '2', '6']),
+  Special.Animatronic('Toy_Chica', ['9', '7', '4', '1', '5']),
+  Special.Animatronic('Mangle', ['12', '11', '10', '7', '1', '2', '6', '']),
+  Special.Animatronic('Golden_Freddy', [])
+]

@@ -1,10 +1,12 @@
 from random import randint
 
 from pyray import *
+
+from classes.Special import Special
 from classes.Managers import Scene_Manager
 from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import JustAnimation, SelectableAnimation
-from classes.Image import JustImage, BorderImage, BoxImage, SelectableImage
+from classes.Image import JustImage, BorderImage, BoxImage, SelectableJustImage, SelectableBoxImage
 from classes.Checkbox import Checkbox
 from classes.Bar import BarSlider, DigitSlider, TextSlider, BarCircle
 from classes.Sound import JustSound
@@ -75,10 +77,17 @@ def change_needs() -> None:
   scenes.scene_objects['development_moments']['stack'].resize(Vector2(512, 384))
   scenes.scene_objects['development_moments']['dont_aks_me_why'].center_text()
 
+  scenes.scene_objects['night']['night_am'].center_text()
+  scenes.scene_objects['night']['night_count'].center_text()
+
   scenes.scene_objects['test_scene']['circle_button'].click_sound = None
 
-def spec_load_image(filename: str) -> Texture:
-  return load_texture_from_image(load_image(release_path + filename))
+def spec_load_image(filename: str, animation_subtype: bool = False) -> Texture or list[Texture]:
+  if animation_subtype:
+    arr = [load_texture_from_image(load_image(release_path + filename))]
+    return arr
+  else:
+    return load_texture_from_image(load_image(release_path + filename))
 
 def spec_load_sound(filename: str) -> Sound:
   return load_sound(release_path + filename)
@@ -96,6 +105,9 @@ def spec_load_animation(dirname: str, times: int) -> list:
 all_objects = {
   'multi>menu|settings|extras|custom_night|jumpscares|development_moments|preview>static': JustAnimation(spec_load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8), Vector2(0, 0), 26, True, 84, 1),
   'multi>settings|extras|custom_night|jumpscares|development_moments|test_scene>back_button': BoxText("<<", 48, Vector2(10, 10), font_filename="assets/fonts/consolas.ttf"),
+  # ----------------------------------------------- #
+  'config>actual_night_text': JustText('Actual Night: ', 32, Vector2(300, 100)),
+  'config>actual_night_slider': DigitSlider(Vector2(700, 100), Vector2(80, 30), 6, goes_zero=False, default_state=config.actual_night),
   # ----------------------------------------------- #
   'menu>twitch': JustAnimation(spec_load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Misc", 4), Vector2(0, 0), 3, True),
   'menu>title_1': JustText("Five", 63, Vector2(75, 21), spacing=3),
@@ -200,7 +212,7 @@ all_objects = {
   'jumpscares>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['Withered Freddy', 'Withered Bonnie', 'Withered Chica', 'Withered Foxy', 'Golden Freddy', 'Toy Freddy', 'Toy Bonnie', 'Toy Chica', 'Mangle', 'Marionette/Puppet']),
   # ----------------------------------------------- #
   'development_moments>top_text': JustText("Developments", 48, Vector2(0, 10)),
-  'development_moments>stack': SelectableImage([
+  'development_moments>stack': SelectableJustImage([
     spec_load_image("assets/graphics/Development_Moments/boris.png"),
     spec_load_image("assets/graphics/Development_Moments/am_i_right.png"),
     spec_load_image("assets/graphics/Development_Moments/hate_this_thing.png"),
@@ -208,10 +220,46 @@ all_objects = {
     spec_load_image("assets/graphics/Development_Moments/poor_restart.png"),
   ], Vector2(config.resolution[0]//2 - 512//2 + 1, config.resolution[1]//2 - 384//2 - 49), layer=2),
 
-  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', '.gitignore one love  ', ';)', 'restart functions are cool  ']),
+  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', 'gitignore one love :heart:    ', 'they ARE pretty ;)', 'i fixed it later)0))     ']),
   'development_moments>dont_aks_me_why': JustText("do not ask me why these pictures are so scaled", 20, Vector2(0, 736), color=DARKGRAY),
   # ----------------------------------------------- #
   'newspaper>news': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/Paychecks_Fire/news.png")),
+  # ----------------------------------------------- #
+  'night>night_am': JustText('12:00 AM', 40, Vector2(350, 320)),
+  'night>night_count': JustText('0th Night', 40, Vector2(350, 400)),
+  'night>white_blinko': Special.WhiteShhrrt(release_path),
+  # ----------------------------------------------- #
+  'game>scroll_anchor': Special.InvisibleAnchor(Vector2(0, 0), Vector2(10, 10)),
+  'game>scroll_box': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768)),
+  'game>office_fun_fan': JustAnimation(spec_load_animation('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/fun_fan', 4), animation_speed=28, is_looped=True, layer=4),
+  'game>office_selectable': SelectableJustImage([
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/office_empty.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Hallway/office_fine_frontlight.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_fine_leftlight.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_fine_rightlight.png'),
+
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/office_broken_frontlight.png'),
+
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/office_witheredbonnie_inside.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/office_witheredchica_inside.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/office_witheredfreddy_inside.png'),
+
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_toychica_leftlight.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_bb_leftlight.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_toybonnie_rightlight.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/Vents/office_mangle_rightlight.png'),
+  ]),
+  'game>office_left_light': SelectableBoxImage([
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_left_disabled.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_left_enabled.png'),
+  ]),
+  'game>office_right_light': SelectableBoxImage([
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_right_disabled.png'),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_right_enabled.png'),
+  ]),
+
+
+  'game>testos_broke_light': BoxText('Broke Light'),
   # ----------------------------------------------- #
   'preview>logo_text': JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, font_filename=get_font_default(), spacing=2),
   'preview>logo': JustImage(spec_load_image("assets/graphics/PreviewLogos/raylib.png"), Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 128)),
@@ -238,15 +286,33 @@ all_sounds = {
   # ----------------------------------------------- #
   'newspaper>reset_sounds': False,
   # ----------------------------------------------- #
-  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True)
+  'night>activation>start_up_sound': JustSound(spec_load_sound(release_path + config.def_set_sound_filename)),
+  # ----------------------------------------------- #
+  'game>activation>bg_ambience': JustSound(spec_load_sound('assets/audios/CMPTR_Low_Tech_Stat.wav'), True),
+  'game>activation>bg_fan': JustSound(spec_load_sound('assets/audios/fansound.wav'), True),
+  'game>storage>light_sound': JustSound(spec_load_sound('assets/audios/buzzlight.wav'), True),
+  'game>storage>broken_light': JustSound(spec_load_sound('assets/audios/popstatic.wav'), True),
+
+  'game>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
+  # ----------------------------------------------- #
+  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
 }
 
 all_variables = {
   'menu>selected_hover_item': None,
-  'menu>selection_arr': None
+  'menu>selection_arr': None,
+  # ----------------------------------------------- #
+  'extras>selection_arr': None,
+  # ----------------------------------------------- #
+  'night>upcoming_end': 'th',
+  # ----------------------------------------------- #
+  'game>scroll_space': 300,
+  'game>light_left_status': False,
+  'game>light_right_status': False,
+  'game>light_not_working': False,
 }
 
-scenes = Scene_Manager(["menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables)
+scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables)
 
 del all_objects, all_sounds
 change_needs()
@@ -256,7 +322,6 @@ change_needs()
 
 def unload_all_textures(mod: int = -1):
   a = 0
-  b = 2
   if mod <= 0:
     b = 0
   else:
@@ -343,7 +408,10 @@ def process_update():
   current_scene = list(scenes.scene_objects)[scenes.scene_index]
   scene_objects = scenes.scene_objects[current_scene]
   for item in scene_objects.items():
-    broken_order[item[1]] = item[1].layer_order
+    try:
+      broken_order[item[1]] = item[1].layer_order
+    except AttributeError:
+      print(f"{'\033[93m'}error DING! object {item[1]} doesnt have 'layer_order' field!{'\033[0m'}")
   fixed_order = sorted(broken_order.items(), key=lambda x: x[1])
   for item in fixed_order:
     item[0].update()

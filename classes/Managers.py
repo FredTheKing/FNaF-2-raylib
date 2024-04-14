@@ -60,7 +60,7 @@ class Scene_Manager(Time):
     self.scene_objects = init_scene_objects(scenes_names, objects_dict)
     self.scene_sounds = init_scene_sounds(scenes_names, sounds_dict)
     self.scene_variables = init_scene_variables(scenes_names, variables_dict)
-    self.scene_index = 12
+    self.scene_index = 13
     self.scene_changed: int = 1
     self.scene_counter = 0
     self.start_time()
@@ -94,8 +94,9 @@ class Scene_Manager(Time):
       KeyboardKey.KEY_ONE,
       KeyboardKey.KEY_TWO,
       KeyboardKey.KEY_THREE,
-      None,
-      None,
+      KeyboardKey.KEY_FOUR,
+      KeyboardKey.KEY_FIVE,
+      KeyboardKey.KEY_SIX,
       None,
       None,
       None,
@@ -105,7 +106,6 @@ class Scene_Manager(Time):
       None,
       None,
       KeyboardKey.KEY_NINE,
-      None,
     ]
 
     for i in range(len(keys_arr)):
