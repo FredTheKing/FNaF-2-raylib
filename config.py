@@ -43,14 +43,26 @@ volume = 1
 show_preview = False
 
 animatronics_arr = [
-  Special.Animatronic('Withered_Freddy', ['8', '7', '3']),
-  Special.Animatronic('Withered_Bonnie', ['8', '7', '1', '5', '']),
-  Special.Animatronic('Withered_Chica', ['8', '4', '2', '6']),
-  Special.Animatronic('Withered_Foxy', ['8', '']),
-  Special.Animatronic('Balloon_Boy', ['10', '5']),
-  Special.Animatronic('Toy_Freddy', ['9', '10', '']),
-  Special.Animatronic('Toy_Bonnie', ['9', '3', '4', '2', '6']),
-  Special.Animatronic('Toy_Chica', ['9', '7', '4', '1', '5']),
-  Special.Animatronic('Mangle', ['12', '11', '10', '7', '1', '2', '6', '']),
-  Special.Animatronic('Golden_Freddy', [])
+  Special.Animatronic(
+    'Withered_Freddy',
+    '8|7|3|OFFICE_HALLWAY',
+    [
+      '8>7-100',
+      '7>OFFICE_HALLWAY-80|3-20',
+      '3>OFFICE_HALLWAY-97|7-3',
+    ],
+    'HALLWAY|INSIDE',
+    [
+      'FAR',
+    ],
+  ),
+  # Special.Animatronic('Withered_Bonnie', ['8', '7', '1', '5', '']),
+  # Special.Animatronic('Withered_Chica', ['8', '4', '2', '6']),
+  # Special.Animatronic('Withered_Foxy', ['8', '']),
+  # Special.Animatronic('Balloon_Boy', ['10', '5']),
+  # Special.Animatronic('Toy_Freddy', ['9', '10', '']),
+  # Special.Animatronic('Toy_Bonnie', ['9', '3', '4', '2', '6']),
+  # Special.Animatronic('Toy_Chica', ['9', '7', '4', '1', '5']),
+  # Special.Animatronic('Mangle', ['12', '11', '10', '7', '1', '2', '6']),
+  # Special.Animatronic('Golden_Freddy', []),
 ]

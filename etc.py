@@ -38,9 +38,15 @@ def debug_draw_everywhere_text():
   draw_text(text, int(pos.x), int(pos.y), font_size, WHITE)
 
 def debug_draw_game_text():
-  t_broken_light = objects.scenes.scene_variables['game']['light_not_working']
+  t_scroll_left = objects.scenes.scene_variables['game']['scroll_left']
+  t_scroll_right = objects.scenes.scene_variables['game']['scroll_right']
 
-  text = f"Broken light: {t_broken_light}"
+  t_broken_light = objects.scenes.scene_variables['game']['light_not_working']
+  t_scroll_pos_x = int(objects.scenes.scene_objects['game']['scroll_anchor'].pos.x)
+
+  t_mask = objects.scenes.scene_objects['game']['ui_mask_button'].pos
+
+  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nScroll anchor x: {t_scroll_pos_x}\n\nBroken light: {t_broken_light}\n\nMask x: ({t_mask.x}, {t_mask.y})"
 
   pos = Vector2(0, 0)
   font_size = 14
@@ -66,11 +72,8 @@ def bottom_text_draw(text: str, size: float = 16):
   draw_text_ex(config.def_font, text, Vector2(config.resolution[0] // 2 - measure.x // 2, config.resolution[1] - 17.2), size, 0, [255, 255, 255, 153])
 
 def tests_do_testing(scenes):
-  objects = [
-    scenes.scene_objects['game']['testos_broke_light']
-  ]
   if config.debug:
-    if objects[0].clicked_verdict:
+    if config.key_pressed == KeyboardKey.KEY_L:
       scenes.scene_variables['game']['light_not_working'] ^= True
 
 def funny_mode(mod: int = 1):
@@ -99,7 +102,6 @@ def glue_subjects_to_object(scenes):
     SetGlueOffset(scenes.scene_objects['game']['office_fun_fan'], Vector2(560, 333)),
     SetGlueOffset(scenes.scene_objects['game']['office_left_light'], Vector2(90, 356)),
     SetGlueOffset(scenes.scene_objects['game']['office_right_light'], Vector2(1420, 356)),
-    SetGlueOffset(scenes.scene_objects['game']['testos_broke_light'], Vector2(100, 100)),
   ]
   for item in subjects:
     x = object.pos.x + item.offset.x

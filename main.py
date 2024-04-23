@@ -1,6 +1,4 @@
-import config
 from classes.Time import Time
-from raylib.colors import *
 from config import set_night
 from etc import *
 from objects import *
@@ -326,11 +324,17 @@ def main():
       border_anchor_point(scenes.scene_objects['game']['scroll_anchor'])
       glue_subjects_to_object(scenes)
 
+
+
       point = int(get_mouse_position().x)
-      if point > (scenes.scene_objects['game']['scroll_box'].pos.x + scenes.scene_variables['game']['scroll_space']):
-        scenes.scene_objects['game']['scroll_anchor'].pos.x -= 0.6 * config.delta
-      if point < (scenes.scene_objects['game']['scroll_box'].pos.x - scenes.scene_variables['game']['scroll_space']):
-        scenes.scene_objects['game']['scroll_anchor'].pos.x += 0.6 * config.delta
+      scenes.scene_variables['game']['scroll_left'] = round((point - int(scenes.scene_objects['game']['scroll_box'].pos.x) + scenes.scene_variables['game']['scroll_space']) / scenes.scene_variables['game']['scroll_sensitivity'])
+      scenes.scene_variables['game']['scroll_right'] = round((point - int(scenes.scene_objects['game']['scroll_box'].pos.x) - scenes.scene_variables['game']['scroll_space']) / scenes.scene_variables['game']['scroll_sensitivity'])
+      del point
+
+      if scenes.scene_variables['game']['scroll_left'] < 0:
+        scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_left'] / 10 * config.delta
+      if scenes.scene_variables['game']['scroll_right'] > 0:
+        scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_right'] / 10 * config.delta
 
 
 
@@ -361,6 +365,7 @@ def main():
         scenes.scene_objects['game']['office_selectable'].texture_index = 3
       else:
         scenes.scene_objects['game']['office_right_light'].texture_index = 0
+
 
 
       if (scenes.scene_variables['game']['light_left_status'] or scenes.scene_variables['game']['light_right_status']) or (not scenes.scene_variables['game']['light_not_working'] and config.ctrl_hold):

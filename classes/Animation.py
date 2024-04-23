@@ -35,6 +35,9 @@ class JustAnimation(Time):
     self.frames = arr
 
   def update(self):
+    if is_window_focused() and self.temp_loops >= 2:
+      self.temp_loops = 0
+      self.start_time()
     if self.is_animation_looped:
       self.check_looped()
     if self.go:

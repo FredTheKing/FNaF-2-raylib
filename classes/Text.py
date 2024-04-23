@@ -51,8 +51,9 @@ class BoxText(JustText, Hitbox):
       self.color = [123, 123, 123, 255]
 
   def hitbox_with_model(self):
-    self.rec.x = int(self.pos.x)
-    self.rec.y = int(self.pos.y) + int(self.rec.height // 9)
+    pass
+    # self.rec.x = int(self.pos.x)
+    # self.rec.y = int(self.pos.y) + int(self.rec.height // 9)
 
   def update(self):
     Hitbox.update(self)

@@ -81,7 +81,12 @@ class Special:
         self.draw()
 
   class Animatronic:
-    def __init__(self, name: str, active_cameras: list[str]):
+    def __init__(self, name: str, available_cams: str, cams_behavior: list[str], office_type: str, office_behavior: list[str]):
       self.name = name or 'NaN' + str(random.choice(string.ascii_letters))
       self.difficulty = 0
-      self.active_cameras = active_cameras
+
+      self.available_cams: str = available_cams
+      self.cams_behavior: list[str] = cams_behavior
+
+      self.office_type: str = office_type
+      self.office_behavior: list[str] = office_behavior

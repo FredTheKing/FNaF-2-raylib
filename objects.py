@@ -229,7 +229,7 @@ all_objects = {
   'night>night_count': JustText('0th Night', 40, Vector2(350, 400)),
   'night>white_blinko': Special.WhiteShhrrt(release_path),
   # ----------------------------------------------- #
-  'game>scroll_anchor': Special.InvisibleAnchor(Vector2(0, 0), Vector2(10, 10)),
+  'game>scroll_anchor': Special.InvisibleAnchor(Vector2(-293, 0), Vector2(10, 10)),
   'game>scroll_box': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768)),
   'game>office_fun_fan': JustAnimation(spec_load_animation('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/fun_fan', 4), animation_speed=28, is_looped=True, layer=4),
   'game>office_selectable': SelectableJustImage([
@@ -258,8 +258,8 @@ all_objects = {
     spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_right_enabled.png'),
   ]),
 
-
-  'game>testos_broke_light': BoxText('Broke Light'),
+  'game>ui_mask_button': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png"), Vector2(10, 720), layer=40),
+  'game>ui_cams_button': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png"), Vector2(515, 720), layer=40),
   # ----------------------------------------------- #
   'preview>logo_text': JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, font_filename=get_font_default(), spacing=2),
   'preview>logo': JustImage(spec_load_image("assets/graphics/PreviewLogos/raylib.png"), Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 128)),
@@ -306,10 +306,19 @@ all_variables = {
   # ----------------------------------------------- #
   'night>upcoming_end': 'th',
   # ----------------------------------------------- #
-  'game>scroll_space': 300,
+  'game>scroll_space': 240,
+  'game>scroll_left': 0,
+  'game>scroll_right': 0,
+  'game>scroll_sensitivity': 37,
+
+  'game>gameplay_battery': 4,
+  'game>gameplay_mask': 0,
+  'game>gameplay_laptop': 0,
+  
   'game>light_left_status': False,
   'game>light_right_status': False,
   'game>light_not_working': False,
+
 }
 
 scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables)
