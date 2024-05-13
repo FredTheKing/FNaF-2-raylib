@@ -1,3 +1,5 @@
+import random
+
 from classes.Time import Time
 from config import set_night
 from etc import *
@@ -17,7 +19,6 @@ def main():
       if scenes.scene_changed:
         audio_activation_update()
         scenes.scene_changed -= 1
-        scenes.time_multiply = 1
 
       # step
       set_night(scenes.scene_objects['config']['actual_night_slider'].current_state, False)
@@ -30,18 +31,16 @@ def main():
     elif current_scene == "menu":
       # activation
       if scenes.scene_changed:
-        audio_activation_update()
+        call_activation(scenes, audio_activation_update)
         scenes.scene_variables['menu']['selection_arr'] = [
           scenes.scene_objects['menu']['new_game'],
           scenes.scene_objects['menu']['continue'],
           scenes.scene_objects['menu']['settings'],
           scenes.scene_objects['menu']['extras'],
         ]
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 0.25
 
       # step
-      if scenes.time_current % 2 == 0:
+      if scenes.scene_timers['menu']['bottom_text_change'].time_current % 2 == 0:
         bottom_text_draw("Original game by: Scott Cawthon\t\t\t\t\tGame built by: FredTheKing\t\t\t\t\tMade in Python 3.12 with raylib (pyray)")
       else:
         bottom_text_draw("Project's, Author's links and much more are in Extras menu\t\t\t\t\tManipulate game settings in Settings menu")
@@ -69,6 +68,18 @@ def main():
       elif scenes.scene_objects['menu']['extras'].clicked_verdict:
         scenes.set_scene('extras')
 
+      if scenes.scene_timers['menu']['random_twitch'].time_current:
+        scenes.scene_timers['menu']['random_twitch'].start_time()
+        rand = random.randint(0, 100)
+        if rand <= 85:
+          scenes.scene_objects['menu']['twitch'].texture_index = 0
+        if 85 < rand <= 90:
+          scenes.scene_objects['menu']['twitch'].texture_index = 1
+        if 90 < rand <= 95:
+          scenes.scene_objects['menu']['twitch'].texture_index = 2
+        if 95 < rand <= 100:
+          scenes.scene_objects['menu']['twitch'].texture_index = 3
+
       # draw
       if scenes.scene_variables['menu']['selected_hover_item'] is not None and scenes.scene_variables['menu']['selected_hover_item'].text == 'Continue':
         draw_text_ex(config.def_font, f'Night {config.actual_night}', Vector2(230, 470), 15, 0, GRAY)
@@ -78,9 +89,7 @@ def main():
     elif current_scene == "settings":
       # activation
       if scenes.scene_changed:
-        audio_activation_update()
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       if scenes.scene_objects['settings']['back_button'].clicked_verdict:
@@ -131,8 +140,7 @@ def main():
     elif current_scene == "extras":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       scenes.scene_variables['extras']['selection_arr'] = [
@@ -166,8 +174,7 @@ def main():
     elif current_scene == "custom_night":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
 
       # step
@@ -235,8 +242,7 @@ def main():
     elif current_scene == "jumpscares":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       if scenes.scene_objects['jumpscares']['back_button'].clicked_verdict:
@@ -251,8 +257,7 @@ def main():
     elif current_scene == "development_moments":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       if scenes.scene_objects['development_moments']['back_button'].clicked_verdict:
@@ -268,8 +273,7 @@ def main():
     elif current_scene == "newspaper":
       # activation
       if scenes.scene_changed:
-        scenes.time_multiply = 1
-        scenes.scene_changed -= 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       if scenes.scene_objects['newspaper']['news'].clicked_verdict or scenes.time_current > 5:
@@ -283,8 +287,7 @@ def main():
     elif current_scene == "night":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
         scenes.scene_variables['night']['upcoming_end'] = define_ending(config.upcoming_night)
         scenes.scene_objects['night']['night_count'].text = f'{config.upcoming_night}{scenes.scene_variables['night']['upcoming_end']} Night'
         scenes.scene_objects['night']['white_blinko'].go = True
@@ -314,8 +317,9 @@ def main():
     elif current_scene == "game":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
+        scenes.scene_objects['game']['ui_battery'].texture_index = 4
+        scenes.scene_objects['game']['scroll_anchor'].pos.x = -293
 
       # step
       if config.debug:
@@ -324,23 +328,28 @@ def main():
       border_anchor_point(scenes.scene_objects['game']['scroll_anchor'])
       glue_subjects_to_object(scenes)
 
-
-
       point = int(get_mouse_position().x)
       scenes.scene_variables['game']['scroll_left'] = round((point - int(scenes.scene_objects['game']['scroll_box'].pos.x) + scenes.scene_variables['game']['scroll_space']) / scenes.scene_variables['game']['scroll_sensitivity'])
       scenes.scene_variables['game']['scroll_right'] = round((point - int(scenes.scene_objects['game']['scroll_box'].pos.x) - scenes.scene_variables['game']['scroll_space']) / scenes.scene_variables['game']['scroll_sensitivity'])
       del point
 
-      if scenes.scene_variables['game']['scroll_left'] < 0:
-        scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_left'] / 10 * config.delta
-      if scenes.scene_variables['game']['scroll_right'] > 0:
-        scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_right'] / 10 * config.delta
+      if not scenes.scene_variables['game']['gameplay_laptop'] or scenes.scene_variables['game']['gameplay_laptop'] == 2:
+        if scenes.scene_variables['game']['scroll_left'] < 0:
+          scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_left'] / 10 * config.delta
+        if scenes.scene_variables['game']['scroll_right'] > 0:
+          scenes.scene_objects['game']['scroll_anchor'].pos.x -= scenes.scene_variables['game']['scroll_right'] / 10 * config.delta
+
+      pullup_mask()
+      pullup_camera()
+
+      scenes.scene_objects['game']['laptop'].animation_index = scenes.scene_variables['game']['gameplay_laptop']
+      scenes.scene_objects['game']['mask'].animation_index = scenes.scene_variables['game']['gameplay_mask']
 
 
 
-      if not config.ctrl_hold:
+      if not config.ctrl_hold or objects.scenes.scene_variables['game']['gameplay_mask'] or objects.scenes.scene_variables['game']['gameplay_laptop']:
         scenes.scene_objects['game']['office_selectable'].texture_index = 0
-      elif config.ctrl_hold:
+      elif config.ctrl_hold and (not objects.scenes.scene_variables['game']['gameplay_mask'] or not objects.scenes.scene_variables['game']['gameplay_laptop']):
         if scenes.scene_variables['game']['light_not_working']:
           scenes.scene_objects['game']['office_selectable'].texture_index = 4
         else:
@@ -348,9 +357,12 @@ def main():
           scenes.scene_variables['game']['light_left_status'] = False
           scenes.scene_variables['game']['light_right_status'] = False
 
-
-      scenes.scene_variables['game']['light_left_status'] = scenes.scene_objects['game']['office_left_light'].hold_verdict
-      scenes.scene_variables['game']['light_right_status'] = scenes.scene_objects['game']['office_right_light'].hold_verdict
+      if not objects.scenes.scene_variables['game']['gameplay_mask'] or not objects.scenes.scene_variables['game']['gameplay_laptop']:
+        scenes.scene_variables['game']['light_left_status'] = scenes.scene_objects['game']['office_left_light'].hold_verdict
+        scenes.scene_variables['game']['light_right_status'] = scenes.scene_objects['game']['office_right_light'].hold_verdict
+      else:
+        scenes.scene_variables['game']['light_left_status'] = 0
+        scenes.scene_variables['game']['light_right_status'] = 0
 
 
       if scenes.scene_variables['game']['light_left_status']:
@@ -387,8 +399,7 @@ def main():
     elif current_scene == "paycheck":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       pass
@@ -401,8 +412,7 @@ def main():
     elif current_scene == "pixel_minigame":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       pass
@@ -415,8 +425,7 @@ def main():
     elif current_scene == "creepy_minigame":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       pass
@@ -429,8 +438,7 @@ def main():
     elif current_scene == "loading":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       check_all_textures()
@@ -457,8 +465,7 @@ def main():
     elif current_scene == "error":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
         print("ASSETS LOADING ERROR!\n\nOh no! Looks your python console doesn't want to load anything whatsoever. Try choosing different python version to boot this game. Then, reboot the game")
 
       # step
@@ -501,7 +508,6 @@ def main():
       # activation
       if scenes.scene_changed:
         scenes.scene_changed -= 1
-        scenes.time_multiply = 1
 
       # step
       if scenes.time_current >= 3:
@@ -515,8 +521,7 @@ def main():
     elif current_scene == "test_scene":
       # activation
       if scenes.scene_changed:
-        scenes.scene_changed -= 1
-        scenes.time_multiply = 1
+        call_activation(scenes, audio_activation_update)
 
       # step
       if scenes.scene_objects['test_scene']['back_button'].clicked_verdict:

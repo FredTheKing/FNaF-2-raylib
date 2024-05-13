@@ -78,11 +78,9 @@ class JustAnimation(Time):
       self.frame_index = self.time_current - self.temp_loops * self.last_frame
 
   def draw(self):
-    if self.frame_index <= self.last_frame:
-      draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
-    else:
+    if self.frame_index > self.last_frame:
       self.frame_index = self.last_frame
-      draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
+    draw_texture_v(self.frames[self.frame_index], self.pos, self.color)
 
   def draw_debug(self, name, x, y):
     self.debug_message = f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}"

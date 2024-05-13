@@ -4,7 +4,7 @@ from classes.Time import Time
 import config
 
 class Scene_Manager(Time):
-  def __init__(self, scenes_names: list, objects_dict: dict, sounds_dict: dict, variables_dict: dict):
+  def __init__(self, scenes_names: list, objects_dict: dict, sounds_dict: dict, variables_dict: dict, timers_dict: dict):
     def init_scene_objects(all_scenes: list, all_objects: dict) -> dict:
       new_dict = {}
       for item in scenes_names:
@@ -23,7 +23,7 @@ class Scene_Manager(Time):
           new_dict[split_scene[0]][split_scene[-1]] = all_objects[dict_name]
       return new_dict
 
-    def init_scene_sounds(all_scenes: list, all_sounds: dict) -> dict:
+    def init_scene_sounds(all_sounds: dict) -> dict:
       new_dict = {}
       for item in scenes_names:
         new_dict[item] = {
@@ -42,7 +42,7 @@ class Scene_Manager(Time):
           new_dict[split_scene[0]]['reset_sounds'] = all_sounds[dict_name]
       return new_dict
 
-    def init_scene_variables(all_scenes: list, all_variables: dict) -> dict:
+    def init_scene_variables(all_variables: dict) -> dict:
       new_dict = {}
       for item in scenes_names:
         new_dict[item] = {}
@@ -52,14 +52,26 @@ class Scene_Manager(Time):
         new_dict[split_scene[0]][split_scene[-1]] = all_variables[dict_name]
       return new_dict
 
+    def init_scene_timers(all_variables: dict) -> dict:
+      new_dict = {}
+      for item in scenes_names:
+        new_dict[item] = {}
+
+      for dict_name in all_variables.keys():
+        split_scene: list = dict_name.split('>')
+        new_dict[split_scene[0]][split_scene[-1]] = all_variables[dict_name]
+      return new_dict
+
+
     super().__init__(1)
     self.scene_list = []
     self.scene_objects = {}
     for item in scenes_names:
       self.scene_list.append(item)
     self.scene_objects = init_scene_objects(scenes_names, objects_dict)
-    self.scene_sounds = init_scene_sounds(scenes_names, sounds_dict)
-    self.scene_variables = init_scene_variables(scenes_names, variables_dict)
+    self.scene_sounds = init_scene_sounds(sounds_dict)
+    self.scene_variables = init_scene_variables(variables_dict)
+    self.scene_timers = init_scene_timers(timers_dict)
     self.scene_index = 13
     self.scene_changed: int = 1
     self.scene_counter = 0

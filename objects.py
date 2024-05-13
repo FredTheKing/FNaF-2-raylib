@@ -1,6 +1,7 @@
 from random import randint
 
 from pyray import *
+from classes.Time import Time
 
 from classes.Special import Special
 from classes.Managers import Scene_Manager
@@ -93,11 +94,14 @@ def spec_load_sound(filename: str) -> Sound:
   return load_sound(release_path + filename)
 
 # dirname to dir, not the file!
-def spec_load_animation(dirname: str, times: int) -> list:
+def spec_load_animation(dirname: str, times: int, is_reversed: bool = False) -> list:
   arr = []
   for item in range(times):
     arr.append(spec_load_image(dirname + f"/{item}.png"))
-  return arr
+  if is_reversed:
+    return list(reversed(arr))
+  else:
+    return arr
 
 # ----------------------------------------------- #
 
@@ -109,7 +113,12 @@ all_objects = {
   'config>actual_night_text': JustText('Actual Night: ', 32, Vector2(300, 100)),
   'config>actual_night_slider': DigitSlider(Vector2(700, 100), Vector2(80, 30), 6, goes_zero=False, default_state=config.actual_night),
   # ----------------------------------------------- #
-  'menu>twitch': JustAnimation(spec_load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Misc", 4), Vector2(0, 0), 3, True),
+  'menu>twitch': SelectableJustImage([
+    spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/still.png"),
+    spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/freddy.png"),
+    spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/bonnie.png"),
+    spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/chica.png"),
+  ], Vector2(0, 0), 0),
   'menu>title_1': JustText("Five", 63, Vector2(75, 21), spacing=3),
   'menu>title_2': JustText("Nights", 63, Vector2(75, 81), spacing=3),
   'menu>title_3': JustText("at", 63, Vector2(75, 141), spacing=3),
@@ -258,8 +267,30 @@ all_objects = {
     spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_right_enabled.png'),
   ]),
 
-  'game>ui_mask_button': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png"), Vector2(10, 720), layer=40),
-  'game>ui_cams_button': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png"), Vector2(515, 720), layer=40),
+  'game>ui_mask_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png'), Vector2(10, 720), layer=40),
+  'game>ui_cams_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png'), Vector2(515, 720), layer=40),
+
+  'game>laptop': SelectableAnimation([
+    spec_load_image('assets/graphics/Monitor_Cameras/Monitor/nothing.png', True),
+    spec_load_animation('assets/graphics/Monitor_Cameras/Monitor', 11),
+    spec_load_animation('assets/graphics/Monitor_Cameras/Monitor', 11, True),
+    spec_load_image('assets/graphics/Monitor_Cameras/Monitor/nothing.png', True),
+  ], layer=30, animation_speed=23),
+  'game>mask': SelectableAnimation([
+    spec_load_image('assets/graphics/Monitor_Cameras/Monitor/nothing.png', True),
+    spec_load_animation('assets/graphics/TheOffice_Nights_Menu/Mask', 9),
+    spec_load_animation('assets/graphics/TheOffice_Nights_Menu/Mask', 9, True),
+    spec_load_image('assets/graphics/TheOffice_Nights_Menu/Mask/8.png', True),
+  ], layer=30, animation_speed=23),
+
+  'game>ui_battery_text': JustText("flashlight", 16, Vector2(46, 22), layer=40),
+  'game>ui_battery': SelectableJustImage([
+    spec_load_image('assets/graphics/Monitor_Cameras/Battery/0-4.png'),
+    spec_load_image('assets/graphics/Monitor_Cameras/Battery/1-4.png'),
+    spec_load_image('assets/graphics/Monitor_Cameras/Battery/2-4.png'),
+    spec_load_image('assets/graphics/Monitor_Cameras/Battery/3-4.png'),
+    spec_load_image('assets/graphics/Monitor_Cameras/Battery/4-4.png'),
+  ], Vector2(39, 35), layer=40),
   # ----------------------------------------------- #
   'preview>logo_text': JustText("powered with", 24, Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 154), WHITE, 2, font_filename=get_font_default(), spacing=2),
   'preview>logo': JustImage(spec_load_image("assets/graphics/PreviewLogos/raylib.png"), Vector2(config.resolution[0] // 2 - 128, config.resolution[1] // 2 - 128)),
@@ -321,7 +352,12 @@ all_variables = {
 
 }
 
-scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables)
+all_timers = {
+  'menu>bottom_text_change': Time(0.25),
+  'menu>random_twitch': Time(10),
+}
+
+scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables, all_timers)
 
 del all_objects, all_sounds
 change_needs()
@@ -426,12 +462,15 @@ def process_update():
     item[0].update()
 
 
-  # audios
+  # audios and timers
   for scene in scenes.scene_list:
     for item in scenes.scene_sounds[scene]['activation'].items():
       item[1].update()
     for item in scenes.scene_sounds[scene]['storage'].items():
       item[1].update()
+
+    for item in scenes.scene_timers[scene].items():
+      item[1].update_time()
 
 def reset_sounds():
   for scene in scenes.scene_list:

@@ -44,9 +44,13 @@ def debug_draw_game_text():
   t_broken_light = objects.scenes.scene_variables['game']['light_not_working']
   t_scroll_pos_x = int(objects.scenes.scene_objects['game']['scroll_anchor'].pos.x)
 
-  t_mask = objects.scenes.scene_objects['game']['ui_mask_button'].pos
+  t_left_light = objects.scenes.scene_variables['game']['light_left_status']
+  t_right_light = objects.scenes.scene_variables['game']['light_right_status']
 
-  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nScroll anchor x: {t_scroll_pos_x}\n\nBroken light: {t_broken_light}\n\nMask x: ({t_mask.x}, {t_mask.y})"
+  t_laptop = objects.scenes.scene_variables['game']['gameplay_laptop']
+  t_mask = objects.scenes.scene_variables['game']['gameplay_mask']
+
+  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nScroll anchor x: {t_scroll_pos_x}\n\nBroken light [L]: {int(t_broken_light)}\n\nLeft light: {int(t_left_light)}\nRight light: {int(t_right_light)}\n\nLaptop state: {t_laptop}\nMask state: {t_mask}"
 
   pos = Vector2(0, 0)
   font_size = 14
@@ -75,6 +79,10 @@ def tests_do_testing(scenes):
   if config.debug:
     if config.key_pressed == KeyboardKey.KEY_L:
       scenes.scene_variables['game']['light_not_working'] ^= True
+    if config.key_pressed == KeyboardKey.KEY_MINUS and scenes.scene_objects['game']['ui_battery'].texture_index > 0:
+      scenes.scene_objects['game']['ui_battery'].texture_index -= 1
+    if config.key_pressed == KeyboardKey.KEY_EQUAL and scenes.scene_objects['game']['ui_battery'].texture_index < 4:
+      scenes.scene_objects['game']['ui_battery'].texture_index += 1
 
 def funny_mode(mod: int = 1):
   x_mod = mod
@@ -107,6 +115,39 @@ def glue_subjects_to_object(scenes):
     x = object.pos.x + item.offset.x
     y = object.pos.y + item.offset.y
     item.subject.pos = Vector2(x, y)
+
+def call_activation(scenes, audio_check):
+  scenes.scene_changed -= 1
+  audio_check()
+  for scene in scenes.scene_list:
+    for item in scenes.scene_timers[scene].items():
+      item[1].start_time()
+
+def pullup_camera():
+  working = objects.scenes.scene_variables['game']['gameplay_mask'] == 0 or objects.scenes.scene_variables['game']['gameplay_mask'] == 2
+  if objects.scenes.scene_objects['game']['ui_cams_button'].hover_activation_verdict and working:
+    if objects.scenes.scene_variables['game']['gameplay_laptop'] == 0:
+      objects.scenes.scene_variables['game']['gameplay_laptop'] = 1
+    elif objects.scenes.scene_variables['game']['gameplay_laptop'] == 3:
+      objects.scenes.scene_variables['game']['gameplay_laptop'] = 2
+
+  elif objects.scenes.scene_variables['game']['gameplay_laptop'] == 1 and objects.scenes.scene_objects['game']['laptop'].is_animation_finished:
+    objects.scenes.scene_variables['game']['gameplay_laptop'] = 3
+  elif objects.scenes.scene_variables['game']['gameplay_laptop'] == 2 and objects.scenes.scene_objects['game']['laptop'].is_animation_finished:
+    objects.scenes.scene_variables['game']['gameplay_laptop'] = 0
+
+def pullup_mask():
+  working = objects.scenes.scene_variables['game']['gameplay_laptop'] == 0 or objects.scenes.scene_variables['game']['gameplay_laptop'] == 2
+  if objects.scenes.scene_objects['game']['ui_mask_button'].hover_activation_verdict and working:
+    if objects.scenes.scene_variables['game']['gameplay_mask'] == 0:
+      objects.scenes.scene_variables['game']['gameplay_mask'] = 1
+    elif objects.scenes.scene_variables['game']['gameplay_mask'] == 3:
+      objects.scenes.scene_variables['game']['gameplay_mask'] = 2
+
+  elif objects.scenes.scene_variables['game']['gameplay_mask'] == 1 and objects.scenes.scene_objects['game']['mask'].is_animation_finished:
+    objects.scenes.scene_variables['game']['gameplay_mask'] = 3
+  elif objects.scenes.scene_variables['game']['gameplay_mask'] == 2 and objects.scenes.scene_objects['game']['mask'].is_animation_finished:
+    objects.scenes.scene_variables['game']['gameplay_mask'] = 0
 
 def global_keys_update():
   config.key_pressed = get_key_pressed()
