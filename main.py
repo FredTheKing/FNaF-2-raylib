@@ -390,6 +390,24 @@ def main():
         scenes.scene_sounds['game']['storage']['light_sound'].stop()
         scenes.scene_sounds['game']['storage']['broken_light'].stop()
 
+      if scenes.scene_variables['game']['gameplay_mask'] == 1:
+        scenes.scene_sounds['game']['storage']['mask_on'].play()
+        scenes.scene_sounds['game']['storage']['mask_off'].stop()
+      elif scenes.scene_variables['game']['gameplay_mask'] == 2:
+        scenes.scene_sounds['game']['storage']['mask_on'].stop()
+        scenes.scene_sounds['game']['storage']['mask_off'].play()
+
+      if scenes.scene_variables['game']['gameplay_laptop'] == 1:
+        scenes.scene_sounds['game']['storage']['laptop_on'].play()
+        scenes.scene_sounds['game']['storage']['laptop_off'].stop()
+      elif scenes.scene_variables['game']['gameplay_laptop'] == 2:
+        scenes.scene_sounds['game']['storage']['laptop_on'].stop()
+        scenes.scene_sounds['game']['storage']['laptop_off'].play()
+
+      if scenes.scene_variables['game']['gameplay_mask'] == 3:
+        scenes.scene_sounds['game']['storage']['mask_breathing'].play()
+      else:
+        scenes.scene_sounds['game']['storage']['mask_breathing'].stop()
 
       # draw
       pass
@@ -530,8 +548,6 @@ def main():
       scenes.scene_objects['test_scene']['circle_bar'].start_circle = scenes.scene_objects['test_scene']['circle_button'].hold_verdict
       if scenes.scene_objects['test_scene']['circle_button'].hold_verdict:
         scenes.scene_sounds['test_scene']['storage']['wind_sound'].play()
-      else:
-        scenes.scene_sounds['test_scene']['storage']['wind_sound'].stop()
 
       # draw
       pass
@@ -556,6 +572,7 @@ def main():
     if config.debug:
       debug_draw_everywhere_text()
       animations_draw_debug()
+      sounds_draw_debug()
 
 
 # ----------------------------------------------- #

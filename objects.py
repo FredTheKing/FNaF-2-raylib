@@ -84,11 +84,8 @@ def change_needs() -> None:
   scenes.scene_objects['test_scene']['circle_button'].click_sound = None
 
 def spec_load_image(filename: str, animation_subtype: bool = False) -> Texture or list[Texture]:
-  if animation_subtype:
-    arr = [load_texture_from_image(load_image(release_path + filename))]
-    return arr
-  else:
-    return load_texture_from_image(load_image(release_path + filename))
+  image = load_texture_from_image(load_image(release_path + filename))
+  return [image] if animation_subtype else image
 
 def spec_load_sound(filename: str) -> Sound:
   return load_sound(release_path + filename)
@@ -98,10 +95,7 @@ def spec_load_animation(dirname: str, times: int, is_reversed: bool = False) -> 
   arr = []
   for item in range(times):
     arr.append(spec_load_image(dirname + f"/{item}.png"))
-  if is_reversed:
-    return list(reversed(arr))
-  else:
-    return arr
+  return list(reversed(arr)) if is_reversed else arr
 
 # ----------------------------------------------- #
 
@@ -227,10 +221,11 @@ all_objects = {
     spec_load_image("assets/graphics/Development_Moments/hate_this_thing.png"),
     spec_load_image("assets/graphics/Development_Moments/X).png"),
     spec_load_image("assets/graphics/Development_Moments/poor_restart.png"),
+    spec_load_image("assets/graphics/Development_Moments/funkin_no_loop.png"),
   ], Vector2(config.resolution[0]//2 - 512//2 + 1, config.resolution[1]//2 - 384//2 - 49), layer=2),
 
-  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', 'gitignore one love :heart:    ', 'they ARE pretty ;)', 'i fixed it later)0))     ']),
-  'development_moments>dont_aks_me_why': JustText("do not ask me why these pictures are so scaled", 20, Vector2(0, 736), color=DARKGRAY),
+  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', 'gitignore one love :heart:    ', 'they ARE pretty ;)', 'i fixed it later)0))     ', 'sounds are pain :(  ']),
+  'development_moments>dont_aks_me_why': JustText("do not ask me why these pictures are so funked up", 20, Vector2(0, 736), color=DARKGRAY),
   # ----------------------------------------------- #
   'newspaper>news': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/Paychecks_Fire/news.png")),
   # ----------------------------------------------- #
@@ -324,9 +319,14 @@ all_sounds = {
   'game>storage>light_sound': JustSound(spec_load_sound('assets/audios/buzzlight.wav'), True),
   'game>storage>broken_light': JustSound(spec_load_sound('assets/audios/popstatic.wav'), True),
 
+  'game>storage>mask_breathing': JustSound(spec_load_sound('assets/audios/deepbreaths.wav'), True),
+  'game>storage>mask_on': JustSound(spec_load_sound('assets/audios/FENCING_42_GEN-HDF10953.wav')),
+  'game>storage>mask_off': JustSound(spec_load_sound('assets/audios/FENCING_43_GEN-HDF10954.wav')),
+  'game>storage>laptop_on': JustSound(spec_load_sound('assets/audios/STEREO_CASSETTE__90097701.wav')),
+  'game>storage>laptop_off': JustSound(spec_load_sound('assets/audios/STEREO_CASSETTE__90097704.wav')),
   'game>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
   # ----------------------------------------------- #
-  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
+  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav')),
 }
 
 all_variables = {
@@ -431,9 +431,24 @@ def animations_draw_debug():
     item_type = str(type(item[1])).split('.')[1]
     if item_type == 'Animation':
       if space.x < config.resolution[0]:
-        name = list(scenes.scene_objects[current_scene].keys())[list(scenes.scene_objects[current_scene].values()).index(item[1])]
-        item[1].draw_debug(name, int(space.x), int(space.y))
+        item[1].draw_debug(item[0], int(space.x), int(space.y))
         space.x += measure_text(item[1].debug_message, 10) + 10
+
+
+def sounds_draw_debug():
+  space = Vector2(10, 524)  # 16px = new line
+  current_scene = list(scenes.scene_objects)[scenes.scene_index]
+  arr = scenes.scene_sounds[current_scene]
+  for group_dict in arr.items():
+    try:
+      for item in group_dict[1].items():
+        item_type = str(type(item[1])).split('.')[1]
+        if item_type == 'Sound':
+          if space.x < config.resolution[0]:
+            item[1].draw_debug(item[0], group_dict[0], int(space.x), int(space.y))
+            space.x += measure_text(item[1].debug_message, 10) + 10
+    except AttributeError:
+      pass
 
 
 
@@ -464,10 +479,9 @@ def process_update():
 
   # audios and timers
   for scene in scenes.scene_list:
-    for item in scenes.scene_sounds[scene]['activation'].items():
-      item[1].update()
-    for item in scenes.scene_sounds[scene]['storage'].items():
-      item[1].update()
+    for mode in 'activation', 'storage':
+      for item in scenes.scene_sounds[scene][mode].items():
+        item[1].update()
 
     for item in scenes.scene_timers[scene].items():
       item[1].update_time()

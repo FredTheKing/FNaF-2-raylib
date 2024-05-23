@@ -84,7 +84,7 @@ class JustAnimation(Time):
 
   def draw_debug(self, name, x, y):
     self.debug_message = f"name: {name}\nstarted: {self.go}\n\nindex: {self.frame_index}\nlast: {self.last_frame}\nis_looped: {self.is_animation_looped}\nloop: {self.temp_loops}\nended: {self.is_animation_ended}\nfinished: {self.is_animation_finished}"
-    draw_text(self.debug_message, x, y, 10, WHITE)
+    draw_text(self.debug_message, x, y, 10, (255, 255, 255, 100))
 
 
 class SelectableAnimation(JustAnimation):
