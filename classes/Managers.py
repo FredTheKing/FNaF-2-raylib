@@ -65,19 +65,37 @@ class Scene_Manager(Time):
 
     super().__init__(1)
     self.scene_list = []
+    self.hidden_layers = []
     self.scene_objects = {}
     for item in scenes_names:
       self.scene_list.append(item)
+
     self.scene_objects = init_scene_objects(scenes_names, objects_dict)
     self.scene_sounds = init_scene_sounds(sounds_dict)
     self.scene_variables = init_scene_variables(variables_dict)
     self.scene_timers = init_scene_timers(timers_dict)
-    self.scene_index = 13
+
+    self.scene_index = 14
     self.scene_changed: int = 1
     self.scene_counter = 0
+
     self.start_time()
 
-  def set_scene(self, id: str):
+  def hide_layer(self, layer_order: int or list):
+    layer_list = layer_order if type(layer_order) is list else [layer_order]
+    for layer_item in layer_list:
+      if layer_item not in self.hidden_layers:
+        self.hidden_layers.append(layer_item)
+
+  def show_layer(self, layer_order: int or list):
+    layer_list = layer_order if type(layer_order) is list else [layer_order]
+    for layer_item in layer_list:
+      if layer_item in self.hidden_layers:
+        self.hidden_layers.pop(self.hidden_layers.index(layer_item))
+
+  def set_scene(self, id: str, show_all_layers: bool = True):
+    if show_all_layers:
+      self.hidden_layers.clear()
     try:
       a = int(id)
       self.scene_index = a

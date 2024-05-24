@@ -88,14 +88,14 @@ class JustAnimation(Time):
 
 
 class SelectableAnimation(JustAnimation):
-  def __init__(self, animations_list_init_frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, layer: int = 0, first_frame=0):
+  def __init__(self, animations_list_init_frames_list=None, pos=Vector2(0, 0), animation_speed=5, is_looped=False, alpha=255, layer: int = 0, first_frame=0, default_animation_index: int = 0):
     if animations_list_init_frames_list is None:
       self.animations_list = []
     else:
       self.animations_list = animations_list_init_frames_list
 
     super().__init__(self.animations_list[0], pos, animation_speed, is_looped, alpha, layer, first_frame)
-    self.animation_index = 0
+    self.animation_index = default_animation_index
 
   def resize(self, new_size: Vector2):
     for index in range(self.animations_list.__len__()):

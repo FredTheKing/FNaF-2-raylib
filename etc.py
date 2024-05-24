@@ -42,7 +42,7 @@ def debug_draw_game_text():
   t_scroll_right = objects.scenes.scene_variables['game']['scroll_right']
 
   t_broken_light = objects.scenes.scene_variables['game']['light_not_working']
-  t_scroll_pos_x = int(objects.scenes.scene_objects['game']['scroll_anchor'].pos.x)
+  t_office_scroll_pos_x = int(objects.scenes.scene_objects['game']['office_scroll_anchor'].pos.x)
 
   t_left_light = objects.scenes.scene_variables['game']['light_left_status']
   t_right_light = objects.scenes.scene_variables['game']['light_right_status']
@@ -50,7 +50,7 @@ def debug_draw_game_text():
   t_laptop = objects.scenes.scene_variables['game']['gameplay_laptop']
   t_mask = objects.scenes.scene_variables['game']['gameplay_mask']
 
-  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nScroll anchor x: {t_scroll_pos_x}\n\nBroken light [L]: {int(t_broken_light)}\n\nLeft light: {int(t_left_light)}\nRight light: {int(t_right_light)}\n\nLaptop state: {t_laptop}\nMask state: {t_mask}"
+  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nOffice scroll anchor x: {t_office_scroll_pos_x}\n\nBroken light [L]: {int(t_broken_light)}\n\nLeft light: {int(t_left_light)}\nRight light: {int(t_right_light)}\n\nLaptop state: {t_laptop}\nMask state: {t_mask}"
 
   pos = Vector2(0, 0)
   font_size = 14
@@ -98,29 +98,67 @@ def border_anchor_point(object):
   if object.pos.x > 0: object.pos.x = 0
   elif object.pos.x < right_border*-1: object.pos.x = right_border*-1
 
-def glue_subjects_to_object(scenes):
+def left_vent_light():
+  if objects.scenes.scene_variables['game']['light_left_status']:
+    objects.scenes.scene_objects['game']['office_left_light'].texture_index = 1
+    objects.scenes.scene_objects['game']['office_selectable'].texture_index = 2
+  else:
+    objects.scenes.scene_objects['game']['office_left_light'].texture_index = 0
+
+def right_vent_light():
+  if objects.scenes.scene_variables['game']['light_right_status']:
+    objects.scenes.scene_objects['game']['office_right_light'].texture_index = 1
+    objects.scenes.scene_objects['game']['office_selectable'].texture_index = 3
+  else:
+    objects.scenes.scene_objects['game']['office_right_light'].texture_index = 0
+
+def sync_camera_selectable_with_map():
+  objects.scenes.scene_objects['game']['camera_selectable'].pack_index = objects.scenes.scene_objects['game']['map_cams'].picked
+  if objects.scenes.scene_objects['game']['map_cams'].pick_changed:
+    objects.scenes.scene_objects['game']['camera_white_shhrrt'].go = True
+
+def layers_camera_changing():
+  if objects.scenes.scene_variables['game']['gameplay_laptop'] == 3:
+    objects.scenes.hide_layer([1, 4])
+    objects.scenes.show_layer([2, 5, 9, 6])
+  else:
+    objects.scenes.show_layer([1, 4])
+    objects.scenes.hide_layer([2, 5, 9, 6])
+
+class glue_subjects_to_object:
   class SetGlueOffset:
     def __init__(self, subject, offset: Vector2 = Vector2(0, 0)):
       self.subject = subject
       self.offset = offset
 
-  object = scenes.scene_objects['game']['scroll_anchor']
-  subjects = [
-    SetGlueOffset(scenes.scene_objects['game']['office_selectable']),
-    SetGlueOffset(scenes.scene_objects['game']['office_fun_fan'], Vector2(560, 333)),
-    SetGlueOffset(scenes.scene_objects['game']['office_left_light'], Vector2(90, 356)),
-    SetGlueOffset(scenes.scene_objects['game']['office_right_light'], Vector2(1420, 356)),
-  ]
-  for item in subjects:
-    x = object.pos.x + item.offset.x
-    y = object.pos.y + item.offset.y
-    item.subject.pos = Vector2(x, y)
+  def office(self):
+    object = objects.scenes.scene_objects['game']['office_scroll_anchor']
+    subjects = [
+      self.SetGlueOffset(objects.scenes.scene_objects['game']['office_selectable']),
+      self.SetGlueOffset(objects.scenes.scene_objects['game']['office_fun_fan'], Vector2(560, 333)),
+      self.SetGlueOffset(objects.scenes.scene_objects['game']['office_left_light'], Vector2(90, 356)),
+      self.SetGlueOffset(objects.scenes.scene_objects['game']['office_right_light'], Vector2(1420, 356)),
+    ]
+    for item in subjects:
+      x = object.pos.x + item.offset.x
+      y = object.pos.y + item.offset.y
+      item.subject.pos = Vector2(x, y)
 
-def call_activation(scenes, audio_check):
-  scenes.scene_changed -= 1
+  def camera(self):
+    object = objects.scenes.scene_objects['game']['camera_scroll_anchor']
+    subjects = [
+
+    ]
+    for item in subjects:
+      x = object.pos.x + item.offset.x
+      y = object.pos.y + item.offset.y
+      item.subject.pos = Vector2(x, y)
+
+def call_activation(audio_check):
+  objects.scenes.scene_changed -= 1
   audio_check()
-  for scene in scenes.scene_list:
-    for item in scenes.scene_timers[scene].items():
+  for scene in objects.scenes.scene_list:
+    for item in objects.scenes.scene_timers[scene].items():
       item[1].start_time()
 
 def pullup_camera():

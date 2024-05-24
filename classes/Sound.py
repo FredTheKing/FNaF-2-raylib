@@ -32,5 +32,5 @@ class JustSound:
 
 
   def draw_debug(self, name, group, x, y):
-    self.debug_message = f"name: {name}\ngroup: {group}\n\nstart_sound:{self.start_sound}\nplayed_once: {self.played_once}\nis_looped: {self.is_looped}\n-------------------"
+    self.debug_message = f"name: {name}\ngroup: {group}\n\nstart_sound: {self.start_sound}\nplayed_once: {self.played_once}\nis_looped: {self.is_looped}\n-------------------"
     draw_text(self.debug_message, x, y, 10, (255, 255, 255, 100))

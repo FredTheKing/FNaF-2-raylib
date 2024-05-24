@@ -1,6 +1,5 @@
 from pyray import *
 from raylib.colors import *
-import objects
 from classes.Hitbox import Hitbox
 import config
 from webbrowser import open
@@ -11,9 +10,9 @@ class JustText:
     if font_type == "<class '_cffi_backend.__CDataOwn'>":
       self.font = font_filename
     elif font_type == "<class 'NoneType'>":
-      self.font = load_font_ex(objects.release_path + config.def_font_filename, size, None, 0)
+      self.font = load_font_ex(config.release_path + config.def_font_filename, size, None, 0)
     else:
-      self.font = load_font_ex(objects.release_path + font_filename, size, None, 0)
+      self.font = load_font_ex(config.release_path + font_filename, size, None, 0)
     self.text = text
     self.fontsize = size
     self.pos = pos

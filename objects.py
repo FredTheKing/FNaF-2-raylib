@@ -7,7 +7,7 @@ from classes.Special import Special
 from classes.Managers import Scene_Manager
 from classes.Text import JustText, BoxText, LinkText
 from classes.Animation import JustAnimation, SelectableAnimation
-from classes.Image import JustImage, BorderImage, BoxImage, SelectableJustImage, SelectableBoxImage
+from classes.Image import JustImage, BorderImage, BoxImage, SelectableJustImage, DoubleSelectableJustImage, SelectableBoxImage
 from classes.Checkbox import Checkbox
 from classes.Bar import BarSlider, DigitSlider, TextSlider, BarCircle
 from classes.Sound import JustSound
@@ -22,6 +22,7 @@ release_path = ""
 temp_extension = os.path.basename(sys.argv[0])
 if temp_extension[temp_extension.rfind(".")::] == ".exe":
   release_path = "_internal/"
+  config.release_path = release_path
 del temp_extension
 
 config.def_font = load_font(release_path + config.def_font_filename)
@@ -231,10 +232,10 @@ all_objects = {
   # ----------------------------------------------- #
   'night>night_am': JustText('12:00 AM', 40, Vector2(350, 320)),
   'night>night_count': JustText('0th Night', 40, Vector2(350, 400)),
-  'night>white_blinko': Special.WhiteShhrrt(release_path),
+  'night>white_blinko': Special.WhiteShhrrt(white_on_start=True),
   # ----------------------------------------------- #
-  'game>scroll_anchor': Special.InvisibleAnchor(Vector2(-293, 0), Vector2(10, 10)),
-  'game>scroll_box': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768)),
+  'game>office_scroll_anchor': Special.InvisibleAnchor(Vector2(-293, 0), Vector2(10, 10)),
+  'game>office_scroll_line': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768)),
   'game>office_fun_fan': JustAnimation(spec_load_animation('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/fun_fan', 4), animation_speed=28, is_looped=True, layer=4),
   'game>office_selectable': SelectableJustImage([
     spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/office_empty.png'),
@@ -262,8 +263,51 @@ all_objects = {
     spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/office_right_enabled.png'),
   ]),
 
-  'game>ui_mask_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png'), Vector2(10, 720), layer=40),
-  'game>ui_cams_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png'), Vector2(515, 720), layer=40),
+  'game>camera_white_shhrrt': Special.WhiteShhrrt(9),
+  'game>camera_scroll_anchor': Special.InvisibleAnchor(),
+  'game>camera_static': JustAnimation(spec_load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8), Vector2(0, 0), 26, True, 84, 5),
+  'game>camera_selectable': DoubleSelectableJustImage([
+    [
+      spec_load_image('assets/graphics/Locations/Partyrooms/1/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/1/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/1/light_withered_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/1/light_toy_chica.png.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Partyrooms/2/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/2/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/2/dark_withered_chica.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/2/light_withered_chica.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/2/light_toy_bonnie.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Partyrooms/3/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/3/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/3/dark_withered_freddy.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/3/light_withered_freddy.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/3/light_toy_bonnie.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/dark_toy_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/light_toy_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/light_toy_chica.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/light_withered_chica.png'),
+      spec_load_image('assets/graphics/Locations/Partyrooms/4/light_easter_egg.png'),
+    ]
+  ], layer=2),
+  'game>map_cams': Special.CameraUI([
+    Vector2(587, 575),
+    Vector2(720, 575),
+    Vector2(587, 508),
+    Vector2(722, 508),
+  ], 6),
+
+  'game>ui_camera_border': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Monitor_Border.png'), layer=2),
+  'game>ui_camera_map': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Map.png'), Vector2(560, 385), 2),
+  'game>ui_mask_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png'), Vector2(10, 720), 40),
+  'game>ui_cams_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png'), Vector2(515, 720), 40),
 
   'game>laptop': SelectableAnimation([
     spec_load_image('assets/graphics/Monitor_Cameras/Monitor/nothing.png', True),
@@ -325,6 +369,7 @@ all_sounds = {
   'game>storage>laptop_on': JustSound(spec_load_sound('assets/audios/STEREO_CASSETTE__90097701.wav')),
   'game>storage>laptop_off': JustSound(spec_load_sound('assets/audios/STEREO_CASSETTE__90097704.wav')),
   'game>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
+  'game>storage>set_sound': JustSound(spec_load_sound('assets/audios/blip3.wav')),
   # ----------------------------------------------- #
   'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav')),
 }
@@ -357,7 +402,7 @@ all_timers = {
   'menu>random_twitch': Time(10),
 }
 
-scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables, all_timers)
+scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "win_or_lose", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables, all_timers)
 
 del all_objects, all_sounds
 change_needs()
@@ -469,9 +514,12 @@ def process_update():
   scene_objects = scenes.scene_objects[current_scene]
   for item in scene_objects.items():
     try:
-      broken_order[item[1]] = item[1].layer_order
+      layer = item[1].layer_order
     except AttributeError:
       print(f"{'\033[93m'}error DING! object {item[1]} doesnt have 'layer_order' field!{'\033[0m'}")
+    finally:
+      if layer not in scenes.hidden_layers:
+        broken_order[item[1]] = item[1].layer_order
   fixed_order = sorted(broken_order.items(), key=lambda x: x[1])
   for item in fixed_order:
     item[0].update()

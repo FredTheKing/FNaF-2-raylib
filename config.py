@@ -1,6 +1,5 @@
 from pyray import *
 import screeninfo
-
 from classes.Special import Special
 
 
@@ -31,6 +30,7 @@ def_font_filename = "assets/fonts/regular.ttf"
 def_set_sound_filename = "assets/audios/blip3.wav"
 def_font: Font
 def_set_sound: Sound
+release_path = ''
 
 actual_night = 1
 upcoming_night = 0

@@ -22,6 +22,7 @@ class JustImage:
   def draw(self):
     draw_texture_v(self.texture, self.pos, self.color)
 
+
 class BorderImage(JustImage):
   def __init__(self, texture: Texture, pos: Vector2 = Vector2(0, 0), border_thick:int = 2, layer: int = 1, alpha: int = 255):
     super().__init__(texture, pos, layer, alpha)
@@ -31,16 +32,18 @@ class BorderImage(JustImage):
     JustImage.update(self)
     draw_rectangle_lines_ex(Rectangle(int(self.pos.x), int(self.pos.y), int(self.texture.width), int(self.texture.height)), self.border_thick, WHITE)
 
+
 class BoxImage(JustImage, Hitbox):
-  def __init__(self, texture: Texture, pos=Vector2(0, 0), layer: int = 1, alpha=255):
+  def __init__(self, texture: Texture, pos=Vector2(0, 0), layer: int = 1, alpha=255, play_set_sound: bool = False):
     JustImage.__init__(self, texture, pos, layer, alpha)
-    Hitbox.__init__(self, pos, Vector2(self.width, self.height), BROWN)
+    Hitbox.__init__(self, pos, Vector2(self.width, self.height), BROWN, config.def_set_sound if play_set_sound else None)
 
   def update(self):
     Hitbox.update(self)
     JustImage.update(self)
     if config.debug:
       self.draw_debug()
+
 
 class SelectableJustImage(JustImage):
   def __init__(self, textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255):
@@ -65,10 +68,29 @@ class SelectableJustImage(JustImage):
     self.change_current_texture()
     JustImage.update(self)
 
+
+class DoubleSelectableJustImage(SelectableJustImage):
+  def __init__(self, packs_textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255):
+    if packs_textures_list_init is None:
+      self.packs_textures_list_init = []
+    else:
+      self.packs_list = packs_textures_list_init
+    self.pack_index = 0
+
+    super().__init__(self.packs_list[0], pos, layer, alpha)
+
+  def change_current_texture(self):
+    self.texture = self.packs_list[self.pack_index][self.texture_index]
+
+  def update(self):
+    self.change_current_texture()
+    JustImage.update(self)
+
+
 class SelectableBoxImage(SelectableJustImage, BoxImage):
-  def __init__(self, textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255):
+  def __init__(self, textures_list_init=None, pos: Vector2 = Vector2(0, 0), layer: int = 1, alpha: int = 255, play_set_sound: bool = False):
     SelectableJustImage.__init__(self, textures_list_init)
-    BoxImage.__init__(self, self.textures_list[0], pos, layer, alpha)
+    BoxImage.__init__(self, self.textures_list[0], pos, layer, alpha, play_set_sound)
 
   def update(self):
     self.change_current_texture()
