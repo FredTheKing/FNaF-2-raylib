@@ -41,20 +41,38 @@ funny = False
 debug = True
 volume = 1
 show_preview = False
+blinko_after_preview = False
 
 animatronics_arr = [
   Special.Animatronic(
     'Withered_Freddy',
-    '8|7|3|OFFICE_HALLWAY',
+    'OLD',
+    #  OLD - Withered animatronics and golden dude
+    #  NEW - Toy animatronics
+    #  OFFICE_STAYER - Mangle and bb
+    #  MARIONETTE - Marionette
+    '8|7|3|HALLWAY|INSIDE',
     [
       '8>7-100',
-      '7>OFFICE_HALLWAY-80|3-20',
-      '3>OFFICE_HALLWAY-97|7-3',
+      '7>HALLWAY-60|3-40',
+      '3>HALLWAY-76|7-24',
+      'HALLWAY>INSIDE-100',
+      #  FROM_WHERE>TO_WHERE1-PERCENT1|TO_WHERE2-PERCENT2
+      #  FROM_WHERE - from what room you need to move
+      #  TO_WHERE1, TO_WHERE2 etc. - the room to which the animatronic must move
+      #  PERCENT1, PERCENT2 etc. - chance of room changing (all of percents MUST be summed up to 100)
+      #  (| - OR between all animatronics)
     ],
-    'HALLWAY|INSIDE',
     [
-      'FAR',
+      '7<Toy_Chica|Withered_Bonnie',
+      'HALLWAY<Withered_Foxy|Withered_Bonnie|Toy_Freddy|Toy_Chica|Mangle|Golden_Freddy'
+      'INSIDE<Toy_Bonnie|Toy_Chica|Withered_Bonnie|Withered_Chica'
+      #  ROOM<ANIMATRONIC1|ANIMATRONIC2|ANIMATRONIC3
+      #  ROOM - the room that main animatronic is trying to get into
+      #  ANIMATRONIC1|ANIMATRONIC2 etc. - what animatronics have not to be on a room you declared a moment before
+      #  (| - AND between all animatronics)
     ],
+    'INSIDE',
   ),
   # Special.Animatronic('Withered_Bonnie', ['8', '7', '1', '5', '']),
   # Special.Animatronic('Withered_Chica', ['8', '4', '2', '6']),

@@ -5,7 +5,7 @@ from classes.Time import Time
 
 from classes.Special import Special
 from classes.Managers import Scene_Manager
-from classes.Text import JustText, BoxText, LinkText
+from classes.Text import JustText, BoxText, LinkText, SelectableJustText
 from classes.Animation import JustAnimation, SelectableAnimation
 from classes.Image import JustImage, BorderImage, BoxImage, SelectableJustImage, DoubleSelectableJustImage, SelectableBoxImage
 from classes.Checkbox import Checkbox
@@ -108,6 +108,7 @@ all_objects = {
   'config>actual_night_text': JustText('Actual Night: ', 32, Vector2(300, 100)),
   'config>actual_night_slider': DigitSlider(Vector2(700, 100), Vector2(80, 30), 6, goes_zero=False, default_state=config.actual_night),
   # ----------------------------------------------- #
+  'menu>boot_up_white_blinko': Special.WhiteShhrrt(60),
   'menu>twitch': SelectableJustImage([
     spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/still.png"),
     spec_load_image("assets/graphics/TheOffice_Nights_Menu/Menu/Misc/freddy.png"),
@@ -223,9 +224,10 @@ all_objects = {
     spec_load_image("assets/graphics/Development_Moments/X).png"),
     spec_load_image("assets/graphics/Development_Moments/poor_restart.png"),
     spec_load_image("assets/graphics/Development_Moments/funkin_no_loop.png"),
+    spec_load_image("assets/graphics/Development_Moments/not_tested.png")
   ], Vector2(config.resolution[0]//2 - 512//2 + 1, config.resolution[1]//2 - 384//2 - 49), layer=2),
 
-  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', 'gitignore one love :heart:    ', 'they ARE pretty ;)', 'i fixed it later)0))     ', 'sounds are pain :(  ']),
+  'development_moments>selector': TextSlider(Vector2(config.resolution[0]//2 - 512//2 - 1, config.resolution[1]//2 - 384//2 + 350), Vector2(444, 30), default_state=0, states=['boris', 'am i right  ', 'gitignore one love :heart:    ', 'they ARE pretty ;)', 'i fixed it later)0))     ', 'sounds are pain :(  ', 'just checked, its great ']),
   'development_moments>dont_aks_me_why': JustText("do not ask me why these pictures are so funked up", 20, Vector2(0, 736), color=DARKGRAY),
   # ----------------------------------------------- #
   'newspaper>news': BoxImage(spec_load_image("assets/graphics/TheOffice_Nights_Menu/Nights_CustomNight/Paychecks_Fire/news.png")),
@@ -234,8 +236,8 @@ all_objects = {
   'night>night_count': JustText('0th Night', 40, Vector2(350, 400)),
   'night>white_blinko': Special.WhiteShhrrt(white_on_start=True),
   # ----------------------------------------------- #
-  'game>office_scroll_anchor': Special.InvisibleAnchor(Vector2(-293, 0), Vector2(10, 10)),
-  'game>office_scroll_line': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768)),
+  'game>office_scroll_anchor': Special.InvisibleAnchor(Vector2(-293, 0), Vector2(10, 10), layer=50),
+  'game>office_scroll_line': Special.InvisibleAnchor(Vector2(config.resolution[0]//2, 0), Vector2(1, 768), layer=50),
   'game>office_fun_fan': JustAnimation(spec_load_animation('assets/graphics/TheOffice_Nights_Menu/TheOffice/Inside/fun_fan', 4), animation_speed=28, is_looped=True, layer=4),
   'game>office_selectable': SelectableJustImage([
     spec_load_image('assets/graphics/TheOffice_Nights_Menu/TheOffice/office_empty.png'),
@@ -264,7 +266,7 @@ all_objects = {
   ]),
 
   'game>camera_white_shhrrt': Special.WhiteShhrrt(9),
-  'game>camera_scroll_anchor': Special.InvisibleAnchor(),
+  'game>camera_scroll_anchor': Special.InvisibleAnchor(Vector2(-200, 0)),
   'game>camera_static': JustAnimation(spec_load_animation("assets/graphics/TheOffice_Nights_Menu/Menu/Static", 8), Vector2(0, 0), 26, True, 84, 5),
   'game>camera_selectable': DoubleSelectableJustImage([
     [
@@ -295,17 +297,103 @@ all_objects = {
       spec_load_image('assets/graphics/Locations/Partyrooms/4/light_toy_chica.png'),
       spec_load_image('assets/graphics/Locations/Partyrooms/4/light_withered_chica.png'),
       spec_load_image('assets/graphics/Locations/Partyrooms/4/light_easter_egg.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Vents/Left/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Left/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Left/light_toy_chica.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Left/light_withered_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Left/light_bb.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Left/light_endo.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Vents/Right/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Right/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Right/light_toy_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Right/light_withered_chica.png'),
+      spec_load_image('assets/graphics/Locations/Vents/Right/light_mangle.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/MainHall/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/MainHall/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/MainHall/dark_toy_chica.png'),
+      spec_load_image('assets/graphics/Locations/MainHall/light_toy_chica.png'),
+      spec_load_image('assets/graphics/Locations/MainHall/light_withered_bonnie.png'),
+      spec_load_image('assets/graphics/Locations/MainHall/light_withered_freddy.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Parts_Service/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_withered_bonnie_gone.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_withered_freddy_only.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_all_gone.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_withered_foxy_only.png'),
+      spec_load_image('assets/graphics/Locations/Parts_Service/light_shadow_only.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/Stage/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/Stage/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/Stage/dark_toy_bonnie_gone.png'),
+      spec_load_image('assets/graphics/Locations/Stage/light_toy_bonnie_gone.png'),
+      spec_load_image('assets/graphics/Locations/Stage/dark_toy_freddy_only.png'),
+      spec_load_image('assets/graphics/Locations/Stage/light_toy_freddy_only.png'),
+      spec_load_image('assets/graphics/Locations/Stage/dark_all_gone.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/dark_bb_gone.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/light_bb_gone.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/light_toy_freddy_and_bb_gone.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Games_Corner/light_toy_freddy.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/light_marionette_1.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/light_marionette_2.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/light_marionette_3.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Prize_Corner/light_endo.png'),
+    ],
+    [
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Kids_Cove/dark_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Kids_Cove/light_empty.png'),
+      spec_load_image('assets/graphics/Locations/KidsCove_Prize_GameCorner/Kids_Cove/light_mangle_gone.png'),
     ]
   ], layer=2),
   'game>map_cams': Special.CameraUI([
     Vector2(587, 575),
-    Vector2(720, 575),
-    Vector2(587, 508),
+    Vector2(720, 576),
+    Vector2(586, 508),
     Vector2(722, 508),
-  ], 6),
+    Vector2(592, 670),
+    Vector2(715, 670),
+    Vector2(742, 450),
+    Vector2(588, 437),
+    Vector2(900, 408),
+    Vector2(833, 528),
+    Vector2(934, 484),
+    Vector2(921, 577),
+  ], 6, 8),
 
   'game>ui_camera_border': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Monitor_Border.png'), layer=2),
   'game>ui_camera_map': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Map.png'), Vector2(560, 385), 2),
+  'game>ui_camera_name': SelectableJustText([
+    'Party Room 1',
+    'Party Room 2',
+    'Party Room 3',
+    'Party Room 4',
+    'Left Air Vent',
+    'Right Air Vent',
+    'Main Hall',
+    'Parts/Services',
+    'Show Stage',
+    'Game Area',
+    'Prize Corner',
+    "Kid's Cove",
+  ], Vector2(563, 330), 40, layer=9),
+  'game>ui_camera_red': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/red.png'), Vector2(49, 93), 9),
+
   'game>ui_mask_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png'), Vector2(10, 720), 40),
   'game>ui_cams_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png'), Vector2(515, 720), 40),
 
@@ -359,7 +447,8 @@ all_sounds = {
   'night>activation>start_up_sound': JustSound(spec_load_sound(release_path + config.def_set_sound_filename)),
   # ----------------------------------------------- #
   'game>activation>bg_ambience': JustSound(spec_load_sound('assets/audios/CMPTR_Low_Tech_Stat.wav'), True),
-  'game>activation>bg_fan': JustSound(spec_load_sound('assets/audios/fansound.wav'), True),
+  'game>activation>bg_ambience2': JustSound(spec_load_sound('assets/audios/CMPTR_Low_Tech_Stat.wav'), True),
+  'game>storage>bg_fan': JustSound(spec_load_sound('assets/audios/fansound.wav'), True),
   'game>storage>light_sound': JustSound(spec_load_sound('assets/audios/buzzlight.wav'), True),
   'game>storage>broken_light': JustSound(spec_load_sound('assets/audios/popstatic.wav'), True),
 
@@ -395,11 +484,15 @@ all_variables = {
   'game>light_right_status': False,
   'game>light_not_working': False,
 
+  'game>camera_scroll_state': 0  # 0 - goto left, 1 - standstill left, 2 - goto right, 3 - standstill right
 }
 
 all_timers = {
   'menu>bottom_text_change': Time(0.25),
   'menu>random_twitch': Time(10),
+  # ----------------------------------------------- #
+  'game>camera_scroll': Time(1),
+  'game>red_timer': Time(1),
 }
 
 scenes = Scene_Manager(["config", "menu", "settings", "extras", "custom_night", "jumpscares", "development_moments", "newspaper", "night", "game", "win_or_lose", "paycheck", "pixel_minigame", "creepy_minigame", "loading", "error", "preview", "test_scene"], all_objects, all_sounds, all_variables, all_timers)

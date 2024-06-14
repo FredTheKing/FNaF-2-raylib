@@ -17,3 +17,4 @@ class Time:
 
   def kill_time(self):
     self.go = False
+    self.time_current = 0

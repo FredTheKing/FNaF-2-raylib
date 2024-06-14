@@ -38,6 +38,9 @@ def main():
           scenes.scene_objects['menu']['settings'],
           scenes.scene_objects['menu']['extras'],
         ]
+        if config.blinko_after_preview:
+          scenes.scene_objects['menu']['boot_up_white_blinko'].go = True
+          config.blinko_after_preview = False
 
       # step
       if scenes.scene_timers['menu']['bottom_text_change'].time_current % 2 == 0:
@@ -318,6 +321,7 @@ def main():
       # activation
       if scenes.scene_changed:
         call_activation(audio_activation_update)
+        scenes.scene_timers['game']['camera_scroll'].kill_time()
         scenes.scene_objects['game']['ui_battery'].texture_index = 4
         scenes.scene_objects['game']['office_scroll_anchor'].pos.x = -293
 
@@ -325,7 +329,8 @@ def main():
       if config.debug:
         debug_draw_game_text()
       tests_do_testing(scenes)
-      border_anchor_point(scenes.scene_objects['game']['office_scroll_anchor'])
+      border_office_anchor_point()
+      camera_anchor_point_walking()
       glue_subjects_to_object.office(glue_subjects_to_object)
       glue_subjects_to_object.camera(glue_subjects_to_object)
 
@@ -342,6 +347,12 @@ def main():
 
       pullup_mask()
       pullup_camera()
+      #music_box()
+
+      if scenes.scene_timers['game']['red_timer'].time_current % 2 == 0:
+        scenes.scene_objects['game']['ui_camera_red'].color[3] = 0
+      else:
+        scenes.scene_objects['game']['ui_camera_red'].color[3] = 255
 
       scenes.scene_objects['game']['laptop'].animation_index = scenes.scene_variables['game']['gameplay_laptop']
       scenes.scene_objects['game']['mask'].animation_index = scenes.scene_variables['game']['gameplay_mask']
@@ -400,6 +411,11 @@ def main():
         scenes.scene_sounds['game']['storage']['mask_breathing'].play()
       else:
         scenes.scene_sounds['game']['storage']['mask_breathing'].stop()
+
+      if scenes.scene_variables['game']['gameplay_laptop'] == 3:
+        scenes.scene_sounds['game']['storage']['bg_fan'].stop()
+      else:
+        scenes.scene_sounds['game']['storage']['bg_fan'].play()
 
 
       sync_camera_selectable_with_map()
@@ -539,6 +555,7 @@ def main():
       # step
       if scenes.time_current >= 3:
         scenes.set_scene('menu')
+        config.blinko_after_preview = True
 
       # draw
       pass

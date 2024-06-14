@@ -43,6 +43,10 @@ def debug_draw_game_text():
 
   t_broken_light = objects.scenes.scene_variables['game']['light_not_working']
   t_office_scroll_pos_x = int(objects.scenes.scene_objects['game']['office_scroll_anchor'].pos.x)
+  t_camera_scroll_pos_x = int(objects.scenes.scene_objects['game']['camera_scroll_anchor'].pos.x)
+
+  t_camera_state = objects.scenes.scene_variables['game']['camera_scroll_state']
+  t_camera_timer = objects.scenes.scene_timers['game']['camera_scroll']
 
   t_left_light = objects.scenes.scene_variables['game']['light_left_status']
   t_right_light = objects.scenes.scene_variables['game']['light_right_status']
@@ -50,7 +54,7 @@ def debug_draw_game_text():
   t_laptop = objects.scenes.scene_variables['game']['gameplay_laptop']
   t_mask = objects.scenes.scene_variables['game']['gameplay_mask']
 
-  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nOffice scroll anchor x: {t_office_scroll_pos_x}\n\nBroken light [L]: {int(t_broken_light)}\n\nLeft light: {int(t_left_light)}\nRight light: {int(t_right_light)}\n\nLaptop state: {t_laptop}\nMask state: {t_mask}"
+  text = f"Scroll coords: ({t_scroll_left}, {t_scroll_right})\nOffice scroll anchor x: {t_office_scroll_pos_x}\nCamera scroll anchor x: {t_camera_scroll_pos_x}\n\nCamera scroll state: {t_camera_state}\nCamera scroll timer: {t_camera_timer.time_current}\n\nBroken light [L]: {int(t_broken_light)}\n\nLeft light: {int(t_left_light)}\nRight light: {int(t_right_light)}\n\nLaptop state: {t_laptop}\nMask state: {t_mask}"
 
   pos = Vector2(0, 0)
   font_size = 14
@@ -92,11 +96,47 @@ def funny_mode(mod: int = 1):
   y = config.screen_resolution[1]//2 - config.resolution[1]//2 + randint(y_mod*-1, y_mod+1)
   set_window_position(x, y)
 
-def border_anchor_point(object):
+def border_office_anchor_point():
+  object = objects.scenes.scene_objects['game']['office_scroll_anchor']
   right_border = 576
 
   if object.pos.x > 0: object.pos.x = 0
   elif object.pos.x < right_border*-1: object.pos.x = right_border*-1
+
+def camera_anchor_point_walking():
+  object = objects.scenes.scene_objects['game']['camera_scroll_anchor']
+  state = objects.scenes.scene_variables['game']['camera_scroll_state']
+  timer = objects.scenes.scene_timers['game']['camera_scroll']
+  right_border = 576
+
+  if object.pos.x >= 0:
+    if state == 0:
+      objects.scenes.scene_variables['game']['camera_scroll_state'] = 1
+      timer.start_time()
+      objects.scenes.scene_objects['game']['camera_scroll_anchor'].pos.x = 0
+
+  elif object.pos.x <= right_border * -1:
+    if state == 2:
+      objects.scenes.scene_variables['game']['camera_scroll_state'] = 3
+      timer.start_time()
+      objects.scenes.scene_objects['game']['camera_scroll_anchor'].pos.x = right_border * -1
+
+  if timer.time_current >= 4:
+      timer.kill_time()
+      if state == 1:
+        objects.scenes.scene_variables['game']['camera_scroll_state'] = 2
+      elif state == 3:
+        objects.scenes.scene_variables['game']['camera_scroll_state'] = 0
+
+  if state == 0:
+    object.pos.x += 0.081 * config.delta
+  elif state == 2:
+    object.pos.x -= 0.081 * config.delta
+
+  if objects.scenes.scene_objects['game']['camera_selectable'].pack_index not in range(0, 6):
+    objects.scenes.scene_objects['game']['camera_selectable'].pos.x = object.pos.x
+  else:
+    objects.scenes.scene_objects['game']['camera_selectable'].pos.x = 0
 
 def left_vent_light():
   if objects.scenes.scene_variables['game']['light_left_status']:
@@ -114,6 +154,7 @@ def right_vent_light():
 
 def sync_camera_selectable_with_map():
   objects.scenes.scene_objects['game']['camera_selectable'].pack_index = objects.scenes.scene_objects['game']['map_cams'].picked
+  objects.scenes.scene_objects['game']['ui_camera_name'].word_index = objects.scenes.scene_objects['game']['map_cams'].picked
   if objects.scenes.scene_objects['game']['map_cams'].pick_changed:
     objects.scenes.scene_objects['game']['camera_white_shhrrt'].go = True
 

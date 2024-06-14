@@ -76,3 +76,20 @@ class LinkText(BoxText):
   def goto_link(self):
     if self.clicked_verdict:
       open(f'{self.link}')
+
+class SelectableJustText(JustText):
+  def __init__(self, words_list_init=None, pos: Vector2 = Vector2(0, 0), size: int = 20, layer: int = 1):
+    if words_list_init is None:
+      self.words_list = []
+    else:
+      self.words_list = words_list_init
+    self.word_index = 0
+
+    super().__init__(self.words_list[0], size, pos, layer=layer)
+
+  def change_current_text(self):
+    self.text = self.words_list[self.word_index]
+
+  def update(self):
+    self.change_current_text()
+    JustText.update(self)

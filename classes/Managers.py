@@ -135,6 +135,7 @@ class Scene_Manager(Time):
       None,
       None,
       None,
+      None,
       KeyboardKey.KEY_NINE,
     ]
 
