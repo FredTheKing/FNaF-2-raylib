@@ -376,6 +376,8 @@ all_objects = {
     Vector2(921, 577),
   ], 6, 8),
 
+  'game>ui_test': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/DebugAnimatronics/WitheredFreddy.png'), Vector2(722, 508), layer=6),
+
   'game>ui_camera_border': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Monitor_Border.png'), layer=2),
   'game>ui_camera_map': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Map.png'), Vector2(560, 385), 2),
   'game>ui_camera_name': SelectableJustText([
@@ -397,6 +399,20 @@ all_objects = {
   'game>ui_mask_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/mask.png'), Vector2(10, 720), 40),
   'game>ui_cams_button': BoxImage(spec_load_image('assets/graphics/TheOffice_Nights_Menu/OfficeUtilities/laptop.png'), Vector2(515, 720), 40),
 
+  'game>ui_jumpscares': SelectableAnimation([
+    spec_load_image('assets/graphics/Other/Static/1/invisible.png', True),
+    spec_load_animation('assets/graphics/Jumpscares/WitheredFreddy', 13),
+    spec_load_animation('assets/graphics/Jumpscares/WitheredBonnie', 16),
+    spec_load_animation('assets/graphics/Jumpscares/WitheredChica', 12),
+    spec_load_animation('assets/graphics/Jumpscares/WitheredFoxy', 14),
+    spec_load_animation('assets/graphics/Jumpscares/WitheredGoldenFreddy', 13),
+    spec_load_animation('assets/graphics/Jumpscares/ToyFreddy', 12),
+    spec_load_animation('assets/graphics/Jumpscares/ToyBonnie', 13),
+    spec_load_animation('assets/graphics/Jumpscares/ToyChica', 13),
+    spec_load_animation('assets/graphics/Jumpscares/Mangle', 16),
+    spec_load_animation('assets/graphics/Jumpscares/TheMarionette', 15),
+  ], layer=29, animation_speed=23),
+  
   'game>laptop': SelectableAnimation([
     spec_load_image('assets/graphics/Monitor_Cameras/Monitor/nothing.png', True),
     spec_load_animation('assets/graphics/Monitor_Cameras/Monitor', 11),
@@ -460,12 +476,15 @@ all_sounds = {
   'game>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
   'game>storage>set_sound': JustSound(spec_load_sound('assets/audios/blip3.wav')),
   # ----------------------------------------------- #
+  'preview>activation>made_with': JustSound(spec_load_sound('assets/audios/made_with_raylib.wav')),
+  # ----------------------------------------------- #
   'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav')),
 }
 
 all_variables = {
   'menu>selected_hover_item': None,
   'menu>selection_arr': None,
+  'menu>blinko_after_preview': False,
   # ----------------------------------------------- #
   'extras>selection_arr': None,
   # ----------------------------------------------- #
@@ -484,7 +503,9 @@ all_variables = {
   'game>light_right_status': False,
   'game>light_not_working': False,
 
-  'game>camera_scroll_state': 0  # 0 - goto left, 1 - standstill left, 2 - goto right, 3 - standstill right
+  'game>camera_scroll_state': 0,  # 0 - goto left, 1 - standstill left, 2 - goto right, 3 - standstill right
+  # ----------------------------------------------- #
+  'win_or_lose>6AM': False,
 }
 
 all_timers = {
@@ -588,6 +609,16 @@ def sounds_draw_debug():
     except AttributeError:
       pass
 
+
+def animatronics_draw_debug():
+  space = Vector2(300, 20)  # 16px = new line
+  for item in config.animatronics_arr:
+    try:
+      item.draw_debug(int(space.x), int(space.y))
+    except AttributeError:
+      pass
+    else:
+      space.y += 40
 
 
 

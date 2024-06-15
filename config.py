@@ -41,17 +41,32 @@ funny = False
 debug = True
 volume = 1
 show_preview = False
-blinko_after_preview = False
 
+debug_animatronics_positions = {
+  '1': Vector2(527, 564),
+  '2': Vector2(780, 565),
+  '3': Vector2(532, 500),
+  '4': Vector2(0, 0),
+  '5': Vector2(0, 0),
+  '6': Vector2(0, 0),
+  '7': Vector2(0, 0),
+  '8': Vector2(0, 0),
+  '9': Vector2(0, 0),
+  '10': Vector2(0, 0),
+  '11': Vector2(0, 0),
+  '12': Vector2(0, 0),
+  'HALLWAY': Vector2(0, 0),
+  'INSIDE': Vector2(0, 0),
+}
+aggressive = 0
 animatronics_arr = [
   Special.Animatronic(
     'Withered_Freddy',
     'OLD',
     #  OLD - Withered animatronics and golden dude
     #  NEW - Toy animatronics
-    #  OFFICE_STAYER - Mangle and bb
-    #  MARIONETTE - Marionette
-    '8|7|3|HALLWAY|INSIDE',
+    #  SITTER - Mangle and bb
+    #  MUSIC - Marionette
     [
       '8>7-100',
       '7>HALLWAY-60|3-40',
@@ -70,7 +85,7 @@ animatronics_arr = [
       #  ROOM<ANIMATRONIC1|ANIMATRONIC2|ANIMATRONIC3
       #  ROOM - the room that main animatronic is trying to get into
       #  ANIMATRONIC1|ANIMATRONIC2 etc. - what animatronics have not to be on a room you declared a moment before
-      #  (| - AND between all animatronics)
+      #  (| - OR between all animatronics)
     ],
     'INSIDE',
   ),

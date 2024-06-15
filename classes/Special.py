@@ -1,5 +1,5 @@
 import random
-import string
+
 from pyray import *
 import config
 from classes.Animation import SelectableAnimation
@@ -106,7 +106,9 @@ class Special:
         self.update_time()
         self.picked_animation()
 
-    def __init__(self, cams_pos_list: list[Vector2] = [], layer: int = 3, default_pick: int = 0):
+    def __init__(self, cams_pos_list=None, layer: int = 3, default_pick: int = 0):
+      if cams_pos_list is None:
+        cams_pos_list = []
       self.total_amount = len(cams_pos_list)
       self.camera_box_collection = []
       self.layer_order = layer
@@ -154,12 +156,74 @@ class Special:
         self.draw()
 
   class Animatronic:
-    def __init__(self, name: str, animatronic_type: str, available_rooms: str, behavior: list[str], exeptions_rooms: list[str], activation_room: str):
+    def __init__(self, name: str, animatronic_type: str, behavior: list[str], exeptions: list[str], activation: str):
       self.name = name
       self.animatronic_type = animatronic_type
       self.difficulty = 0
 
-      self.available_rooms: str = available_rooms
       self.behavior = behavior
-      self.exeptions_rooms = exeptions_rooms
-      self.activation_room = activation_room
+      self.exeptions = exeptions
+      self.activation = activation
+
+      self.step = False
+      self.default_position = self.behavior[0].split('>')[0]
+      self.current_position = self.default_position
+      self.last_visited: list = [0, 0]
+
+      self.timer = Time(1)
+
+    def restore_position(self):
+      self.current_position = self.default_position
+
+    def execute_step_on_timer(self):
+      self.timer.update_time()
+      if self.timer.time_current >= 5:
+        #if random.randint(0, 20) <= self.difficulty:
+        self.timer.start_time()
+        self.step = True
+
+    def behavior_update(self):
+      if self.step:
+        self.step = False
+
+        for item in self.behavior:
+          splitted_behavior = item.split('>')
+          if splitted_behavior[0] == self.current_position:
+            splitted_addresses = splitted_behavior[1].split('|')
+
+            destination_address = {}
+            for item in splitted_addresses:
+              splitted_percent = item.split('-')
+              destination_address[splitted_percent[0]] = int(splitted_percent[1])
+
+            random_percent = random.randint(0, 100)
+
+            for destination, percent in destination_address.items():
+              if random_percent in range(percent):
+                self.current_position = destination
+                self.last_visited = [random_percent, percent]
+                return
+              else:
+                random_percent -= percent
+
+    def update_old(self):
+      self.behavior_update()
+
+    def update_new(self):
+      pass
+
+    def update_sitter(self):
+      pass
+
+    def update_music(self):
+      pass
+
+    def update(self):
+      self.execute_step_on_timer()
+      if self.animatronic_type == "OLD": self.update_old()
+      elif self.animatronic_type == 'NEW': self.update_new()
+      elif self.animatronic_type == 'SITTER': self.update_sitter()
+      elif self.animatronic_type == 'MUSIC': self.update_music()
+
+    def draw_debug(self, x, y):
+      draw_text(f'{self.name}: {self.current_position} | {self.timer.time_current} - {self.last_visited}', x, y, 18, WHITE)

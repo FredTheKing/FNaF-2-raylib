@@ -158,6 +158,22 @@ def sync_camera_selectable_with_map():
   if objects.scenes.scene_objects['game']['map_cams'].pick_changed:
     objects.scenes.scene_objects['game']['camera_white_shhrrt'].go = True
 
+def animatronics_restored():
+  for item in config.animatronics_arr:
+    item.restore_position()
+    item.timer.start_time()
+
+def jumpscare_finished():
+  jump = objects.scenes.scene_objects['game']['ui_jumpscares']
+  if jump.animation_index and jump.is_animation_ended:
+    objects.scenes.set_scene('win_or_lose')
+    objects.scenes.scene_variables['win_or_lose']['won'] = False
+
+def six_am_event():
+  if objects.scenes.time_current >= 408:  # 408 is right
+    objects.scenes.set_scene('win_or_lose')
+    objects.scenes.scene_variables['win_or_lose']['won'] = True
+
 def layers_camera_changing():
   if objects.scenes.scene_variables['game']['gameplay_laptop'] == 3:
     objects.scenes.hide_layer([1, 4])

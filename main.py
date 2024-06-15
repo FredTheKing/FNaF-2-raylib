@@ -1,5 +1,6 @@
 import random
 
+import config
 from classes.Time import Time
 from config import set_night
 from etc import *
@@ -38,9 +39,10 @@ def main():
           scenes.scene_objects['menu']['settings'],
           scenes.scene_objects['menu']['extras'],
         ]
-        if config.blinko_after_preview:
+        if scenes.scene_variables['menu']['blinko_after_preview']:
           scenes.scene_objects['menu']['boot_up_white_blinko'].go = True
-          config.blinko_after_preview = False
+          play_sound(config.def_set_sound)
+          scenes.scene_variables['menu']['blinko_after_preview'] = False
 
       # step
       if scenes.scene_timers['menu']['bottom_text_change'].time_current % 2 == 0:
@@ -321,13 +323,21 @@ def main():
       # activation
       if scenes.scene_changed:
         call_activation(audio_activation_update)
+        animatronics_restored()
         scenes.scene_timers['game']['camera_scroll'].kill_time()
+
         scenes.scene_objects['game']['ui_battery'].texture_index = 4
         scenes.scene_objects['game']['office_scroll_anchor'].pos.x = -293
+        scenes.scene_variables['game']['camera_scroll_state'] = 0
+
+        scenes.scene_variables['game']['gameplay_mask'] = 0
+        scenes.scene_variables['game']['gameplay_laptop'] = 0
+        scenes.scene_variables['game']['gameplay_battery'] = 4
 
       # step
       if config.debug:
         debug_draw_game_text()
+        animatronics_draw_debug()
       tests_do_testing(scenes)
       border_office_anchor_point()
       camera_anchor_point_walking()
@@ -382,6 +392,9 @@ def main():
 
       layers_camera_changing()
 
+      jumpscare_finished()
+      six_am_event()
+
 
       if (scenes.scene_variables['game']['light_left_status'] or scenes.scene_variables['game']['light_right_status']) or (not scenes.scene_variables['game']['light_not_working'] and config.ctrl_hold):
         scenes.scene_sounds['game']['storage']['light_sound'].play()
@@ -419,6 +432,8 @@ def main():
 
 
       sync_camera_selectable_with_map()
+      for item in config.animatronics_arr:
+        item.update()
 
 
       # draw
@@ -555,7 +570,7 @@ def main():
       # step
       if scenes.time_current >= 3:
         scenes.set_scene('menu')
-        config.blinko_after_preview = True
+        scenes.scene_variables['menu']['blinko_after_preview'] = True
 
       # draw
       pass
