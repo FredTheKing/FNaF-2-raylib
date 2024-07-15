@@ -46,25 +46,27 @@ debug_animatronics_positions = {
   '1': Vector2(527, 564),
   '2': Vector2(780, 565),
   '3': Vector2(532, 500),
-  '4': Vector2(0, 0),
-  '5': Vector2(0, 0),
-  '6': Vector2(0, 0),
-  '7': Vector2(0, 0),
-  '8': Vector2(0, 0),
-  '9': Vector2(0, 0),
-  '10': Vector2(0, 0),
-  '11': Vector2(0, 0),
-  '12': Vector2(0, 0),
-  'HALLWAY': Vector2(0, 0),
-  'INSIDE': Vector2(0, 0),
+  '4': Vector2(782, 500),
+  '5': Vector2(542, 642),
+  '6': Vector2(776, 642),
+  '7': Vector2(694, 430),
+  '8': Vector2(588, 392),
+  '9': Vector2(850, 388),
+  '10': Vector2(833, 480),
+  '11': Vector2(888, 470),
+  '12': Vector2(881, 582),
+  'HALLWAY': Vector2(664, 562),
+  'INSIDE': Vector2(664, 642),
 }
 aggressive = 0
-animatronics_arr = [
+animatronics_arr: list[Special.Animatronic] = [
   Special.Animatronic(
     'Withered_Freddy',
-    'OLD',
-    #  OLD - Withered animatronics and golden dude
-    #  NEW - Toy animatronics
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/WitheredFreddy.png',
+    'BLACKOUT',
+    #  BLACKOUT - Withered animatronics and golden dude
+    #  FLASH - Withered foxy
+    #  SIBLINGS - Toy Bonnie and Toy Chica
     #  SITTER - Mangle and bb
     #  MUSIC - Marionette
     [
@@ -80,8 +82,8 @@ animatronics_arr = [
     ],
     [
       '7<Toy_Chica|Withered_Bonnie',
-      'HALLWAY<Withered_Foxy|Withered_Bonnie|Toy_Freddy|Toy_Chica|Mangle|Golden_Freddy'
-      'INSIDE<Toy_Bonnie|Toy_Chica|Withered_Bonnie|Withered_Chica'
+      'HALLWAY<Withered_Foxy|Withered_Bonnie|Toy_Freddy|Toy_Chica|Mangle|Golden_Freddy',
+      'INSIDE<Toy_Freddy|Toy_Bonnie|Toy_Chica|Withered_Bonnie|Withered_Chica',
       #  ROOM<ANIMATRONIC1|ANIMATRONIC2|ANIMATRONIC3
       #  ROOM - the room that main animatronic is trying to get into
       #  ANIMATRONIC1|ANIMATRONIC2 etc. - what animatronics have not to be on a room you declared a moment before
@@ -89,13 +91,127 @@ animatronics_arr = [
     ],
     'INSIDE',
   ),
-  # Special.Animatronic('Withered_Bonnie', ['8', '7', '1', '5', '']),
-  # Special.Animatronic('Withered_Chica', ['8', '4', '2', '6']),
-  # Special.Animatronic('Withered_Foxy', ['8', '']),
-  # Special.Animatronic('Balloon_Boy', ['10', '5']),
-  # Special.Animatronic('Toy_Freddy', ['9', '10', '']),
-  # Special.Animatronic('Toy_Bonnie', ['9', '3', '4', '2', '6']),
-  # Special.Animatronic('Toy_Chica', ['9', '7', '4', '1', '5']),
+  Special.Animatronic(
+    'Withered_Bonnie',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/WitheredBonnie.png',
+    'BLACKOUT',
+    [
+      '8>HALLWAY-60|7-40',
+      '7>HALLWAY-70|1-30',
+      '1>5-70|HALLWAY-30',
+      '5>INSIDE-100',
+      'HALLWAY>INSIDE-50|1-50',
+    ],
+    [
+      '7<Withered_Freddy|Toy_Chica',
+      '1<Toy_Chica',
+      '5<Toy_Chica|Balloon_Boy',
+      'HALLWAY<Mangle|Golden_Freddy|Toy_Chica|Toy_Freddy|Withered_Freddy',
+      'INSIDE<Toy_Freddy|Toy_Bonnie|Toy_Chica|Withered_Freddy|Withered_Chica'
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Withered_Chica',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/WitheredChica.png',
+    'BLACKOUT',
+    [
+      '8>4-50|2-50',
+      '4>2-100',
+      '2>6-80|4-20',
+      '6>INSIDE-100',
+    ],
+    [
+      '4<Toy_Chica|Toy_Bonnie',
+      '2<Toy_Bonnie',
+      '6<Toy_Bonnie|Mangle',
+      'INSIDE<Toy_Freddy|Toy_Bonnie|Toy_Chica|Withered_Freddy|Withered_Bonnie'
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Withered_Foxy',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/Foxy.png',
+    'FLASH',
+    [
+      '8>HALLWAY-100',
+      'HALLWAY>INSIDE-100',
+    ],
+    [
+      'HALLWAY<Golden_Freddy|Toy_Chica|Toy_Freddy|Withered_Freddy',
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Balloon_Boy',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/BB.png',
+    'SITTER',
+    [
+      '10>5-100',
+      '5>INSIDE-100',
+    ],
+    [
+      '5<Withered_Bonnie|Toy_Chica',
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Toy_Freddy',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/ToyFreddy.png',
+    'BLACKOUT',
+    [
+      '9>HALLWAY-60|10-40',
+      '10>HALLWAY-100',
+      'HALLWAY>INSIDE-100',
+    ],
+    [
+      'HALLWAY<Withered_Freddy|Withered_Foxy|Withered_Bonnie|Toy_Chica|Mangle|Golden_Freddy',
+      'INSIDE<Withered_Freddy|Withered_Bonnie|Withered_Chica|Toy_Bonnie|Toy_Chica',
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Toy_Bonnie',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/ToyBonnie.png',
+    'SIBLINGS',
+    [
+      '9>2-40|3-30|4-30',
+      '2>6-90|4-10',
+      '4>2-90|3-5|6-5',
+      '3>2-70|4-30',
+      '6>INSIDE-100',
+    ],
+    [
+      '3<Withered_Freddy',
+      '4<Toy_Chica|Withered_Chica',
+      '6<Mangle|Withered_Chica',
+      '2<Withered_Chica',
+      'INSIDE<Withered_Freddy|Withered_Bonnie|Withered_Chica|Toy_Freddy|Toy_Chica',
+    ],
+    'INSIDE',
+  ),
+  Special.Animatronic(
+    'Toy_Chica',
+    'assets/graphics/Monitor_Cameras/DebugAnimatronics/ToyFreddy.png',
+    'SIBLINGS',
+    [
+      '9>7-70|4-20|HALLWAY-10',
+      '7>HALLWAY-60|4-20|1-20',
+      '4>HALLWAY-80|1-20',
+      'HALLWAY>1-95|4-5'
+      '1>HALLWAY-50|5-50',
+      '5>INSIDE-100',
+    ],
+    [
+      '7<Withered_Freddy|Withered_Bonnie',
+      '4<Withered_Chica|Toy_Bonnie',
+      '1<Withered_Bonnie',
+      '5<Balloon_Boy|Withered_Bonnie',
+      'HALLWAY<Withered_Freddy|Withered_Foxy|Withered_Bonnie|Toy_Freddy|Mangle|Golden_Freddy',
+      'INSIDE<Withered_Freddy|Withered_Bonnie|Withered_Chica|Toy_Bonnie|Toy_Freddy',
+    ],
+    'INSIDE',
+  ),
   # Special.Animatronic('Mangle', ['12', '11', '10', '7', '1', '2', '6']),
   # Special.Animatronic('Golden_Freddy', []),
 ]

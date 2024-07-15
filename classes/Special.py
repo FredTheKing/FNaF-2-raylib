@@ -156,21 +156,27 @@ class Special:
         self.draw()
 
   class Animatronic:
-    def __init__(self, name: str, animatronic_type: str, behavior: list[str], exeptions: list[str], activation: str):
+    def __init__(self, name: str, debug_picture_filename: Texture, animatronic_type: str, behavior: list[str], exceptions: list[str], activation: str):
+      def spec_load_image(filename: str, animation_subtype: bool = False) -> Texture or list[Texture]:
+        image = load_texture_from_image(load_image(config.release_path + filename))
+        return [image] if animation_subtype else image
+
       self.name = name
+      self.debug_pic = spec_load_image(debug_picture_filename)
       self.animatronic_type = animatronic_type
-      self.difficulty = 0
+      self.difficulty = 10
 
       self.behavior = behavior
-      self.exeptions = exeptions
+      self.exceptions = exceptions
       self.activation = activation
 
       self.step = False
       self.default_position = self.behavior[0].split('>')[0]
+      self.trying_position = None
       self.current_position = self.default_position
       self.last_visited: list = [0, 0]
 
-      self.timer = Time(1)
+      self.timer = Time(random.uniform(0.7, 1.3))
 
     def restore_position(self):
       self.current_position = self.default_position
@@ -178,9 +184,9 @@ class Special:
     def execute_step_on_timer(self):
       self.timer.update_time()
       if self.timer.time_current >= 5:
-        #if random.randint(0, 20) <= self.difficulty:
         self.timer.start_time()
-        self.step = True
+        if random.randint(0, 20) < self.difficulty:
+          self.step = True
 
     def behavior_update(self):
       if self.step:
@@ -200,30 +206,43 @@ class Special:
 
             for destination, percent in destination_address.items():
               if random_percent in range(percent):
-                self.current_position = destination
+                self.trying_position = destination
                 self.last_visited = [random_percent, percent]
                 return
               else:
                 random_percent -= percent
 
-    def update_old(self):
-      self.behavior_update()
+    def exceptions_update(self):
+      if self.trying_position is not None:
+        for item in self.exceptions:
+          splitted_exception = item.split('<')
+          if splitted_exception[0] == self.trying_position:
+            splitted_animatronics = splitted_exception[1].split('|')
 
-    def update_new(self):
-      pass
+            useful_animatronics_locations = {}
+            for animatronic in config.animatronics_arr:
+              temp_name = animatronic.name
+              if temp_name in splitted_animatronics and animatronic.name != self.name:
+                useful_animatronics_locations[temp_name] = animatronic.current_position
 
-    def update_sitter(self):
-      pass
-
-    def update_music(self):
-      pass
+            for animatronic, position in useful_animatronics_locations.items():
+              if position != self.trying_position:
+                self.current_position = self.trying_position
+                self.trying_position = None
+                return
+            else:
+              self.trying_position = None
 
     def update(self):
       self.execute_step_on_timer()
-      if self.animatronic_type == "OLD": self.update_old()
-      elif self.animatronic_type == 'NEW': self.update_new()
-      elif self.animatronic_type == 'SITTER': self.update_sitter()
-      elif self.animatronic_type == 'MUSIC': self.update_music()
+      self.behavior_update()
+      self.exceptions_update()
 
     def draw_debug(self, x, y):
       draw_text(f'{self.name}: {self.current_position} | {self.timer.time_current} - {self.last_visited}', x, y, 18, WHITE)
+      try:
+        pos: Vector2 = config.debug_animatronics_positions[self.current_position]
+      except KeyError:
+        pass
+      else:
+        draw_texture(self.debug_pic, int(pos.x), int(pos.y), WHITE)

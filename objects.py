@@ -376,8 +376,6 @@ all_objects = {
     Vector2(921, 577),
   ], 6, 8),
 
-  'game>ui_test': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/DebugAnimatronics/WitheredFreddy.png'), Vector2(722, 508), layer=6),
-
   'game>ui_camera_border': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Monitor_Border.png'), layer=2),
   'game>ui_camera_map': JustImage(spec_load_image('assets/graphics/Monitor_Cameras/CameraUtilities/Map.png'), Vector2(560, 385), 2),
   'game>ui_camera_name': SelectableJustText([
@@ -478,7 +476,7 @@ all_sounds = {
   # ----------------------------------------------- #
   'preview>activation>made_with': JustSound(spec_load_sound('assets/audios/made_with_raylib.wav')),
   # ----------------------------------------------- #
-  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav')),
+  'test_scene>storage>wind_sound': JustSound(spec_load_sound('assets/audios/windup2.wav'), True),
 }
 
 all_variables = {
