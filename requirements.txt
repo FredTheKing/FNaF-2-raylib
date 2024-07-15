@@ -1,0 +1,3 @@
+pyray~=0.1.0
+raylib~=4.5.0.1
+screeninfo~=0.8.1
